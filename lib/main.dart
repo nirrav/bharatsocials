@@ -23,6 +23,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -37,6 +39,12 @@ class _MyHomePageState extends State<MyHomePage> {
     EventsScreen(),
   ];
 
+  final List<String> _titles = [
+    'Bharat Socials',
+    'NGO Broadcast Page',
+    'Registered Events Page',
+  ];
+
   void onTabTapped(int index) {
     _pageController.jumpToPage(index);
   }
@@ -45,48 +53,67 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bharat Socials'),
-        titleTextStyle: TextStyle(color: Colors.black, fontSize: 25.0),
+        title: Text(_titles[_currentIndex]),
+        titleTextStyle: TextStyle(
+            color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
         backgroundColor: Color(0xFFCDEBF7),
         centerTitle: true,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1.0),
+          child: Container(
+            height: 1.0,
+            color: Color.fromRGBO(0, 0, 0, 0.683),
+          ),
+        ),
       ),
-      drawer: Sidebar(),
-      body: Column(
-        children: [
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-              children: _children,
+      drawer: Sidebar(
+        backgroundColor: Colors.white,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+                'assets/appbackground.png'), // replace with your image
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+                children: _children,
+              ),
             ),
-          ),
-          Container(
-            height: 5,
-            color: Colors.grey[300],
-          ),
-          BottomNavigationBar(
-            onTap: onTabTapped,
-            currentIndex: _currentIndex,
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.group),
-                label: 'Groups',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.event),
-                label: 'Events',
-              ),
-            ],
-          ),
-        ],
+            Container(
+              height: 5,
+              color: Colors.grey[300],
+            ),
+            BottomNavigationBar(
+              onTap: onTabTapped,
+              currentIndex: _currentIndex,
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.group),
+                  label: 'Groups',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.event),
+                  label: 'Events',
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

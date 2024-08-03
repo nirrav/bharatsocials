@@ -1,0 +1,35 @@
+[33mad665a0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mayush[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/broadcast-page[m[33m, [m[1;31morigin/ayush[m[33m, [m[1;31morigin/HEAD[m[33m)[m events page messages styles changed, shadows, border, text color change kiya
+[33m75e5607[m making some changes idk what
+[33mc19eb59[m made changes after pulling
+[33m8c8c497[m made changes on events page, eg.: background and scrolling
+[33m4eeca64[m made the badges text less grey
+[33m997cff6[m added chat texture, moved banner and marque, made changes in the sidebar
+[33m0b78e51[m made some changes in the sidebar
+[33mc2bc874[m[33m ([m[1;31morigin/sidebar[m[33m)[m Add files via upload
+[33m082ec5d[m Merge pull request #1 from nirrav/events-page
+[33m95a58cb[m Add files via upload
+[33m4cc7277[m deleted the 2 unneccesary files
+[33md62a069[m[33m ([m[1;31morigin/login-signup[m[33m)[m deleted the 2 unneccesary files
+[33md94ebb9[m Merge pull request #3 from nirrav/ngo-profile
+[33m5aa36bd[m Merged ngo-list-profiles into main
+[33md6cbf72[m[33m ([m[1;31morigin/ngo-profile[m[33m)[m Update ngoProfileChanges.dart
+[33mf00bbf9[m Update ViewProfile.dart
+[33mdf2a9af[m mereged but the view profile isnt working
+[33mb2ebf36[m idk what i did but i guess trhe main has been merged with broadcast-page, and now next commit will be the sidebar
+[33m1375759[m Merge branch 'events-page' into broadcast-page
+[33m04fe8b8[m added bg image, changed colors, made domain bg semi transparent
+[33m5e6156f[m updated home page
+[33m6edf12c[m Updated home page
+[33mb97fcf3[m[33m ([m[1;31morigin/ngo-list-profiles[m[33m)[m Made NGO lists
+[33m65811d4[m Ngo-profile
+[33m7f5bd63[m Add files via upload
+[33m75ba518[m made ayush change in home.dart
+[33m9416c4a[m added domain icons to folders
+[33m891d3f8[m Home page
+[33mf21ccfa[m Add files via upload
+[33m515727c[m Add files via upload
+[33m555605c[m made some colr changes from black to white
+[33mfb4c547[m 1) Added bg image 2)formatted structure 3) set dummy color scheme
+[33mb3f1dee[m Made tons of changes: 1)made template for chat and list of broadcast groups 2)made it so that the template fills the data that it gets, till no data it has placeholders 3) made user management(keyboard accessability) 4) made chat box better
+[33mefe4c69[m makeing these changes after changing my whole world
+[33m7a6620f[m[33m ([m[1;32mmain[m[33m)[m first commit

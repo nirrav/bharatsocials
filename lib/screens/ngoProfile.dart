@@ -101,6 +101,7 @@ class NgoProfileScreen extends StatelessWidget {
             radius: 95,
             backgroundImage: AssetImage(imagePath),
             backgroundColor: Color.fromARGB(255, 68, 255, 21),
+
             onBackgroundImageError: (_, __) {},
           ),
         ),
@@ -115,6 +116,7 @@ class NgoProfileScreen extends StatelessWidget {
         children: [
           Text(
             name,
+
             style: TextStyle(
               fontSize: screenSize.width * 0.06,
               fontWeight: FontWeight.bold,
@@ -124,6 +126,7 @@ class NgoProfileScreen extends StatelessWidget {
           Padding(
             // padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.04),
             padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.001),
+
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
