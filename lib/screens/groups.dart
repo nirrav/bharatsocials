@@ -86,9 +86,9 @@ class DomainCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: domain.color.withOpacity(0.8),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Color.fromARGB(68, 0, 0, 0), width: 1),
+          border: Border.all(color: const Color.fromARGB(68, 0, 0, 0), width: 1),
           boxShadow: [
-            BoxShadow(
+            const BoxShadow(
               color: Color.fromARGB(68, 0, 0, 0),
               blurRadius: 2,
               offset: Offset(0, 2),
