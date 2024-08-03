@@ -142,6 +142,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Color.fromRGBO(0, 0, 0, 0.343),
                     width: 1,
                   ),
+                  // top: BorderSide(
+                  //   color: Color.fromRGBO(0, 0, 0, 0.343),
+                  //   width: 1,
+                  // ),
                 ),
               ),
               height: 50,
@@ -156,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         events[index],
                         style: const TextStyle(
-                            color: Color.fromARGB(255, 59, 100, 249),
+                            color: Color.fromARGB(255, 0, 0, 0),
                             fontSize: 20,
                             fontWeight: FontWeight.bold),
                       ),
