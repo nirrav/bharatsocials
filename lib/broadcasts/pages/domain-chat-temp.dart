@@ -71,10 +71,11 @@ More Info:
         title: Text(
           _domainName ?? 'Loading...',
         ),
+        titleTextStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black,),
         backgroundColor: const Color(0xFFCDEBF7),
         elevation: 0, // Remove shadow for a cleaner look
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1.0), // Height of the border
+          preferredSize: const Size.fromHeight(1.0), // Height of the border
           child: Container(
             color: Colors.black, // Color of the border
             height: 1.0, // Thickness of the border

@@ -21,7 +21,7 @@ class NGOListScreen extends StatelessWidget {
         ),
         backgroundColor: const Color(0xFFCDEBF7),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(4.0), // Height of the border
+          preferredSize: const Size.fromHeight(4.0), // Height of the border
           child: Container(
             color: Colors.transparent, // Background color of the bottom area
             child: Container(

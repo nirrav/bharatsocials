@@ -136,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // Marquee
             Container(
               decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 198, 238, 247),
+                color: Color.fromARGB(198, 86, 218, 248),
                 border: Border(
                   bottom: BorderSide(
                     color: Color.fromRGBO(0, 0, 0, 0.343),
@@ -225,8 +225,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Icon(Icons.school, size: 60, color: Colors.blue),
-                          Text('Sarva ', style: TextStyle(fontSize: 18)),
-                          Text(' Sikhsha ', style: TextStyle(fontSize: 18)),
+                          Text('Sarva ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text(' Sikhsha ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
@@ -265,8 +265,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Icon(Icons.woman, size: 60, color: Colors.purple),
-                          Text('     Women ', style: TextStyle(fontSize: 18)),
-                          Text(' Empowerment ', style: TextStyle(fontSize: 18)),
+                          Text('     Women ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text(' Empowerment ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
@@ -315,9 +315,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: <Widget>[
                                 Icon(Icons.eco, size: 60, color: Colors.green),
                                 Text('    Environment ',
-                                    style: TextStyle(fontSize: 18)),
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                                 Text('   Sustainability',
-                                    style: TextStyle(fontSize: 18)),
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                               ],
                             ),
                           ),
@@ -358,8 +358,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Icon(Icons.medical_services,
                                     size: 60, color: Colors.red),
                                 Text('   Health & ',
-                                    style: TextStyle(fontSize: 18)),
-                                Text('Hygiene', style: TextStyle(fontSize: 18)),
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                Text('Hygiene', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                               ],
                             ),
                           ),

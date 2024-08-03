@@ -40,9 +40,9 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   final List<String> _titles = [
-    'Bharat Socials',
+    'Socials',
     'NGO Broadcast Page',
-    'Registered Events Page',
+    'Registered Events',
   ];
 
   void onTabTapped(int index) {
@@ -55,14 +55,14 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(_titles[_currentIndex]),
         titleTextStyle: TextStyle(
-            color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
+            color: Colors.black, fontSize: 30.0, fontWeight: FontWeight.bold),
         backgroundColor: Color(0xFFCDEBF7),
         centerTitle: true,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1.0),
           child: Container(
             height: 1.0,
-            color: Color.fromRGBO(0, 0, 0, 0.683),
+            color: Color.fromRGBO(0, 0, 0, 0.3333333333333333),
           ),
         ),
       ),
@@ -95,6 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.grey[300],
             ),
             BottomNavigationBar(
+              backgroundColor: Color(0xFFCDEBF7),
               onTap: onTabTapped,
               currentIndex: _currentIndex,
               items: [

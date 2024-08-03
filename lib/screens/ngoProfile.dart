@@ -27,7 +27,7 @@ class NgoProfileScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           name,
-          style: TextStyle(
+          style: const TextStyle(
               fontWeight: FontWeight.bold), // Fix: TextStyle was missing
         ),
         leading: IconButton(
@@ -37,7 +37,7 @@ class NgoProfileScreen extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 125, 217, 239),
         elevation: 0,
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(4.0),
+          preferredSize: const Size.fromHeight(4.0),
           child: Container(
             color: Colors.black,
             height: 1,
@@ -85,11 +85,11 @@ class NgoProfileScreen extends StatelessWidget {
               //   end: Alignment.bottomCenter,
               // ),
             ),
-            child: Center(
+            child: const Center(
               child: Icon(
                 Icons.image,
                 size: 100,
-                color: const Color.fromARGB(0, 189, 189, 189),
+                color: Color.fromARGB(0, 189, 189, 189),
               ),
             ),
           ),
@@ -100,7 +100,7 @@ class NgoProfileScreen extends StatelessWidget {
           child: CircleAvatar(
             radius: 95,
             backgroundImage: AssetImage(imagePath),
-            backgroundColor: Color.fromARGB(255, 68, 255, 21),
+            backgroundColor: const Color.fromARGB(255, 68, 255, 21),
 
             onBackgroundImageError: (_, __) {},
           ),
