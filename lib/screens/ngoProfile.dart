@@ -70,31 +70,38 @@ class NgoProfileScreen extends StatelessWidget {
             width: screenSize.width,
             height: screenSize.height * 0.3,
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color.fromARGB(255, 6, 255, 52),
-                  Color.fromARGB(255, 230, 255, 3),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+              image: DecorationImage(
+            image: AssetImage(
+                'assets/WD.jpeg'), // replace with your image
+            fit: BoxFit.cover,
+          ),
+              // gradient: LinearGradient(
+              //   colors: [
+              //     Color.fromARGB(255, 204, 110, 255),
+              //     Color.fromARGB(255, 19, 114, 255),
+              //     Color.fromARGB(255, 111, 229, 255),
+              //   ],
+              //   begin: Alignment.topCenter,
+              //   end: Alignment.bottomCenter,
+              // ),
             ),
             child: Center(
               child: Icon(
                 Icons.image,
                 size: 100,
-                color: Colors.grey[400],
+                color: const Color.fromARGB(0, 189, 189, 189),
               ),
             ),
           ),
         ),
         Positioned(
-          bottom: -screenSize.height * 0.1,
-          left: screenSize.width * 0.5 - 75,
+          bottom: -screenSize.height * 0.08,
+          left: screenSize.width * 0.03,
           child: CircleAvatar(
-            radius: 75,
+            radius: 95,
             backgroundImage: AssetImage(imagePath),
-            backgroundColor: Colors.grey[200],
+            backgroundColor: Color.fromARGB(255, 68, 255, 21),
+
             onBackgroundImageError: (_, __) {},
           ),
         ),
@@ -109,7 +116,7 @@ class NgoProfileScreen extends StatelessWidget {
         children: [
           Text(
             name,
-            textAlign: TextAlign.center,
+
             style: TextStyle(
               fontSize: screenSize.width * 0.06,
               fontWeight: FontWeight.bold,
@@ -117,7 +124,9 @@ class NgoProfileScreen extends StatelessWidget {
           ),
           SizedBox(height: screenSize.height * 0.01),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.04),
+            // padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.04),
+            padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.001),
+
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
