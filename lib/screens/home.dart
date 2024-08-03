@@ -133,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.only(bottom: 50),
         child: Column(
           children: <Widget>[
-            // Banner
+            // Marquee
             Container(
               decoration: const BoxDecoration(
                 color: Color.fromARGB(255, 198, 238, 247),
@@ -156,8 +156,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         events[index],
                         style: const TextStyle(
-                            color: Color.fromARGB(255, 248, 68, 68),
-                            fontSize: 20),
+                            color: Color.fromARGB(255, 59, 100, 249),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   );
@@ -201,8 +202,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   },
                   child: SizedBox(
-                    width: 140,
-                    height: 140,
+                    width: 160,
+                    height: 160,
                     child: Container(
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(162, 255, 255, 255),
@@ -241,8 +242,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   },
                   child: SizedBox(
-                    width: 140,
-                    height: 140,
+                    width: 160,
+                    height: 160,
                     child: Container(
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(162, 255, 255, 255),
@@ -290,8 +291,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                         child: SizedBox(
-                          width: 140,
-                          height: 140,
+                          width: 160,
+                          height: 160,
                           child: Container(
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(162, 255, 255, 255),
@@ -332,8 +333,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                         child: SizedBox(
-                          width: 140,
-                          height: 140,
+                          width: 160,
+                          height: 160,
                           child: Container(
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(162, 255, 255, 255),

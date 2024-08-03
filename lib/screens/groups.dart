@@ -53,7 +53,7 @@ class GroupsScreen extends StatelessWidget {
                             MaterialPageRoute(
                                 builder: (context) => const DomainChat(
                                       domainId: 'domainId',
-                                      isVolunteer: true,
+                                      isVolunteer: false,
                                     ) //if value is true then keyboard is disabled
 
                                 ),
@@ -86,7 +86,8 @@ class DomainCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: domain.color.withOpacity(0.8),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: const Color.fromARGB(68, 0, 0, 0), width: 1),
+          border:
+              Border.all(color: const Color.fromARGB(68, 0, 0, 0), width: 1),
           boxShadow: [
             const BoxShadow(
               color: Color.fromARGB(68, 0, 0, 0),

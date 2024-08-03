@@ -58,13 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
             color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
         backgroundColor: Color(0xFFCDEBF7),
         centerTitle: true,
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1),
-          child: Container(
-            color: Colors.black,
-            height: 1,
-          ),
-        ),
+        
       ),
       drawer: Sidebar(
         backgroundColor: Colors.white,
