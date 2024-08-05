@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
-import 'groups.dart';
-import 'events.dart';
 
 class NgoProfileScreen extends StatelessWidget {
   final String name;
@@ -27,8 +24,7 @@ class NgoProfileScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           name,
-          style: const TextStyle(
-              fontWeight: FontWeight.bold), // Fix: TextStyle was missing
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -44,18 +40,33 @@ class NgoProfileScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildBanner(screenSize),
-            _buildNgoInfo(screenSize),
-            _buildAboutSection(screenSize),
-            _buildSocialMediaSection(screenSize),
-            _buildWebsiteSection(screenSize),
-          ],
-        ),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background image
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                    'assets/texture.jpg'), // Replace with your image path
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          // Main content
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildBanner(screenSize),
+                _buildNgoInfo(screenSize),
+                _buildAboutSection(screenSize),
+                _buildSocialMediaSection(screenSize),
+                _buildWebsiteSection(screenSize),
+              ],
+            ),
+          ),
+        ],
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(context),
     );
   }
 
@@ -71,10 +82,10 @@ class NgoProfileScreen extends StatelessWidget {
             height: screenSize.height * 0.3,
             decoration: const BoxDecoration(
               image: DecorationImage(
-            image: AssetImage(
-                'assets/WD.jpeg'), // replace with your image
-            fit: BoxFit.cover,
-          ),
+                image: AssetImage(
+                    'assets/appbackground.png'), // replace with your image
+                fit: BoxFit.cover,
+              ),
               // gradient: LinearGradient(
               //   colors: [
               //     Color.fromARGB(255, 204, 110, 255),
@@ -85,13 +96,13 @@ class NgoProfileScreen extends StatelessWidget {
               //   end: Alignment.bottomCenter,
               // ),
             ),
-            child: const Center(
-              child: Icon(
-                Icons.image,
-                size: 100,
-                color: Color.fromARGB(0, 189, 189, 189),
-              ),
-            ),
+            // child: const Center(
+            //   child: Icon(
+            //     Icons.image,
+            //     size: 100,
+            //     color: Color.fromARGB(129, 167, 37, 37),
+            //   ),
+            // ),
           ),
         ),
         Positioned(
@@ -100,8 +111,7 @@ class NgoProfileScreen extends StatelessWidget {
           child: CircleAvatar(
             radius: 95,
             backgroundImage: AssetImage(imagePath),
-            backgroundColor: const Color.fromARGB(255, 68, 255, 21),
-
+            backgroundColor: Color.fromARGB(97, 68, 255, 21),
             onBackgroundImageError: (_, __) {},
           ),
         ),
@@ -116,7 +126,6 @@ class NgoProfileScreen extends StatelessWidget {
         children: [
           Text(
             name,
-
             style: TextStyle(
               fontSize: screenSize.width * 0.06,
               fontWeight: FontWeight.bold,
@@ -273,46 +282,48 @@ class NgoProfileScreen extends StatelessWidget {
     );
   }
 
-  BottomNavigationBar _buildBottomNavigationBar(BuildContext context) {
-    return BottomNavigationBar(
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.group),
-          label: 'Groups',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.event),
-          label: 'Events',
-        ),
-      ],
-      onTap: (index) {
-        switch (index) {
-          case 0:
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
-            );
-            break;
-          case 1:
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const GroupsScreen()),
-            );
-            break;
-          case 2:
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const EventsScreen()),
-            );
-            break;
-        }
-      },
-    );
-  }
+  // BottomNavigationBar _buildBottomNavigationBar(BuildContext context) {
+  //   return BottomNavigationBar(
+  //     items: const [
+  //       BottomNavigationBarItem(
+  //         icon: Icon(Icons.home),
+  //         label: 'Home',
+  //       ),
+  //       BottomNavigationBarItem(
+  //         icon: Icon(Icons.group),
+  //         label: 'Groups',
+  //       ),
+  //       BottomNavigationBarItem(
+  //         icon: Icon(Icons.event),
+  //         label: 'Events',
+  //       ),
+  //     ],
+  //     onTap: (index) {
+  //       switch (index) {
+  //         case 0:
+  //           Navigator.push(
+  //             context,
+  //             MaterialPageRoute(
+  //                 builder: (context) => const HomeScreen(
+  //                       isLoggedIn: true,
+  //                     )),
+  //           );
+  //           break;
+  //         case 1:
+  //           Navigator.push(
+  //             context,
+  //             MaterialPageRoute(builder: (context) => const GroupsScreen()),
+  //           );
+  //           break;
+  //         case 2:
+  //           Navigator.push(
+  //             context,
+  //             MaterialPageRoute(builder: (context) => const EventsScreen()),
+  //           );
+  //           break;
+  //       }
+  //     },
+  //   );
 }
 
 class SocialMedia {

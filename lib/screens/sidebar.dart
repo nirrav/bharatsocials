@@ -8,7 +8,7 @@ import 'profile.dart';
 class Sidebar extends StatelessWidget {
   final Color backgroundColor;
 
-  const Sidebar({Key? key, required this.backgroundColor}) : super(key: key);
+  const Sidebar({super.key, required this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +33,9 @@ class Sidebar extends StatelessWidget {
                     child: Icon(Icons.person, size: 60.0),
                   ),
                   decoration: BoxDecoration(
-                    color: backgroundColor,
+                    color: Color(0xFFCDEBF7),
                   ),
                 ),
-
-
                 ListTile(
                   title: Row(
                     children: [
@@ -159,10 +157,25 @@ class Sidebar extends StatelessWidget {
             ),
             onTap: () {
               Navigator.pop(context); // Close the drawer
+
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const LoginPopUp()),
+                  builder: (context) => LoginPage(
+                    onLoginStatusChanged: (bool isLoggedIn) {
+                      if (isLoggedIn) {
+                        Navigator.pop(context); // Close the LoginPage
+                        // Optionally redirect to a specific screen
+                        // Navigator.pushReplacement(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => SomeOtherScreen(),
+                        //   ),
+                        // );
+                      }
+                    },
+                  ),
+                ),
               );
             },
           ),

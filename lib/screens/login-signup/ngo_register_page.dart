@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:permission_handler/permission_handler.dart'; // Import permission_handler package
 
 class NgoRegisterPage extends StatefulWidget {
   const NgoRegisterPage({super.key});
@@ -15,18 +16,19 @@ class _NgoRegisterPageState extends State<NgoRegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(143, 155, 192, 227),
-      // appBar: AppBar(
-      //   title: const Text('Register as NGO',
-      //       style: TextStyle(color: Colors.black)),
-      //   backgroundColor: Colors.lightBlue,
-      // ),
+      backgroundColor: const Color.fromARGB(143, 155, 192, 227),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              image: const DecorationImage(
+                image: AssetImage(
+                    'assets/texture.jpg'), // Texture image for the background
+                fit: BoxFit.cover, // Ensures the texture covers the container
+              ),
+              color: Colors
+                  .transparent, // Keep the container background transparent
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
@@ -98,13 +100,30 @@ class _NgoRegisterPageState extends State<NgoRegisterPage> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.lightBlue,
+                        backgroundColor: const Color.fromARGB(
+                            255, 152, 220, 247), // Background color
                         padding: const EdgeInsets.symmetric(vertical: 15),
                         textStyle:
                             const TextStyle(fontSize: 16, color: Colors.black),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(16.0), // Rounded corners
+                          side: BorderSide(
+                            color: const Color.fromARGB(255, 128, 131, 136)
+                                .withOpacity(0.5), // Border color
+                            width: 0.9, // Border width
+                          ),
+                        ),
+                        elevation: 4, // Shadow depth
                       ),
-                      child: const Text('Submit',
-                          style: TextStyle(color: Colors.black)),
+                      child: Text(
+                        'Submit',
+                        style: TextStyle(
+                          fontSize: 18, // Font size
+                          fontWeight: FontWeight.bold, // Font weight
+                          color: Colors.black, // Text color
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -187,21 +206,69 @@ class _NgoRegisterPageState extends State<NgoRegisterPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Proof of Identity (POI)',
+          'Proof of Identity (Copy of light bill)',
           style: TextStyle(fontSize: 16, color: Colors.black),
         ),
         const SizedBox(height: 10),
         ElevatedButton(
           onPressed: () async {
-            FilePickerResult? result = await FilePicker.platform.pickFiles();
-            if (result != null) {
-              setState(() {
-                _uploadedFilePath = result.files.single.path;
-              });
+            // Request storage permission if necessary
+            var status = await Permission.storage.status;
+
+            if (!status.isGranted) {
+              status = await Permission.storage.request();
+
+              if (!status.isGranted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text(
+                          'Storage permission is required to pick files.')),
+                );
+                return;
+              }
+            }
+
+            try {
+              FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+              if (result != null && result.files.isNotEmpty) {
+                setState(() {
+                  _uploadedFilePath = result.files.single.path;
+                });
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('No file selected')),
+                );
+              }
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('An error occurred: $e')),
+              );
             }
           },
-          child: const Text('Upload Document',
-              style: TextStyle(color: Colors.black)),
+          style: ElevatedButton.styleFrom(
+            backgroundColor:
+                const Color.fromARGB(255, 152, 220, 247), // Background color
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            textStyle: const TextStyle(fontSize: 16, color: Colors.black),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0), // Rounded corners
+              side: BorderSide(
+                color: const Color.fromARGB(255, 128, 131, 136)
+                    .withOpacity(0.5), // Border color
+                width: 0.9, // Border width
+              ),
+            ),
+            elevation: 4, // Shadow depth
+          ),
+          child: const Text(
+            'Upload',
+            style: TextStyle(
+              fontSize: 18, // Font size
+              fontWeight: FontWeight.bold, // Font weight
+              color: Colors.black, // Text color
+            ),
+          ),
         ),
         if (_uploadedFilePath != null)
           Text(

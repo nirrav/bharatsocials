@@ -34,7 +34,9 @@ class _MyHomePageState extends State<MyHomePage> {
   final PageController _pageController = PageController();
 
   final List<Widget> _children = [
-    HomeScreen(),
+    HomeScreen(
+      isLoggedIn: true,
+    ),
     GroupsScreen(),
     EventsScreen(),
   ];

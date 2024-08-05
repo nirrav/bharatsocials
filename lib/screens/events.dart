@@ -22,7 +22,13 @@ class RoundedRectangleCard extends StatelessWidget {
           vertical: 8.0), // Spacing between rectangles
       width: double.infinity, // Full width of the parent
       decoration: BoxDecoration(
-        color: const Color.fromRGBO(152, 220, 247, 0.762), // Background color
+        image: DecorationImage(
+          image:
+              AssetImage('assets/texture.jpg'), // Replace with your image path
+          fit: BoxFit.cover, // Ensure the image covers the entire container
+        ),
+        color: Color.fromARGB(255, 196, 177, 70), // Background color
+
         borderRadius: BorderRadius.circular(16.0), // Rounded corners
         boxShadow: [
           BoxShadow(
@@ -35,10 +41,11 @@ class RoundedRectangleCard extends StatelessWidget {
         ],
         border: Border.all(
           color: const Color.fromARGB(255, 128, 131, 136)
-              .withOpacity(0.5), // Border color
+              .withOpacity(1), // Border color
           width: 0.9, // Border width
         ),
       ),
+
       child: Padding(
         padding: const EdgeInsets.symmetric(
             horizontal: 16.0, vertical: 20.0), // Padding
