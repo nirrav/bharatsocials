@@ -71,10 +71,16 @@ More Info:
         title: Text(
           _domainName ?? 'Loading...',
         ),
-        backgroundColor: const Color(0xFFCDEBF7),
+        titleTextStyle: const TextStyle(
+          fontSize: 30,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+        backgroundColor: Color(0xFFCDEBF7),
         elevation: 0, // Remove shadow for a cleaner look
+        centerTitle: true, // Add this line to center the title
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1.0), // Height of the border
+          preferredSize: const Size.fromHeight(1.0), // Height of the border
           child: Container(
             color: Colors.black, // Color of the border
             height: 1.0, // Thickness of the border
@@ -82,11 +88,17 @@ More Info:
         ),
       ),
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-                'assets/texture.jpg'), // replace with your image path
+                'assets/appbackground.png'), // replace with your image path
             fit: BoxFit.cover,
+          ),
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.black, // specify the color of the border
+              width: 2.0, // specify the width of the border
+            ),
           ),
         ),
         child: Column(
@@ -104,17 +116,21 @@ More Info:
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
+                      color: Colors.transparent,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.3),
                           spreadRadius: 2,
                           blurRadius: 4,
                           offset: const Offset(0, 3),
-                        )
+                        ),
                       ],
+                      image: DecorationImage(
+                        image: AssetImage(
+                            'assets/texture.jpg'), // Replace with your background image
+                        fit: BoxFit.cover, // Adjust fit as needed
+                      ),
                     ),
-
                     child: Stack(
                       children: [
                         ListTile(
@@ -153,7 +169,7 @@ More Info:
                             ? Positioned(
                                 bottom: 10,
                                 right:
-                                    0, // Position the bookmark button at the top right corner
+                                    0, // Position the bookmark button at the bottom right corner
                                 child: IconButton(
                                   icon: const Icon(Icons.bookmark_border),
                                   onPressed: () {

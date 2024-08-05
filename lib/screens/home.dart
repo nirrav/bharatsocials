@@ -1,9 +1,10 @@
 import 'package:bharatsocials/screens/NGOList.dart';
+import 'package:bharatsocials/screens/login-signup/login_popup.dart'; // Import the login screen
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required bool isLoggedIn});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -15,6 +16,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Timer? _bannerTimer;
   int currentPage = 0;
   final int bannerCount = 4;
+  final bool _isLoggedIn =
+      false; // VARIABLE TO CHECK IF USER HAS LOGGED IN OR NO
 
   late List<String> bannerImages;
   List<String> events = [
@@ -47,7 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
           {'iconCode': 0xe0be, 'color': 0xFF1DA1F2} // Twitter icon
         ]
       },
-      // Add more NGOs with similar structure
     ],
     'Women Empowerment': [
       {
@@ -60,14 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
           {'iconCode': 0xe0b0, 'color': 0xFFDD4B39} // Instagram icon
         ]
       },
-      // Add more NGOs with similar structure
     ],
-    'Environment Sustainability': [
-      // Add NGOs
-    ],
-    'Health & Hygiene': [
-      // Add NGOs
-    ],
+    'Environment Sustainability': [],
+    'Health & Hygiene': [],
   };
 
   @override
@@ -125,6 +122,31 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  void _handleDomainTap(String category) {
+    if (_isLoggedIn) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => NGOListScreen(
+            category: category,
+            ngos: domainData[category]!,
+          ),
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginPage(
+            onLoginStatusChanged: (status) {
+              // Handle the login status change here
+            },
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,16 +158,12 @@ class _HomeScreenState extends State<HomeScreen> {
             // Marquee
             Container(
               decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 198, 238, 247),
+                color: Color.fromARGB(198, 86, 218, 248),
                 border: Border(
                   bottom: BorderSide(
                     color: Color.fromRGBO(0, 0, 0, 0.343),
                     width: 1,
                   ),
-                  // top: BorderSide(
-                  //   color: Color.fromRGBO(0, 0, 0, 0.343),
-                  //   width: 1,
-                  // ),
                 ),
               ),
               height: 50,
@@ -194,23 +212,12 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NGOListScreen(
-                          category: 'Sarva Sikhsha',
-                          ngos: domainData['Sarva Sikhsha']!,
-                        ),
-                      ),
-                    );
-                  },
+                  onTap: () => _handleDomainTap('Sarva Sikhsha'),
                   child: SizedBox(
                     width: 160,
                     height: 160,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(162, 255, 255, 255),
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
@@ -220,37 +227,42 @@ class _HomeScreenState extends State<HomeScreen> {
                             offset: const Offset(0, 3),
                           ),
                         ],
+                        image: DecorationImage(
+                          image: AssetImage(
+                              'assets/texture.jpg'), // Replace with your background image path
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.school, size: 60, color: Colors.blue),
-                          Text('Sarva ', style: TextStyle(fontSize: 18)),
-                          Text(' Sikhsha ', style: TextStyle(fontSize: 18)),
-                        ],
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors
+                              .transparent, // Semi-transparent overlay to ensure readability
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.school, size: 60, color: Colors.blue),
+                            Text('Sarva ',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold)),
+                            Text(' Sikhsha ',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 50),
                 InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NGOListScreen(
-                          category: 'Women Empowerment',
-                          ngos: domainData['Women Empowerment']!,
-                        ),
-                      ),
-                    );
-                  },
+                  onTap: () => _handleDomainTap('Women Empowerment'),
                   child: SizedBox(
                     width: 160,
                     height: 160,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(162, 255, 255, 255),
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
@@ -260,13 +272,22 @@ class _HomeScreenState extends State<HomeScreen> {
                             offset: const Offset(0, 3),
                           ),
                         ],
+                        image: DecorationImage(
+                          image: AssetImage(
+                              'assets/texture.jpg'), // Replace with your background image path
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       child: const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Icon(Icons.woman, size: 60, color: Colors.purple),
-                          Text('     Women ', style: TextStyle(fontSize: 18)),
-                          Text(' Empowerment ', style: TextStyle(fontSize: 18)),
+                          Text('     Women ',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text(' Empowerment ',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
@@ -283,23 +304,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NGOListScreen(
-                                category: 'Environment Sustainability',
-                                ngos: domainData['Environment Sustainability']!,
-                              ),
-                            ),
-                          );
-                        },
+                        onTap: () =>
+                            _handleDomainTap('Environment Sustainability'),
                         child: SizedBox(
                           width: 160,
                           height: 160,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: const Color.fromARGB(162, 255, 255, 255),
                               borderRadius: BorderRadius.circular(10),
                               boxShadow: [
                                 BoxShadow(
@@ -309,15 +320,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                   offset: const Offset(0, 3),
                                 ),
                               ],
+                              image: DecorationImage(
+                                image: AssetImage(
+                                    'assets/texture.jpg'), // Replace with your background image path
+                                fit: BoxFit.cover,
+                              ),
                             ),
                             child: const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Icon(Icons.eco, size: 60, color: Colors.green),
                                 Text('    Environment ',
-                                    style: TextStyle(fontSize: 18)),
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)),
                                 Text('   Sustainability',
-                                    style: TextStyle(fontSize: 18)),
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)),
                               ],
                             ),
                           ),
@@ -325,23 +345,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(width: 50),
                       InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NGOListScreen(
-                                category: 'Health & Hygiene',
-                                ngos: domainData['Health & Hygiene']!,
-                              ),
-                            ),
-                          );
-                        },
+                        onTap: () => _handleDomainTap('Health & Hygiene'),
                         child: SizedBox(
                           width: 160,
                           height: 160,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: const Color.fromARGB(162, 255, 255, 255),
                               borderRadius: BorderRadius.circular(10),
                               boxShadow: [
                                 BoxShadow(
@@ -351,6 +360,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   offset: const Offset(0, 3),
                                 ),
                               ],
+                              image: DecorationImage(
+                                image: AssetImage(
+                                    'assets/texture.jpg'), // Replace with your background image path
+                                fit: BoxFit.cover,
+                              ),
                             ),
                             child: const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -358,8 +372,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Icon(Icons.medical_services,
                                     size: 60, color: Colors.red),
                                 Text('   Health & ',
-                                    style: TextStyle(fontSize: 18)),
-                                Text('Hygiene', style: TextStyle(fontSize: 18)),
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)),
+                                Text('Hygiene',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)),
                               ],
                             ),
                           ),
