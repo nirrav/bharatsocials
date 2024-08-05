@@ -12,14 +12,21 @@ class _ProfilePageState extends State<ProfilePage> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _contactController = TextEditingController();
-  
+
   String? _bloodGroup;
   String? _gender;
 
   bool _isEditing = false;
 
   final List<String> _bloodGroups = [
-    'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'
+    'A+',
+    'A-',
+    'B+',
+    'B-',
+    'AB+',
+    'AB-',
+    'O+',
+    'O-'
   ];
   final List<String> _genders = ['Male', 'Female', 'Other'];
 
@@ -59,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ProfileTextField(
                 label: "Email",
                 controller: _emailController,
-                placeholder: "example@exaple.com",
+                placeholder: "example@example.com",
                 isEditing: _isEditing,
               ),
               ProfileTextField(
@@ -92,14 +99,35 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(
+                    const Color.fromRGBO(152, 220, 247, 0.762), // Background color
+                  ),
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(16.0), // Rounded corners
+                    ),
+                  ),
+                  shadowColor: WidgetStateProperty.all(
+                    const Color.fromARGB(255, 8, 7, 7)
+                        .withOpacity(0.2), // Shadow color
+                  ),
+                  elevation:
+                      WidgetStateProperty.all(4), // Elevation for shadow
+                  side: WidgetStateProperty.all(
+                    BorderSide(
+                      color: const Color.fromARGB(255, 128, 131, 136)
+                          .withOpacity(0.5), // Border color
+                      width: 0.9, // Border width
+                    ),
+                  ),
+                ),
                 onPressed: () {
                   setState(() {
                     _isEditing = !_isEditing;
                   });
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFCDEBF7),
-                ),
                 child: Text(_isEditing ? "Save Profile" : "Edit Profile"),
               ),
             ],

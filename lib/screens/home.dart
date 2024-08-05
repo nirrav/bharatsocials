@@ -1,10 +1,6 @@
+import 'package:bharatsocials/screens/NGOList.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-
-import 'package:bharatsocials/domains/envSus.dart';
-import 'package:bharatsocials/domains/healthHyg.dart';
-import 'package:bharatsocials/domains/sarvaSiksha.dart';
-import 'package:bharatsocials/domains/womenEmp.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,10 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Timer? _bannerTimer;
   int currentPage = 0;
   final int bannerCount = 4;
-  final Color domainColor =
-      Colors.blue; // Change this to change the color of all domains
 
-  // Placeholder data for banners and events
   late List<String> bannerImages;
   List<String> events = [
     "Event 1: Health Camp on 5th Aug",
@@ -31,6 +24,52 @@ class _HomeScreenState extends State<HomeScreen> {
     "Event 4: Women's Empowerment Session on 25th Aug",
   ];
 
+  final Map<String, List<Map<String, dynamic>>> domainData = {
+    'Sarva Sikhsha': [
+      {
+        'name': 'Education First NGO',
+        'location': 'Ahmedabad',
+        'color': '0xFFFFF8E0',
+        'description':
+            'Focuses on providing education to underprivileged children.',
+        'imagePath': 'assets/education_first.png',
+        'socialMedia': [
+          {'iconCode': 0xe8b6, 'color': 0xFF3b5998} // Facebook icon
+        ]
+      },
+      {
+        'name': 'Learning Together',
+        'location': 'Jaipur',
+        'color': '0xFFE0E0FF',
+        'description': 'Promotes collaborative learning and skill development.',
+        'imagePath': 'assets/learning_together.png',
+        'socialMedia': [
+          {'iconCode': 0xe0be, 'color': 0xFF1DA1F2} // Twitter icon
+        ]
+      },
+      // Add more NGOs with similar structure
+    ],
+    'Women Empowerment': [
+      {
+        'name': 'Empower Women NGO',
+        'location': 'Bangalore',
+        'color': '0xFFFFE0E0',
+        'description': 'Supports women in achieving economic independence.',
+        'imagePath': 'assets/empower_women.png',
+        'socialMedia': [
+          {'iconCode': 0xe0b0, 'color': 0xFFDD4B39} // Instagram icon
+        ]
+      },
+      // Add more NGOs with similar structure
+    ],
+    'Environment Sustainability': [
+      // Add NGOs
+    ],
+    'Health & Hygiene': [
+      // Add NGOs
+    ],
+  };
+
   @override
   void initState() {
     super.initState();
@@ -38,11 +77,9 @@ class _HomeScreenState extends State<HomeScreen> {
     _scrollController = ScrollController();
     _startScrolling();
 
-    // Initialize banner images in the initState
     bannerImages = List.generate(bannerCount,
         (index) => 'https://via.placeholder.com/300x150?text=Banner+$index');
 
-    // Set up a timer to auto-scroll the banners
     _bannerTimer = Timer.periodic(const Duration(seconds: 2), (Timer timer) {
       if (_pageController.hasClients) {
         if (currentPage < bannerCount - 1) {
@@ -83,8 +120,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _pageController.dispose();
     _scrollController.dispose();
-    _bannerTimer?.cancel(); // Cancel the timer if it's not null
-    _bannerTimer = null; // Set the timer to null after canceling
+    _bannerTimer?.cancel();
+    _bannerTimer = null;
     super.dispose();
   }
 
@@ -96,9 +133,8 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.only(bottom: 50),
         child: Column(
           children: <Widget>[
-            // Banner
+            // Marquee
             Container(
-              // margin: EdgeInsets.only(bottom: 5),
               decoration: const BoxDecoration(
                 color: Color.fromARGB(255, 198, 238, 247),
                 border: Border(
@@ -106,6 +142,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Color.fromRGBO(0, 0, 0, 0.343),
                     width: 1,
                   ),
+                  // top: BorderSide(
+                  //   color: Color.fromRGBO(0, 0, 0, 0.343),
+                  //   width: 1,
+                  // ),
                 ),
               ),
               height: 50,
@@ -120,8 +160,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         events[index],
                         style: const TextStyle(
-                            color: Color.fromARGB(255, 248, 68, 68),
-                            fontSize: 20),
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   );
@@ -148,8 +189,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-            // Marquee
-
             const SizedBox(height: 50),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -158,12 +197,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SarvaSiksha()),
+                      MaterialPageRoute(
+                        builder: (context) => NGOListScreen(
+                          category: 'Sarva Sikhsha',
+                          ngos: domainData['Sarva Sikhsha']!,
+                        ),
+                      ),
                     );
                   },
                   child: SizedBox(
-                    width: 140,
-                    height: 140,
+                    width: 160,
+                    height: 160,
                     child: Container(
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(162, 255, 255, 255),
@@ -193,12 +237,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => WomenEmp()),
+                      MaterialPageRoute(
+                        builder: (context) => NGOListScreen(
+                          category: 'Women Empowerment',
+                          ngos: domainData['Women Empowerment']!,
+                        ),
+                      ),
                     );
                   },
                   child: SizedBox(
-                    width: 140,
-                    height: 140,
+                    width: 160,
+                    height: 160,
                     child: Container(
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(162, 255, 255, 255),
@@ -237,12 +286,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => EnvSus()),
+                            MaterialPageRoute(
+                              builder: (context) => NGOListScreen(
+                                category: 'Environment Sustainability',
+                                ngos: domainData['Environment Sustainability']!,
+                              ),
+                            ),
                           );
                         },
                         child: SizedBox(
-                          width: 140,
-                          height: 140,
+                          width: 160,
+                          height: 160,
                           child: Container(
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(162, 255, 255, 255),
@@ -275,12 +329,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HealthHyg()),
+                              builder: (context) => NGOListScreen(
+                                category: 'Health & Hygiene',
+                                ngos: domainData['Health & Hygiene']!,
+                              ),
+                            ),
                           );
                         },
                         child: SizedBox(
-                          width: 140,
-                          height: 140,
+                          width: 160,
+                          height: 160,
                           child: Container(
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(162, 255, 255, 255),

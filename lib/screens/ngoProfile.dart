@@ -3,293 +3,312 @@ import 'home.dart';
 import 'groups.dart';
 import 'events.dart';
 
-void main() {
-  runApp(const VidyaNGOApp());
-}
+class NgoProfileScreen extends StatelessWidget {
+  final String name;
+  final String location;
+  final String description;
+  final String imagePath;
+  final List<SocialMedia> socialMedia;
 
-class VidyaNGOApp extends StatelessWidget {
-  const VidyaNGOApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: VidyaNGOScreen(),
-    );
-  }
-}
-
-class VidyaNGOScreen extends StatelessWidget {
-  const VidyaNGOScreen({super.key});
+  const NgoProfileScreen({
+    super.key,
+    required this.name,
+    required this.location,
+    required this.description,
+    required this.imagePath,
+    required this.socialMedia,
+  });
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
+    final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Vidya NGO'),
+        title: Text(
+          name,
+          style: TextStyle(
+              fontWeight: FontWeight.bold), // Fix: TextStyle was missing
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
-<<<<<<< HEAD
-        backgroundColor: Color(0xFFCDEBF7),
-=======
         backgroundColor: const Color.fromARGB(255, 125, 217, 239),
->>>>>>> ad665a015edefad88b5082be536766d6d8be5951
         elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(4.0),
+          child: Container(
+            color: Colors.black,
+            height: 1,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // ProfileBanner(), // Adding ProfileBanner at the top
-            Stack(
+            _buildBanner(screenSize),
+            _buildNgoInfo(screenSize),
+            _buildAboutSection(screenSize),
+            _buildSocialMediaSection(screenSize),
+            _buildWebsiteSection(screenSize),
+          ],
+        ),
+      ),
+      bottomNavigationBar: _buildBottomNavigationBar(context),
+    );
+  }
+
+  Widget _buildBanner(Size screenSize) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        ClipRRect(
+          borderRadius:
+              const BorderRadius.vertical(bottom: Radius.circular(15)),
+          child: Container(
+            width: screenSize.width,
+            height: screenSize.height * 0.3,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 6, 255, 52),
+                  Color.fromARGB(255, 230, 255, 3),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            child: Center(
+              child: Icon(
+                Icons.image,
+                size: 100,
+                color: Colors.grey[400],
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: -screenSize.height * 0.1,
+          left: screenSize.width * 0.5 - 75,
+          child: CircleAvatar(
+            radius: 75,
+            backgroundImage: AssetImage(imagePath),
+            backgroundColor: Colors.grey[200],
+            onBackgroundImageError: (_, __) {},
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNgoInfo(Size screenSize) {
+    return Padding(
+      padding: EdgeInsets.only(top: screenSize.width * 0.2),
+      child: Column(
+        children: [
+          Text(
+            name,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: screenSize.width * 0.06,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: screenSize.height * 0.01),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.04),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Background Container with Gradient and Border Radius
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Container(
-                    width: screenSize.width,
-                    height: screenSize.height * 0.3,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color.fromARGB(255, 6, 255, 52),
-                          Color.fromARGB(255, 230, 255, 3),
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                    ),
-                    // child: Image.asset(
-                    // 'images/Designer.jpg',
-                    // fit: BoxFit.cover,
-                    // ),
+                Text(
+                  'Domain: [Domain]', // Replace with actual domain if available
+                  style: TextStyle(
+                    fontSize: screenSize.width * 0.04,
+                    color: Colors.grey[600],
                   ),
                 ),
-                const Positioned(
-                  bottom: 15,
-                  left: 10,
-                  child: CircleAvatar(
-                    radius: 75,
-                    backgroundImage: AssetImage(
-                      'images/Designer.jpg',
-                    ),
+                SizedBox(height: screenSize.height * 0.01),
+                Text(
+                  'Location: $location',
+                  style: TextStyle(
+                    fontSize: screenSize.width * 0.04,
+                    color: Colors.grey[600],
                   ),
                 ),
               ],
             ),
-            // Container(
-            //   padding: EdgeInsets.all(screenSize.width * 0.04),
-            //   decoration: BoxDecoration(
-            //     color: Color.fromARGB(255, 205, 205, 205),
-            //     borderRadius: BorderRadius.circular(screenSize.width * 0.04),
-            //   ),
-            // ),
-            Padding(
-              padding: EdgeInsets.all(screenSize.width * 0.04),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Vidya NGO',
-                    style: TextStyle(
-                      fontSize: screenSize.width * 0.06,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: screenSize.height * 0.01),
-                  Text(
-                    'Location: Mumbai',
-                    style: TextStyle(
-                      fontSize: screenSize.width * 0.04,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  SizedBox(height: screenSize.height * 0.02),
-                  Container(
-                    padding: EdgeInsets.all(screenSize.width * 0.04),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 205, 205, 205),
-                      borderRadius:
-                          BorderRadius.circular(screenSize.width * 0.04),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'About',
-                          style: TextStyle(
-                            fontSize: screenSize.width * 0.05,
-                            fontWeight: FontWeight.bold,
-                            color: const Color.fromARGB(255, 0, 0, 0),
-                          ),
-                        ),
-                        SizedBox(height: screenSize.height * 0.01),
-                        Text(
-                          'Vidya is a dedicated NGO focused on transforming education in India. It aims to provide quality education and skill development to underprivileged children and youth. By fostering a supportive learning environment, Vidya strives to empower individuals and uplift communities through knowledge and opportunity.',
-                          style: TextStyle(
-                            fontSize: screenSize.width * 0.04,
-                            color: const Color.fromARGB(255, 0, 0, 0),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: TextButton(
-                            onPressed: () {},
-                            child: const Text('More'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: screenSize.height * 0.02),
-                  Container(
-                    padding: EdgeInsets.all(screenSize.width * 0.04),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[700],
-                      borderRadius:
-                          BorderRadius.circular(screenSize.width * 0.04),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Social',
-                          style: TextStyle(
-                            fontSize: screenSize.width * 0.05,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(height: screenSize.height * 0.01),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.camera_alt_outlined),
-                              color: Colors.pink,
-                              iconSize: screenSize.width * 0.1,
-                              onPressed: () {},
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.alternate_email_outlined),
-                              color: Colors.blue,
-                              iconSize: screenSize.width * 0.1,
-                              onPressed: () {},
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.facebook),
-                              color: Colors.blueAccent,
-                              iconSize: screenSize.width * 0.1,
-                              onPressed: () {},
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAboutSection(Size screenSize) {
+    return Padding(
+      padding: EdgeInsets.all(screenSize.width * 0.04),
+      child: Container(
+        padding: EdgeInsets.all(screenSize.width * 0.04),
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 205, 205, 205),
+          borderRadius: BorderRadius.circular(screenSize.width * 0.04),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'About',
+              style: TextStyle(
+                fontSize: screenSize.width * 0.05,
+                fontWeight: FontWeight.bold,
+                color: const Color.fromARGB(255, 0, 0, 0),
+              ),
+            ),
+            SizedBox(height: screenSize.height * 0.01),
+            Text(
+              description,
+              style: TextStyle(
+                fontSize: screenSize.width * 0.04,
+                color: const Color.fromARGB(255, 0, 0, 0),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: TextButton(
+                onPressed: () {},
+                child: const Text('More'),
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: 'Groups',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.event),
-            label: 'Events',
-          ),
-        ],
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
-              break;
-            case 1:
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const GroupsScreen()),
-              );
-              break;
-            case 2:
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => EventsScreen()),
-              );
-              break;
-          }
-        },
+    );
+  }
+
+  Widget _buildSocialMediaSection(Size screenSize) {
+    return Padding(
+      padding: EdgeInsets.all(screenSize.width * 0.04),
+      child: Container(
+        padding: EdgeInsets.all(screenSize.width * 0.04),
+        decoration: BoxDecoration(
+          color: Colors.grey[700],
+          borderRadius: BorderRadius.circular(screenSize.width * 0.04),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Social',
+              style: TextStyle(
+                fontSize: screenSize.width * 0.05,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: screenSize.height * 0.01),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: socialMedia
+                  .map(
+                    (media) => IconButton(
+                      icon: Icon(media.icon),
+                      color: media.color,
+                      iconSize: screenSize.width * 0.1,
+                      onPressed: () {},
+                    ),
+                  )
+                  .toList(),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildWebsiteSection(Size screenSize) {
+    return Padding(
+      padding: EdgeInsets.all(screenSize.width * 0.04),
+      child: Container(
+        padding: EdgeInsets.all(screenSize.width * 0.04),
+        decoration: BoxDecoration(
+          color: Colors.grey[700],
+          borderRadius: BorderRadius.circular(screenSize.width * 0.04),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Website',
+              style: TextStyle(
+                fontSize: screenSize.width * 0.05,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: screenSize.height * 0.01),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.link),
+                  color: Colors.white,
+                  iconSize: screenSize.width * 0.1,
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  BottomNavigationBar _buildBottomNavigationBar(BuildContext context) {
+    return BottomNavigationBar(
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.group),
+          label: 'Groups',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.event),
+          label: 'Events',
+        ),
+      ],
+      onTap: (index) {
+        switch (index) {
+          case 0:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
+            break;
+          case 1:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const GroupsScreen()),
+            );
+            break;
+          case 2:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const EventsScreen()),
+            );
+            break;
+        }
+      },
     );
   }
 }
 
-class ProfileBanner extends StatelessWidget {
-  const ProfileBanner({super.key});
+class SocialMedia {
+  final IconData icon;
+  final Color color;
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 250,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color.fromARGB(255, 145, 248, 148),
-            Color.fromARGB(255, 255, 255, 255),
-          ],
-        ),
-      ),
-      child: Stack(
-        children: [
-          const Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 48.0),
-              child: Text(
-                'Vidya NGO',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: Text(
-                'Location: Mumbai',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[700],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  SocialMedia(this.icon, this.color);
 }

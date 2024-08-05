@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   final List<String> _titles = [
-    'Socials',
+    'Bharat Socials',
     'NGO Broadcast Page',
     'Registered Events Page',
   ];
@@ -54,14 +54,15 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_titles[_currentIndex]),
-        titleTextStyle: TextStyle(color: Colors.black, fontSize: 25.0),
+        titleTextStyle: TextStyle(
+            color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
         backgroundColor: Color(0xFFCDEBF7),
         centerTitle: true,
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1),
+          preferredSize: Size.fromHeight(1.0),
           child: Container(
-            color: Colors.black,
-            height: 1,
+            height: 1.0,
+            color: Color.fromRGBO(0, 0, 0, 0.683),
           ),
         ),
       ),
