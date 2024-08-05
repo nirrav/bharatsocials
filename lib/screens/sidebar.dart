@@ -1,13 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-// import 'badges.dart';
+import 'package:bharatsocials/screens/login-signup/login_popup.dart';
 import 'settings.dart';
 import 'profile.dart';
-// import 'stats.dart';
 
 class Sidebar extends StatelessWidget {
-  const Sidebar({super.key, required Color backgroundColor});
+  final Color backgroundColor;
+
+  const Sidebar({super.key, required this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +33,7 @@ class Sidebar extends StatelessWidget {
                     child: Icon(Icons.person, size: 60.0),
                   ),
                   decoration: BoxDecoration(
-                    color:
-                        Color(0xFFCDEBF7), // Change this to your desired color
+                    color: Color(0xFFCDEBF7),
                   ),
                 ),
                 ListTile(
@@ -41,7 +41,7 @@ class Sidebar extends StatelessWidget {
                     children: [
                       Icon(Icons.person),
                       Text(
-                        '   View Profile',
+                        ' View Profile',
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 18,
@@ -56,13 +56,13 @@ class Sidebar extends StatelessWidget {
                     );
                   },
                 ),
-                Divider(color: Color.fromARGB(68, 0, 0, 0)), // Add a divider
+                Divider(color: Color.fromARGB(68, 0, 0, 0)),
                 ListTile(
                   title: Row(
                     children: [
                       Icon(Icons.settings),
                       Text(
-                        '   Settings',
+                        ' Settings',
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 18,
@@ -78,7 +78,7 @@ class Sidebar extends StatelessWidget {
                     );
                   },
                 ),
-                Divider(color: Color.fromARGB(68, 0, 0, 0)), // Add a divider
+                Divider(color: Color.fromARGB(68, 0, 0, 0)),
                 ListTile(
                   title: Row(
                     children: [
@@ -87,7 +87,7 @@ class Sidebar extends StatelessWidget {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: '   Badges',
+                              text: ' Badges',
                               style: TextStyle(
                                 color: Colors.grey[600],
                                 fontSize: 18,
@@ -105,9 +105,9 @@ class Sidebar extends StatelessWidget {
                       ),
                     ],
                   ),
-                  enabled: false, // Make it non-tappable
+                  enabled: false,
                 ),
-                Divider(color: Color.fromARGB(68, 0, 0, 0)), // Add a divider
+                Divider(color: Color.fromARGB(68, 0, 0, 0)),
                 ListTile(
                   title: Row(
                     children: [
@@ -116,7 +116,7 @@ class Sidebar extends StatelessWidget {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: '   Statistics',
+                              text: ' Statistics',
                               style: TextStyle(
                                 color: Colors.grey[600],
                                 fontSize: 18,
@@ -134,19 +134,59 @@ class Sidebar extends StatelessWidget {
                       ),
                     ],
                   ),
-                  enabled: false, // Make it non-tappable
+                  enabled: false,
                 ),
-                Divider(color: Color.fromARGB(68, 0, 0, 0)), // Add a divider
+                Divider(color: Color.fromARGB(68, 0, 0, 0)),
               ],
             ),
           ),
+          ListTile(
+            tileColor: Colors.green,
+            title: Row(
+              children: [
+                Icon(Icons.login, color: Colors.white),
+                SizedBox(width: 8),
+                Text(
+                  'Login',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+              ],
+            ),
+            onTap: () {
+              Navigator.pop(context); // Close the drawer
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginPage(
+                    onLoginStatusChanged: (bool isLoggedIn) {
+                      if (isLoggedIn) {
+                        Navigator.pop(context); // Close the LoginPage
+                        // Optionally redirect to a specific screen
+                        // Navigator.pushReplacement(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => SomeOtherScreen(),
+                        //   ),
+                        // );
+                      }
+                    },
+                  ),
+                ),
+              );
+            },
+          ),
+          Divider(color: Color.fromARGB(68, 0, 0, 0)),
           ListTile(
             tileColor: Colors.red,
             title: Row(
               children: [
                 Icon(Icons.logout, color: Colors.white),
                 Text(
-                  '   Logout',
+                  ' Logout',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -169,7 +209,7 @@ class Sidebar extends StatelessWidget {
                 ),
               ),
             ),
-            enabled: false, // Make it non-tappable
+            enabled: false,
           ),
         ],
       ),
