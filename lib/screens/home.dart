@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentPage = 0;
   final int bannerCount = 4;
   final bool _isLoggedIn =
-      true; // VARIABLE TO CHECK IF USER HAS LOGGED IN OR NO
+      false; // VARIABLE TO CHECK IF USER HAS LOGGED IN OR NO
 
   late List<String> bannerImages;
   List<String> events = [

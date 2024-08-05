@@ -78,6 +78,7 @@ More Info:
         ),
         backgroundColor: Color(0xFFCDEBF7),
         elevation: 0, // Remove shadow for a cleaner look
+        centerTitle: true, // Add this line to center the title
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0), // Height of the border
           child: Container(

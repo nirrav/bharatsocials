@@ -82,8 +82,8 @@ class NgoProfileScreen extends StatelessWidget {
             height: screenSize.height * 0.3,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                    'assets/appbackground.png'), // replace with your image
+                image:
+                    AssetImage('assets/nature.jpg'), // replace with your image
                 fit: BoxFit.cover,
               ),
               // gradient: LinearGradient(
@@ -107,11 +107,11 @@ class NgoProfileScreen extends StatelessWidget {
         ),
         Positioned(
           bottom: -screenSize.height * 0.08,
-          left: screenSize.width * 0.03,
+          left: screenSize.width * 0.5 - 75,
           child: CircleAvatar(
-            radius: 95,
+            radius: 75,
             backgroundImage: AssetImage(imagePath),
-            backgroundColor: Color.fromARGB(97, 68, 255, 21),
+            backgroundColor: Color.fromARGB(255, 68, 229, 235),
             onBackgroundImageError: (_, __) {},
           ),
         ),
