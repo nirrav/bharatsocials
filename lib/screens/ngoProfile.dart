@@ -96,7 +96,7 @@ class NgoProfileScreen extends StatelessWidget {
         ),
         Positioned(
           bottom: -screenSize.height * 0.08,
-          left: screenSize.width * 0.03,
+          left: screenSize.width * 0.5 - 75,
           child: CircleAvatar(
             radius: 75,
             backgroundImage: AssetImage(imagePath),
