@@ -1,3 +1,4 @@
+import 'package:bharatsocials/login/register.dart';
 import 'package:bharatsocials/ngos/ngoDashboard.dart';
 import 'package:bharatsocials/volunteers/volDashboard.dart';
 import 'package:flutter/material.dart';
@@ -179,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
       // If no role or an unknown role is passed, show a placeholder or error
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Placeholder()),
+        MaterialPageRoute(builder: (context) => RegistrationPage()),
       );
     }
   }

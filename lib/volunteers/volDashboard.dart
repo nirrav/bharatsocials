@@ -1,36 +1,49 @@
+// lib/screens/volunteer_dashboard.dart
+
 import 'package:bharatsocials/colors.dart';
+import 'package:bharatsocials/common_widgets/event_card.dart';
+import 'package:bharatsocials/common_widgets/upcoming_events_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class VolunteerDashboard extends StatelessWidget {
+class VolunteerDashboard extends StatefulWidget {
   const VolunteerDashboard({super.key});
+
+  @override
+  _VolunteerDashboardState createState() => _VolunteerDashboardState();
+}
+
+class _VolunteerDashboardState extends State<VolunteerDashboard> {
+  int _selectedIndex = 0; // Tracking the selected index
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.getBackgroundColor(
-          context), // Dynamic background color based on theme
+      backgroundColor: AppColors.getBackgroundColor(context),
       appBar: AppBar(
-        backgroundColor:
-            AppColors.getButtonColor(context), // Dynamic AppBar color
+        backgroundColor: AppColors.getButtonColor(context),
+        centerTitle: true, // Centering the title in the AppBar
         title: Text(
-          'Dashboard',
+          'Vol Dashboard',
           style: GoogleFonts.poppins(
             fontSize: 20,
-            color: AppColors.getButtonTextColor(
-                context), // Dynamic text color for title
+            color: AppColors.getButtonTextColor(context),
           ),
         ),
         actions: [
           IconButton(
             icon: FaIcon(
               FontAwesomeIcons.bell,
-              color:
-                  AppColors.getButtonTextColor(context), // Dynamic icon color
+              color: AppColors.getButtonTextColor(context),
             ),
             onPressed: () {
-              // Handle notification icon press
               print("Notification icon pressed");
             },
           ),
@@ -38,10 +51,9 @@ class VolunteerDashboard extends StatelessWidget {
         leading: IconButton(
           icon: FaIcon(
             FontAwesomeIcons.bars,
-            color: AppColors.getButtonTextColor(context), // Dynamic icon color
+            color: AppColors.getButtonTextColor(context),
           ),
           onPressed: () {
-            // Handle menu icon press
             print("Menu icon pressed");
           },
         ),
@@ -52,149 +64,135 @@ class VolunteerDashboard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Upcoming Events',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  color: AppColors.getTextColor(
-                      context), // Dynamic text color for section title
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Upcoming Events',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      color: AppColors.getTextColor(context),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      // Navigate to AllEventsPage when View All is tapped
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AllEventsPage(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'View All...',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 8),
-              _buildEventList(
-                  context), // Horizontal ListView for upcoming events
+              _buildEventList(context), // Show top 4 events here
               SizedBox(height: 16),
-              Text(
-                'Attended Events',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  color: AppColors.getTextColor(
-                      context), // Dynamic text color for section title
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Attended Events',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      color: AppColors.getTextColor(context),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      print("View All... Attended Events tapped");
+                    },
+                    child: Text(
+                      'View All...',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 8),
-              _buildEventList(
-                  context), // Horizontal ListView for attended events
+              _buildEventList(context),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor:
-            AppColors.getButtonColor(context), // Dynamic BottomNavBar color
-        items: [
-          BottomNavigationBarItem(
-            icon: FaIcon(
-              FontAwesomeIcons.house,
-              color:
-                  AppColors.getButtonTextColor(context), // Dynamic icon color
-            ),
-            label: 'Home',
+      bottomNavigationBar: BottomAppBar(
+        color: AppColors.getButtonColor(context),
+        elevation: 8, // Adding elevation for modern effect
+        shape: CircularNotchedRectangle(), // Optional: rounded corners
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 48.0, vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildNavItem(
+                icon: FontAwesomeIcons.house,
+                index: 0,
+              ),
+              _buildNavItem(
+                icon: FontAwesomeIcons.bookmark,
+                index: 1,
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: FaIcon(
-              FontAwesomeIcons.bookmark,
-              color:
-                  AppColors.getButtonTextColor(context), // Dynamic icon color
-            ),
-            label: 'Bookmarks',
+        ),
+      ),
+    );
+  }
+
+  // Helper method to build the navigation item (without text)
+  Widget _buildNavItem({
+    required IconData icon,
+    required int index,
+  }) {
+    bool isSelected = _selectedIndex == index;
+    return GestureDetector(
+      onTap: () => _onItemTapped(index),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FaIcon(
+            icon,
+            color: isSelected
+                ? AppColors.getButtonTextColor(context)
+                : AppColors.getButtonTextColor(context).withOpacity(0.6),
+            size: 28, // Increased size for a modern look
           ),
         ],
       ),
     );
   }
 
+  // Build the horizontal list for events (showing top 4 events here)
   Widget _buildEventList(BuildContext context) {
     return Container(
       height: 200,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 4,
+        itemCount: 4, // Show only top 4 events
         itemBuilder: (context, index) {
-          return _buildEventCard(context); // Each event card
+          return EventCard(
+            eventName: 'Dummy Event Name $index', // Example event name
+            eventDate: '14th December 2024', // Example date
+            eventLocation: 'Borivali', // Example location
+            onViewMore: () {
+              print("View More button pressed for Event $index");
+            },
+          ); // Using the EventCard widget
         },
-      ),
-    );
-  }
-
-  Widget _buildEventCard(BuildContext context) {
-    // Use dynamic button color from AppColors
-    final buttonColor = AppColors.getButtonColor(context);
-
-    return Container(
-      width: 200,
-      margin: const EdgeInsets.only(right: 16),
-      decoration: BoxDecoration(
-        color: const Color(
-            0xFFD9D9D9), // Static grey background for the event card
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 4,
-            offset: Offset(2, 2),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Name: Dummy Event Name',
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: AppColors.getButtonTextColor(
-                    context), // Dynamic text color for event name
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Date: 14th December 2024',
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: AppColors.getButtonTextColor(
-                    context), // Dynamic text color for date
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Location: Borivali',
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: AppColors.getButtonTextColor(
-                    context), // Dynamic text color for location
-              ),
-            ),
-            Spacer(),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Handle "View More" button press
-                  print("View More button pressed");
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      buttonColor, // Dynamic background color for button
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: Text(
-                  'View More',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: AppColors.getButtonTextColor(
-                        context), // Dynamic text color for button text
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
