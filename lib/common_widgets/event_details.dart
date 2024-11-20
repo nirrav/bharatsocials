@@ -40,9 +40,9 @@ class EventDetailsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildEventDetailsBox(context),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildPurposeBox(context, 'Purpose Of Event'),
-              SizedBox(height: 30), // Extra space before buttons
+              const SizedBox(height: 30), // Extra space before buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -52,7 +52,7 @@ class EventDetailsPage extends StatelessWidget {
                     color: Colors.green,
                     onPressed: () {
                       // Handle Interested action
-                      Placeholder();
+                      const Placeholder();
                     },
                   ),
                   _buildActionButton(
@@ -61,7 +61,7 @@ class EventDetailsPage extends StatelessWidget {
                     color: Colors.red,
                     onPressed: () {
                       // Handle Not Interested action
-                      Placeholder();
+                      const Placeholder();
                     },
                   ),
                 ],
@@ -81,7 +81,7 @@ class EventDetailsPage extends StatelessWidget {
         color: Colors.grey[200], // Lighter grey for a softer look
         borderRadius:
             BorderRadius.circular(12), // Rounded corners for a more modern feel
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black26,
             blurRadius: 6,
@@ -93,9 +93,9 @@ class EventDetailsPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildInfoRow(context, 'Event Name:', 'Volunteer Meet'),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           _buildInfoRow(context, 'Date:', '14th December 2024'),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           _buildInfoRow(context, 'Location:', 'Borivali'),
         ],
       ),
@@ -112,7 +112,7 @@ class EventDetailsPage extends StatelessWidget {
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w500, // Medium weight for readability
-            color: AppColors.getTextColor(context),
+            color: Colors.black,
           ),
         ),
         Text(
@@ -120,7 +120,7 @@ class EventDetailsPage extends StatelessWidget {
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w400, // Regular weight for description
-            color: AppColors.getTextColor(context),
+            color: Colors.black,
           ),
         ),
       ],
@@ -134,7 +134,7 @@ class EventDetailsPage extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black26,
             blurRadius: 6,
@@ -150,16 +150,16 @@ class EventDetailsPage extends StatelessWidget {
             style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w600, // Bold for title
-              color: AppColors.getTextColor(context),
+              color: Colors.black,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             'This event aims to gather volunteers to discuss and plan upcoming community service activities. Your participation will make a difference!',
             style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w400, // Regular weight for description
-              color: AppColors.getTextColor(context),
+              color: Colors.black,
             ),
           ),
         ],

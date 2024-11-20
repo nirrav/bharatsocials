@@ -4,7 +4,7 @@ class DotIndicator extends StatelessWidget {
   final bool isActive;
   final bool isDarkMode;
 
-  const DotIndicator({required this.isActive, required this.isDarkMode});
+  const DotIndicator({super.key, required this.isActive, required this.isDarkMode});
 
   @override
   Widget build(BuildContext context) {

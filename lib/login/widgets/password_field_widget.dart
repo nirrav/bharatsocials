@@ -11,7 +11,7 @@ class PasswordFieldWidget extends StatelessWidget {
   final String passwordStrength; // Added to pass the strength value
   final ValueChanged<String> onPasswordChanged; // Callback for password change
 
-  const PasswordFieldWidget({
+  const PasswordFieldWidget({super.key, 
     required this.label,
     required this.isDarkMode,
     required this.controller,

@@ -1,0 +1,162 @@
+{
+  "project_info": {
+    "project_number": "1084015809711",
+    "project_id": "bharatsocials-52908",
+    "storage_bucket": "bharatsocials-52908.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1084015809711:android:08982f3dd0428ffdb5305a",
+        "android_client_info": {
+          "package_name": "com.bharatsocials.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1084015809711-968flqslqbgd0v29urbh8j4b7ehfqabe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkZr7aS7HiAseDOrAjVifqKbKrbe0heFU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1084015809711-968flqslqbgd0v29urbh8j4b7ehfqabe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1084015809711-nvj11b7ide76fnv7rs1e2vm3jcqunvtj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.newbharatsocial"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1084015809711:android:6803b2748c55795eb5305a",
+        "android_client_info": {
+          "package_name": "com.example.bharatsocials"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1084015809711-odnvdgtcprpjmg2oo9dcbjfb9r2e7aeo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bharatsocials",
+            "certificate_hash": "b7f196214d537b1d2784943a26277ea5cf314bd7"
+          }
+        },
+        {
+          "client_id": "1084015809711-968flqslqbgd0v29urbh8j4b7ehfqabe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkZr7aS7HiAseDOrAjVifqKbKrbe0heFU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1084015809711-968flqslqbgd0v29urbh8j4b7ehfqabe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1084015809711-nvj11b7ide76fnv7rs1e2vm3jcqunvtj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.newbharatsocial"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1084015809711:android:856ab9be865b1c2ab5305a",
+        "android_client_info": {
+          "package_name": "com.example.fcm_notification_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1084015809711-968flqslqbgd0v29urbh8j4b7ehfqabe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkZr7aS7HiAseDOrAjVifqKbKrbe0heFU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1084015809711-968flqslqbgd0v29urbh8j4b7ehfqabe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1084015809711-nvj11b7ide76fnv7rs1e2vm3jcqunvtj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.newbharatsocial"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1084015809711:android:9c43cc4c11b1806bb5305a",
+        "android_client_info": {
+          "package_name": "com.newbharatsocial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1084015809711-968flqslqbgd0v29urbh8j4b7ehfqabe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkZr7aS7HiAseDOrAjVifqKbKrbe0heFU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1084015809711-968flqslqbgd0v29urbh8j4b7ehfqabe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1084015809711-nvj11b7ide76fnv7rs1e2vm3jcqunvtj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.newbharatsocial"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

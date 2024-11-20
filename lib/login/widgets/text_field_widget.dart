@@ -5,9 +5,9 @@ class TextFieldWidget extends StatelessWidget {
   final String label;
   final TextEditingController controller; // The controller for the text field
 
-  const TextFieldWidget({
+  const TextFieldWidget({super.key, 
     required this.label,
-    required this.controller, required bool isDarkMode,
+    required this.controller, required bool isDarkMode, 
   });
 
   @override

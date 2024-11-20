@@ -1,8 +1,26 @@
-import 'package:bharatsocials/login/home.dart';
+import 'dart:io';
+import 'package:bharatsocials/firebase_options.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart'; // Import for Google Fonts
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:bharatsocials/splashScreen.dart';
+import 'package:bharatsocials/notifications.dart'; // Import notifications.dart
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Register background message handler
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+  // Initialize local notifications
+  await initializeLocalNotifications();
+
   runApp(const MyApp());
 }
 
@@ -19,7 +37,6 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white, // Light mode background color
         textTheme: TextTheme(
           bodyLarge: GoogleFonts.poppins(
-            // Apply Poppins Medium font style for light mode text
             color: Colors.black,
             fontWeight: FontWeight.w500, // Medium weight
             fontSize: 16,
@@ -33,7 +50,6 @@ class MyApp extends StatelessWidget {
             const Color(0xFF333333), // Charcoal gray background for dark mode
         textTheme: TextTheme(
           bodyLarge: GoogleFonts.poppins(
-            // Apply Poppins Medium font style for dark mode text
             color: Colors.white,
             fontWeight: FontWeight.w500, // Medium weight
             fontSize: 16,
@@ -43,8 +59,34 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode
           .system, // Auto-switch between light/dark based on system theme
-      home:
-          const HomePage(), // Placeholder for now, you can replace it with your home screen later
+      home: SplashScreen(),
     );
+  }
+}
+
+Future<void> initializeLocalNotifications() async {
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+  // Create a default notification channel for Android 8.0+ devices
+  if (Platform.isAndroid) {
+    final AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'default_channel', // Channel ID
+      'Default Notifications', // Channel name
+      description:
+          'This is the default notification channel for app notifications',
+      importance: Importance.high,
+      playSound: true,
+    );
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
   }
 }

@@ -7,7 +7,7 @@ class SubmitButtonWidget extends StatelessWidget {
   final VoidCallback onSubmit;
   final String selectedRole; // Add selectedRole as a parameter
 
-  const SubmitButtonWidget({
+  const SubmitButtonWidget({super.key, 
     required this.isTermsAgreed,
     required this.onSubmit,
     required this.selectedRole, // Receive the role
@@ -41,7 +41,7 @@ class SubmitButtonWidget extends StatelessWidget {
             : null, // Only disable functionality, not color
         style: ElevatedButton.styleFrom(
           backgroundColor: buttonColor, // Color remains consistent
-          padding: EdgeInsets.symmetric(vertical: 13), // Adjusted padding
+          padding: const EdgeInsets.symmetric(vertical: 13), // Adjusted padding
           elevation: 4,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(13),

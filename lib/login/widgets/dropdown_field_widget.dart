@@ -4,7 +4,7 @@ class DropdownFieldWidget extends StatelessWidget {
   final String label;
   final bool isDarkMode;
 
-  const DropdownFieldWidget({required this.label, required this.isDarkMode});
+  const DropdownFieldWidget({super.key, required this.label, required this.isDarkMode});
 
   @override
   Widget build(BuildContext context) {

@@ -20,7 +20,7 @@ class LoginButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: buttonColor, // Color remains consistent
-          padding: EdgeInsets.symmetric(vertical: 13), // Adjusted padding
+          padding: const EdgeInsets.symmetric(vertical: 13), // Adjusted padding
           elevation: 4,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(13),

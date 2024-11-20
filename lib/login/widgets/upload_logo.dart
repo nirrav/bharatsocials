@@ -3,25 +3,21 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart'; // Import the image picker package
 
-class UploadButtonWidget extends StatefulWidget {
+class UploadLogoButtonWidget extends StatefulWidget {
   final String label;
   final bool isDarkMode;
 
-  const UploadButtonWidget(
-      {super.key,
-      required this.label,
-      required this.isDarkMode,
-      required void Function() onTap,
-      });
+  const UploadLogoButtonWidget(
+      {super.key, required this.label, required this.isDarkMode});
 
   @override
-  _UploadButtonWidgetState createState() => _UploadButtonWidgetState();
+  _UploadLogoButtonWidgetState createState() => _UploadLogoButtonWidgetState();
 }
 
-class _UploadButtonWidgetState extends State<UploadButtonWidget> {
+class _UploadLogoButtonWidgetState extends State<UploadLogoButtonWidget> {
   XFile? _image; // Variable to hold the selected image
 
-  // Function to pick an image
+  // Function to pick an image (logo)
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
 
@@ -62,7 +58,7 @@ class _UploadButtonWidgetState extends State<UploadButtonWidget> {
             ),
           ),
           const SizedBox(height: 10),
-          // If an image is selected, show a thumbnail of the image
+          // If an image is selected, show a thumbnail of the image (logo)
           if (_image != null)
             Image.file(
               File(_image!.path),

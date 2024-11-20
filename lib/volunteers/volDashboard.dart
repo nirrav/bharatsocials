@@ -84,7 +84,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                         ),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'View All...',
                       style: TextStyle(
                         color: Colors.blue,
@@ -95,9 +95,9 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                   ),
                 ],
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               _buildEventList(context), // Show top 4 events here
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -112,7 +112,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                     onTap: () {
                       print("View All... Attended Events tapped");
                     },
-                    child: Text(
+                    child: const Text(
                       'View All...',
                       style: TextStyle(
                         color: Colors.blue,
@@ -123,7 +123,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                   ),
                 ],
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               _buildEventList(context),
             ],
           ),
@@ -132,7 +132,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
       bottomNavigationBar: BottomAppBar(
         color: AppColors.getButtonColor(context),
         elevation: 8, // Adding elevation for modern effect
-        shape: CircularNotchedRectangle(), // Optional: rounded corners
+        shape: const CircularNotchedRectangle(), // Optional: rounded corners
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 48.0, vertical: 8),
           child: Row(
@@ -178,7 +178,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
 
   // Build the horizontal list for events (showing top 4 events here)
   Widget _buildEventList(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 200,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,

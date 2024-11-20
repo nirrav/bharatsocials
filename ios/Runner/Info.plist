@@ -3,6 +3,8 @@
 <plist version="1.0">
 	<dict>
 		<key>NSPhotoLibraryUsageDescription</key>
+		<string>We need access to your photo library to select an image.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
 		<string>We need access to your photo library to upload images.</string>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>

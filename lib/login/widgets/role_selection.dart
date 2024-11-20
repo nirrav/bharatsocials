@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 class RoleSelectionDialog extends StatelessWidget {
   final Function(String) onRoleSelected; // Callback to return the selected role
 
-  const RoleSelectionDialog({required this.onRoleSelected});
+  const RoleSelectionDialog({super.key, required this.onRoleSelected});
 
   @override
   Widget build(BuildContext context) {
