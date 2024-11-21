@@ -1,11 +1,12 @@
-// lib/screens/volunteer_dashboard.dart
-
-import 'package:bharatsocials/colors.dart';
-import 'package:bharatsocials/common_widgets/event_card.dart';
-import 'package:bharatsocials/common_widgets/upcoming_events_page.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:bharatsocials/volunteers/sidebar.dart';
+import 'package:bharatsocials/volunteers/NotiPage.dart';
+import 'package:bharatsocials/volunteers/savedPage.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:bharatsocials/common_widgets/event_details.dart';
+import 'package:bharatsocials/common_widgets/event_card.dart' as commonWidgets;
 
 class VolunteerDashboard extends StatefulWidget {
   const VolunteerDashboard({super.key});
@@ -21,6 +22,16 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
     setState(() {
       _selectedIndex = index;
     });
+
+    if (index == 1) {
+      // Navigate to the SavedPage when the saved icon is tapped
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SavedEventsPage(),
+        ),
+      );
+    }
   }
 
   @override
@@ -29,7 +40,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
       backgroundColor: AppColors.getBackgroundColor(context),
       appBar: AppBar(
         backgroundColor: AppColors.getButtonColor(context),
-        centerTitle: true, // Centering the title in the AppBar
+        centerTitle: true,
         title: Text(
           'Vol Dashboard',
           style: GoogleFonts.poppins(
@@ -44,20 +55,26 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
               color: AppColors.getButtonTextColor(context),
             ),
             onPressed: () {
-              print("Notification icon pressed");
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationPage()),
+              );
+            },
+          )
+        ],
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: FaIcon(
+              FontAwesomeIcons.bars,
+              color: AppColors.getButtonTextColor(context),
+            ),
+            onPressed: () {
+              Scaffold.of(context).openDrawer(); // Open the sidebar
             },
           ),
-        ],
-        leading: IconButton(
-          icon: FaIcon(
-            FontAwesomeIcons.bars,
-            color: AppColors.getButtonTextColor(context),
-          ),
-          onPressed: () {
-            print("Menu icon pressed");
-          },
         ),
       ),
+      drawer: const Sidebar(), // Adding the sidebar
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -76,11 +93,10 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Navigate to AllEventsPage when View All is tapped
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const AllEventsPage(),
+                          builder: (context) => const EventDetailsPage(),
                         ),
                       );
                     },
@@ -96,7 +112,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                 ],
               ),
               const SizedBox(height: 8),
-              _buildEventList(context), // Show top 4 events here
+              _buildEventList(context),
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,10 +147,10 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
       ),
       bottomNavigationBar: BottomAppBar(
         color: AppColors.getButtonColor(context),
-        elevation: 8, // Adding elevation for modern effect
-        shape: const CircularNotchedRectangle(), // Optional: rounded corners
+        elevation: 8,
+        shape: const CircularNotchedRectangle(),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 48.0, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 80.0, vertical: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -153,7 +169,6 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
     );
   }
 
-  // Helper method to build the navigation item (without text)
   Widget _buildNavItem({
     required IconData icon,
     required int index,
@@ -169,29 +184,25 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
             color: isSelected
                 ? AppColors.getButtonTextColor(context)
                 : AppColors.getButtonTextColor(context).withOpacity(0.6),
-            size: 28, // Increased size for a modern look
+            size: 28,
           ),
         ],
       ),
     );
   }
 
-  // Build the horizontal list for events (showing top 4 events here)
   Widget _buildEventList(BuildContext context) {
     return SizedBox(
       height: 200,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 4, // Show only top 4 events
+        itemCount: 4,
         itemBuilder: (context, index) {
-          return EventCard(
-            eventName: 'Dummy Event Name $index', // Example event name
-            eventDate: '14th December 2024', // Example date
-            eventLocation: 'Borivali', // Example location
-            onViewMore: () {
-              print("View More button pressed for Event $index");
-            },
-          ); // Using the EventCard widget
+          return commonWidgets.EventCard(
+            eventName: 'Dummy Event Name $index',
+            eventDate: '14th December 2024',
+            eventLocation: 'Borivali',
+          );
         },
       ),
     );

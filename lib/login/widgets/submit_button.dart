@@ -1,16 +1,17 @@
-import 'package:bharatsocials/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bharatsocials/colors.dart'; // Import AppColors
+
 class SubmitButtonWidget extends StatelessWidget {
   final bool isTermsAgreed;
-  final VoidCallback onSubmit;
+  final VoidCallback onSubmit; // Define the onSubmit callback
   final String selectedRole; // Add selectedRole as a parameter
 
-  const SubmitButtonWidget({super.key, 
+  const SubmitButtonWidget({
+    super.key,
     required this.isTermsAgreed,
     required this.onSubmit,
-    required this.selectedRole, // Receive the role
+    required this.selectedRole,
   });
 
   @override
@@ -25,19 +26,7 @@ class SubmitButtonWidget extends StatelessWidget {
       width: double.infinity, // Take full width for the button
       child: ElevatedButton(
         onPressed: isTermsAgreed
-            ? () {
-                // Call the onSubmit function
-                onSubmit();
-
-                // Navigate to the LoginPage with the selected role
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(
-                        userRole: selectedRole), // Pass the selected role
-                  ),
-                );
-              }
+            ? onSubmit // Use the passed onSubmit function
             : null, // Only disable functionality, not color
         style: ElevatedButton.styleFrom(
           backgroundColor: buttonColor, // Color remains consistent

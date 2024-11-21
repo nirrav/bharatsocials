@@ -43,6 +43,8 @@ dependencies:
   permission_handler:
   flutter_local_notifications:
   firebase_analytics:
+  shared_preferences:
+  table_calendar:
 
 dev_dependencies:
   flutter_test:

@@ -10,7 +10,7 @@ class PermissionHelper {
       // If denied, ask the user to allow permission
       print('Permission denied. Requesting again...');
       await Future.delayed(
-          Duration(seconds: 2)); // Small delay before re-requesting
+          const Duration(seconds: 2)); // Small delay before re-requesting
       status = await Permission.storage.request();
     }
 

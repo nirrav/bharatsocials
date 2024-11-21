@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:bharatsocials/login/admin_register.dart';
-import 'package:bharatsocials/login/home.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:bharatsocials/login/login.dart';
 import 'package:bharatsocials/login/widgets/dot_indicator.dart';
@@ -26,7 +25,7 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  // Controllers for the input fields
+// Declare controllers for all the fields
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
@@ -38,6 +37,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
   TextEditingController collegeNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
 
+// Controllers for NGO form
+  TextEditingController organizationNameController = TextEditingController();
+  TextEditingController contactNumberController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+
   String passwordStrength = "";
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
@@ -46,9 +50,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   String selectedRole = '';
   File? _image; // Variable to hold the selected image
-
   @override
   void dispose() {
+    // Dispose all controllers
     passwordController.dispose();
     confirmPasswordController.dispose();
     firstNameController.dispose();
@@ -59,7 +63,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
     departmentController.dispose();
     collegeNameController.dispose();
     emailController.dispose();
+    organizationNameController.dispose();
+    contactNumberController.dispose();
+    cityController.dispose();
+
     super.dispose();
+  }
+
+  // Function to handle the image selected in the UploadButtonWidget
+  void _onImageSelected(File? image) {
+    setState(() {
+      _image = image; // Update the selected image
+    });
   }
 
   // Password strength checking logic
@@ -166,9 +181,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.02),
-                    if (selectedRole == 'Volunteer')
+                    if (selectedRole == 'volunteer')
                       _buildVolunteerForm(isDarkMode),
-                    if (selectedRole == 'NGO') _buildNgoForm(isDarkMode),
+                    if (selectedRole == 'ngo') _buildNgoForm(isDarkMode),
                     PasswordFieldWidget(
                       label: 'Create A Password',
                       isDarkMode: isDarkMode,
@@ -201,11 +216,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       onPasswordChanged: (value) {},
                     ),
                     UploadButtonWidget(
-                      label: selectedRole == 'NGO'
+                      label: selectedRole == 'ngo'
                           ? 'Proof Of Identity (Upload Government ID)'
                           : 'Proof Of Identity (Upload ID Card)',
                       isDarkMode: isDarkMode,
-                      onTap: _pickImage,
+                      onImageSelected: _onImageSelected, // Pass callback here
                     ),
                     Row(
                       children: [
@@ -242,8 +257,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     SizedBox(height: screenHeight * 0.05),
                     SubmitButtonWidget(
                       isTermsAgreed: _isTermsAgreed,
-                      onSubmit: _onSubmit,
                       selectedRole: selectedRole,
+                      onSubmit: _onSubmit, // Pass the _onSubmit function here
                     ),
                     const SizedBox(height: 20),
                   ],
@@ -277,6 +292,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
       return;
     }
 
+    // Check if proof of identity (image) is provided
+    if (_image == null) {
+      _showErrorSnackbar('Please upload a proof of identity.');
+      return;
+    }
+
     // Check form validity
     if (!_isFormValid()) {
       _showErrorSnackbar('Please fill all required fields correctly.');
@@ -298,19 +319,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
       // Image upload to Firebase Storage
       String imageUrl = '';
       if (_image != null) {
-        print("Starting image upload...");
-
         String fileName = '${DateTime.now().millisecondsSinceEpoch}.png';
         try {
-          print("Uploading image with file name: $fileName");
           UploadTask uploadTask = FirebaseStorage.instance
               .ref('${selectedRole.toLowerCase()}s/$fileName')
               .putFile(_image!);
-
-          uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
-            print(
-                'Upload progress: ${snapshot.bytesTransferred}/${snapshot.totalBytes}');
-          });
 
           TaskSnapshot snapshot = await uploadTask;
           imageUrl = await snapshot.ref.getDownloadURL();
@@ -320,45 +333,53 @@ class _RegistrationPageState extends State<RegistrationPage> {
           _showErrorSnackbar('Error uploading image.');
           return;
         }
-      } else {
-        print("No image selected. Skipping image upload.");
       }
 
       // Firestore data save
       Map<String, dynamic> userData = {
-        'first_name': firstNameController.text,
-        'middle_name': middleNameController.text,
-        'last_name': lastNameController.text,
         'email': emailController.text,
-        'phone': phoneNoController.text,
-        'role': selectedRole,
         'image': imageUrl,
         'isVerified': false,
         'fcmToken': fcmToken, // Store the FCM token
       };
 
-      if (selectedRole == 'Volunteer') {
+      // Store user data based on the role
+      if (selectedRole == 'volunteer') {
         userData.addAll({
+          'first_name': firstNameController.text,
+          'middle_name': middleNameController.text,
+          'last_name': lastNameController.text,
+          'phone': phoneNoController.text,
           'roll_no': rollNoController.text,
           'department': departmentController.text,
           'college_name': collegeNameController.text,
         });
         await FirebaseFirestore.instance.collection('volunteers').add(userData);
-      } else if (selectedRole == 'NGO') {
+      } else if (selectedRole == 'ngo') {
         userData.addAll({
-          'organization_name':
-              firstNameController.text, // Organization name for NGOs
-          'contact_number': phoneNoController.text, // Contact number for NGOs
-          'city': collegeNameController.text, // City for NGOs
+          'organization_name': organizationNameController.text,
+          'contact_number': contactNumberController.text,
+          'city': cityController.text,
         });
         await FirebaseFirestore.instance.collection('ngos').add(userData);
       }
 
-      // Navigate to the next page only after successful data saving
+      // Navigate to the Login Page first
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const LoginPage(userRole: 'role')),
+        MaterialPageRoute(
+            builder: (_) => const LoginPage(
+              )), // Adjust the LoginPage constructor if necessary
       );
+
+      // After a short delay, show the Snackbar
+      Future.delayed(const Duration(seconds: 1), () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content:
+                  Text("You've registered successfully. Now, please login.")),
+        );
+      });
 
       // Clear all the form fields after successful submission
       _clearFormFields();
@@ -391,6 +412,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
     passwordController.clear();
     confirmPasswordController.clear();
 
+    // Reset NGO form fields
+    organizationNameController.clear();
+    contactNumberController.clear();
+    cityController.clear();
+
     // Reset other fields
     setState(() {
       _isTermsAgreed = false; // Uncheck the terms and conditions checkbox
@@ -402,23 +428,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   bool _isFormValid() {
-    // Common validation for all roles
-    if (firstNameController.text.isEmpty) {
-      print("First name is empty.");
-      return false;
-    }
-
-    // Skip last name validation if the selected role is 'NGO'
-    if (selectedRole != 'NGO' && lastNameController.text.isEmpty) {
-      print("Last name is empty.");
-      return false;
-    }
-
-    if (phoneNoController.text.isEmpty) {
-      print("Phone number is empty.");
-      return false;
-    }
-
     if (emailController.text.isEmpty) {
       print("Email is empty.");
       return false;
@@ -440,7 +449,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
     }
 
     // Role-specific validation
-    if (selectedRole == 'Volunteer') {
+    if (selectedRole == 'volunteer') {
+      // Volunteer specific validation
+      if (firstNameController.text.isEmpty) {
+        print("First name is empty for Volunteer.");
+        return false;
+      }
+      if (lastNameController.text.isEmpty) {
+        print("Last name is empty for Volunteer.");
+        return false;
+      }
       if (rollNoController.text.isEmpty) {
         print("Roll number is empty for Volunteer.");
         return false;
@@ -455,13 +473,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
       }
     }
 
-    if (selectedRole == 'NGO') {
-      if (collegeNameController.text.isEmpty) {
-        print("City is empty for NGO.");
+    if (selectedRole == 'ngo') {
+      // NGO specific validation
+      if (organizationNameController.text.isEmpty) {
+        print("Organization name is empty for NGO.");
         return false;
       }
-      if (firstNameController.text.isEmpty) {
-        print("Organization name is empty for NGO.");
+      if (contactNumberController.text.isEmpty) {
+        print("Contact number is empty for NGO.");
+        return false;
+      }
+      if (cityController.text.isEmpty) {
+        print("City is empty for NGO.");
         return false;
       }
     }
@@ -538,7 +561,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       children: [
         TextFieldWidget(
           label: 'Organization Name',
-          controller: firstNameController,
+          controller: organizationNameController,
           isDarkMode: isDarkMode,
         ),
         TextFieldWidget(
@@ -548,12 +571,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ),
         TextFieldWidget(
           label: 'Contact Number',
-          controller: phoneNoController,
+          controller: contactNumberController,
           isDarkMode: isDarkMode,
         ),
         TextFieldWidget(
           label: 'City',
-          controller: collegeNameController,
+          controller: cityController,
           isDarkMode: isDarkMode,
         ),
       ],

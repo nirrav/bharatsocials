@@ -1,18 +1,18 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart'; // Import the image picker package
 
 class UploadButtonWidget extends StatefulWidget {
   final String label;
   final bool isDarkMode;
+  final Function(File?) onImageSelected; // Callback function to send image back
 
-  const UploadButtonWidget(
-      {super.key,
-      required this.label,
-      required this.isDarkMode,
-      required void Function() onTap,
-      });
+  const UploadButtonWidget({
+    super.key,
+    required this.label,
+    required this.isDarkMode,
+    required this.onImageSelected, // Pass the callback here
+  });
 
   @override
   _UploadButtonWidgetState createState() => _UploadButtonWidgetState();
@@ -35,6 +35,9 @@ class _UploadButtonWidgetState extends State<UploadButtonWidget> {
       setState(() {
         _image = pickedImage; // Update the state with the picked image
       });
+      print("Image selected: ${pickedImage.name}"); // Print the image filename
+      widget.onImageSelected(
+          File(pickedImage.path)); // Pass the image back to parent widget
     }
   }
 

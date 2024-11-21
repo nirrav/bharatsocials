@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bharatsocials/colors.dart'; // Import AppColors
+// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class EventDetailsPage extends StatelessWidget {
   const EventDetailsPage({super.key});
@@ -40,27 +40,27 @@ class EventDetailsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildEventDetailsBox(context),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               _buildPurposeBox(context, 'Purpose Of Event'),
-              const SizedBox(height: 30), // Extra space before buttons
+              SizedBox(height: 30), // Extra space before buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildActionButton(
-                    context,
-                    text: 'Interested',
-                    color: Colors.green,
-                    onPressed: () {
-                      // Handle Interested action
-                      const Placeholder();
-                    },
-                  ),
                   _buildActionButton(
                     context,
                     text: 'Not Interested',
                     color: Colors.red,
                     onPressed: () {
                       // Handle Not Interested action
+                      const Placeholder();
+                    },
+                  ),
+                  _buildActionButton(
+                    context,
+                    text: 'Interested',
+                    color: Colors.green,
+                    onPressed: () {
+                      // Handle Interested action
                       const Placeholder();
                     },
                   ),
@@ -81,9 +81,9 @@ class EventDetailsPage extends StatelessWidget {
         color: Colors.grey[200], // Lighter grey for a softer look
         borderRadius:
             BorderRadius.circular(12), // Rounded corners for a more modern feel
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Colors.black26,
+            color: Colors.black,
             blurRadius: 6,
             offset: Offset(0, 2),
           ),
@@ -93,9 +93,9 @@ class EventDetailsPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildInfoRow(context, 'Event Name:', 'Volunteer Meet'),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           _buildInfoRow(context, 'Date:', '14th December 2024'),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           _buildInfoRow(context, 'Location:', 'Borivali'),
         ],
       ),
@@ -112,7 +112,7 @@ class EventDetailsPage extends StatelessWidget {
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w500, // Medium weight for readability
-            color: Colors.black,
+            color: Colors.black, // Set text color to black
           ),
         ),
         Text(
@@ -120,7 +120,7 @@ class EventDetailsPage extends StatelessWidget {
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w400, // Regular weight for description
-            color: Colors.black,
+            color: Colors.black, // Set text color to black
           ),
         ),
       ],
@@ -134,9 +134,9 @@ class EventDetailsPage extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(12),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Colors.black26,
+            color: Colors.black,
             blurRadius: 6,
             offset: Offset(0, 2),
           ),
@@ -150,16 +150,16 @@ class EventDetailsPage extends StatelessWidget {
             style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w600, // Bold for title
-              color: Colors.black,
+              color: Colors.black, // Set text color to black
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'This event aims to gather volunteers to discuss and plan upcoming community service activities. Your participation will make a difference!',
             style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w400, // Regular weight for description
-              color: Colors.black,
+              color: Colors.black, // Set text color to black
             ),
           ),
         ],

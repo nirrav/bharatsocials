@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:bharatsocials/ngos/CreateEvent.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bharatsocials/ngos/Sidebar.dart'; // Import the sidebar file
 import 'package:bharatsocials/volunteers/NotiPage.dart'; // Import Notification Page
 import 'package:bharatsocials/ngos/boardcastChannel.dart'; // Import BroadcastChannelScreen
-import 'package:bharatsocials/ngos/CreateEvent.dart';
 
 
 
-class NgoDashboard extends StatefulWidget {
+class CaDashboardScreen extends StatefulWidget {
   @override
-  _DashboardScreenState createState() => _DashboardScreenState();
+  _CaDashboardScreenState createState() => _CaDashboardScreenState();
 }
 
-class _DashboardScreenState extends State<NgoDashboard> {
+class _CaDashboardScreenState extends State<CaDashboardScreen> {
   // Variable to track selected tab
   int _selectedIndex = 0;
 
@@ -55,7 +55,7 @@ class _DashboardScreenState extends State<NgoDashboard> {
           mainAxisAlignment: MainAxisAlignment.center, // Center the title
           children: [
             Text(
-              'NGO Dashboard',
+              'Dashboard',
               style: TextStyle(color: Colors.black),
             ),
           ],
@@ -115,16 +115,16 @@ class _DashboardScreenState extends State<NgoDashboard> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
-        onPressed: () { 
-         Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MyCustomForm()),
-          ); 
-        }, // Add functionality for FAB
-        child: Icon(Icons.add, color: Colors.black),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: Colors.white,
+      //   onPressed: () {
+      //    Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => MyCustomForm()),
+      //     );
+      //   }, // Add functionality for FAB
+      //   child: Icon(Icons.add, color: Colors.black),
+      // ),
     );
   }
 

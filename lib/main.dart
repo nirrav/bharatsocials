@@ -68,7 +68,7 @@ Future<void> initializeLocalNotifications() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
 
-  final InitializationSettings initializationSettings = InitializationSettings(
+  final InitializationSettings initializationSettings = const InitializationSettings(
     android: initializationSettingsAndroid,
   );
 
@@ -76,7 +76,7 @@ Future<void> initializeLocalNotifications() async {
 
   // Create a default notification channel for Android 8.0+ devices
   if (Platform.isAndroid) {
-    final AndroidNotificationChannel channel = AndroidNotificationChannel(
+    final AndroidNotificationChannel channel = const AndroidNotificationChannel(
       'default_channel', // Channel ID
       'Default Notifications', // Channel name
       description:

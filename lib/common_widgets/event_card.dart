@@ -1,7 +1,7 @@
-import 'package:bharatsocials/colors.dart';
-import 'package:bharatsocials/common_widgets/event_details.dart';
 import 'package:flutter/material.dart';
+import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:bharatsocials/common_widgets/event_details.dart';
 
 class EventCard extends StatelessWidget {
   final String eventName;
@@ -9,11 +9,11 @@ class EventCard extends StatelessWidget {
   final String eventLocation;
 
   const EventCard({
-    super.key,
+    Key? key,
     required this.eventName,
     required this.eventDate,
-    required this.eventLocation, required Null Function() onViewMore,
-  });
+    required this.eventLocation,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class EventCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFD9D9D9), // Grey background for the event card
         borderRadius: BorderRadius.circular(8),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
             color: Colors.black26,
             blurRadius: 4,
@@ -45,7 +45,7 @@ class EventCard extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               'Date: $eventDate',
               style: GoogleFonts.poppins(
@@ -53,7 +53,7 @@ class EventCard extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               'Location: $eventLocation',
               style: GoogleFonts.poppins(
@@ -61,7 +61,7 @@ class EventCard extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            const Spacer(),
+            Spacer(),
             Align(
               alignment: Alignment.bottomRight,
               child: ElevatedButton(
@@ -69,13 +69,13 @@ class EventCard extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const EventDetailsPage(),
+                      builder: (context) => EventDetailsPage(),
                     ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: buttonColor,
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),

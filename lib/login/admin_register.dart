@@ -1,4 +1,5 @@
 import 'package:bharatsocials/login/home.dart';
+import 'package:bharatsocials/login/login.dart';
 import 'package:bharatsocials/login/widgets/upload_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +15,8 @@ import 'dart:io'; // For File handling
 import 'package:image_picker/image_picker.dart'; // For Image picking
 
 class AdminRegisterPage extends StatefulWidget {
+  const AdminRegisterPage({super.key});
+
   @override
   _AdminRegisterPageState createState() => _AdminRegisterPageState();
 }
@@ -29,11 +32,12 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
   TextEditingController confirmPasswordController = TextEditingController();
 
   bool _isTermsAgreed = false;
-  String selectedRole = 'College Admin'; // Default role
+  String selectedRole = 'college'; // Default role
   bool _isPasswordVisible = false; // Manage password visibility
   bool _isConfirmPasswordVisible = false; // Manage confirm password visibility
   String passwordStrength = 'weak'; // Default password strength
   File? _identityProof; // To hold the identity proof image
+  File? _image; // Variable to hold the selected image
 
   @override
   void dispose() {
@@ -45,6 +49,13 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
     passwordController.dispose();
     confirmPasswordController.dispose();
     super.dispose();
+  }
+
+// Function to handle the image selected in the UploadButtonWidget
+  void _onImageSelected(File? image) {
+    setState(() {
+      _image = image; // Update the selected image
+    });
   }
 
   // Password strength check
@@ -65,26 +76,33 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
     });
   }
 
-  // Method for image picker (Proof of Identity)
-  Future<void> _pickImage() async {
+  void _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
     if (pickedFile != null) {
       setState(() {
-        _identityProof = File(pickedFile.path);
+        _image = File(pickedFile.path);
       });
+      print("Image picked: Path: ${_image?.path}");
+    } else {
+      print("No image selected from gallery.");
     }
   }
 
-  // Submit method for saving data to Firestore
   Future<void> _onSubmit() async {
+    // Check if proof of identity (image) is provided
+    if (_image == null) {
+      _showErrorSnackbar('Please upload a proof of identity.');
+      return;
+    }
     // Validate fields
     if (adminNameController.text.isEmpty ||
         adminEmailController.text.isEmpty ||
         passwordController.text.isEmpty ||
         confirmPasswordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please fill in all required fields.")),
+        const SnackBar(content: Text("Please fill in all required fields.")),
       );
       return;
     }
@@ -92,7 +110,7 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
     // Check if password and confirm password match
     if (passwordController.text != confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Passwords do not match.")),
+        const SnackBar(content: Text("Passwords do not match.")),
       );
       return;
     }
@@ -100,7 +118,7 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
     // Check password strength
     if (passwordStrength == 'weak') {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Password is too weak.")),
+        const SnackBar(content: Text("Password is too weak.")),
       );
       return;
     }
@@ -113,16 +131,23 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
         password: passwordController.text.trim(),
       );
 
-      // Upload Proof of Identity (if exists) to Firebase Storage
-      String? fileUrl;
-      if (_identityProof != null) {
-        // Upload image to Firebase Storage
-        Reference storageReference = FirebaseStorage.instance
-            .ref()
-            .child('proof_of_identity/${userCredential.user!.uid}');
-        UploadTask uploadTask = storageReference.putFile(_identityProof!);
-        TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => {});
-        fileUrl = await taskSnapshot.ref.getDownloadURL(); // Get download URL
+      // Image upload to Firebase Storage
+      String imageUrl = '';
+      if (_image != null) {
+        String fileName = '${DateTime.now().millisecondsSinceEpoch}.png';
+        try {
+          UploadTask uploadTask = FirebaseStorage.instance
+              .ref('${selectedRole.toLowerCase()}s/$fileName')
+              .putFile(_image!);
+
+          TaskSnapshot snapshot = await uploadTask;
+          imageUrl = await snapshot.ref.getDownloadURL();
+          print("Image uploaded successfully. Download URL: $imageUrl");
+        } catch (e) {
+          print("Error during image upload: $e");
+          _showErrorSnackbar('Error uploading image.');
+          return;
+        }
       }
 
       // Create the data map to be sent to Firestore
@@ -130,16 +155,16 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
         'admin_name': adminNameController.text.trim(),
         'admin_email': adminEmailController.text.trim(),
         'admin_phone': adminPhoneController.text.trim(),
-        'role': 'admin',
+        'role': 'admin', // Always set to admin
         'admin_role': selectedRole,
         'isVerified': false,
-        'profile_picture': fileUrl, // Add the image URL from Firebase Storage
+        'image': imageUrl,
       };
 
-      // Add college or university-specific data based on the selected role
-      if (selectedRole == 'College Admin') {
+      // Add role-specific data
+      if (selectedRole == 'college') {
         adminData['college_name'] = collegeFieldController.text.trim();
-      } else if (selectedRole == 'University Admin') {
+      } else if (selectedRole == 'uni') {
         adminData['university_name'] = universityFieldController.text.trim();
       }
 
@@ -147,13 +172,22 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
       await FirebaseFirestore.instance.collection('admins').add(adminData);
       print("Admin registered successfully");
 
-      // Navigate to HomePage after successful registration
+      // Navigate to the Login Page first
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => HomePage(),
-        ),
+          builder: (context) => const LoginPage(),
+        ), // Assuming LoginPage is your login screen
       );
+
+      // After a short delay, show the Snackbar
+      Future.delayed(const Duration(seconds: 1), () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content:
+                  Text("You've registered successfully. Now, please login.")),
+        );
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: $e")),
@@ -177,7 +211,7 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(),
+            builder: (context) => const HomePage(),
           ),
         );
         return false;
@@ -187,13 +221,13 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: screenHeight * 0.12),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -239,7 +273,7 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
                           children: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: selectedRole == 'College Admin'
+                                backgroundColor: selectedRole == 'college'
                                     ? buttonColor
                                     : Colors.grey,
                                 shape: RoundedRectangleBorder(
@@ -248,7 +282,7 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
                               ),
                               onPressed: () {
                                 setState(() {
-                                  selectedRole = 'College Admin';
+                                  selectedRole = 'college';
                                 });
                               },
                               child: Text(
@@ -259,20 +293,19 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
                                 ),
                               ),
                             ),
-                            SizedBox(width: 20),
+                            const SizedBox(width: 20),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    selectedRole == 'University Admin'
-                                        ? buttonColor
-                                        : Colors.grey,
+                                backgroundColor: selectedRole == 'uni'
+                                    ? buttonColor
+                                    : Colors.grey,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(13),
                                 ),
                               ),
                               onPressed: () {
                                 setState(() {
-                                  selectedRole = 'University Admin';
+                                  selectedRole = 'uni';
                                 });
                               },
                               child: Text(
@@ -289,7 +322,7 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
 
                         // Admin-specific fields
                         TextFieldWidget(
-                          label: 'First Name',
+                          label: 'Full Name',
                           controller: adminNameController,
                           isDarkMode: isDarkMode,
                         ),
@@ -333,14 +366,14 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
                           onPasswordChanged: (_) {},
                         ),
 
-                        if (selectedRole == 'College Admin') ...[
+                        if (selectedRole == 'college') ...[
                           TextFieldWidget(
                             label: 'College Name',
                             controller: collegeFieldController,
                             isDarkMode: isDarkMode,
                           ),
                         ],
-                        if (selectedRole == 'University Admin') ...[
+                        if (selectedRole == 'uni') ...[
                           TextFieldWidget(
                             label: 'University Name',
                             controller: universityFieldController,
@@ -348,13 +381,16 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
                           ),
                         ],
 
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
 
                         // Upload Proof Of Identity
                         UploadButtonWidget(
-                          label: 'Proof Of Identity (Upload ID Card)',
+                          label: selectedRole == 'NGO'
+                              ? 'Proof Of Identity (Upload Government ID)'
+                              : 'Proof Of Identity (Upload ID Card)',
                           isDarkMode: isDarkMode,
-                          onTap: _pickImage,
+                          onImageSelected:
+                              _onImageSelected, // Pass callback here
                         ),
 
                         // Terms and Conditions checkbox
@@ -397,10 +433,10 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
                         SizedBox(height: screenHeight * 0.05),
                         SubmitButtonWidget(
                           isTermsAgreed: _isTermsAgreed,
-                          onSubmit: _onSubmit,
                           selectedRole: selectedRole,
+                          onSubmit: _onSubmit,
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),
@@ -411,6 +447,11 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
         ),
       ),
     );
+  }
+
+  void _showErrorSnackbar(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   // Helper method to create a connecting line

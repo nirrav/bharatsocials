@@ -1,5 +1,5 @@
-// colors.dart
 import 'package:flutter/material.dart';
+// colors.dart
 
 class AppColors {
   static Color getBackgroundColor(BuildContext context) {
@@ -12,6 +12,11 @@ class AppColors {
     return isDarkMode ? Colors.white : Colors.black;
   }
 
+  static Color getDefaultTextColor(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return isDarkMode ? Colors.black : Colors.white;
+  }
+
   static Color getButtonColor(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return isDarkMode ? Colors.white : Colors.black;
@@ -20,6 +25,11 @@ class AppColors {
   static Color getButtonTextColor(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return isDarkMode ? Colors.black : Colors.white;
+  }
+
+  static Color getCardTextColor(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return isDarkMode ? Colors.white : Colors.black;
   }
 
   // Optional: Define other colors (e.g., dot colors, line colors)

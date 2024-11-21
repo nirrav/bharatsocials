@@ -1,19 +1,23 @@
+import 'package:bharatsocials/admins/CollegeAdmin/caDashboard.dart';
+import 'package:bharatsocials/admins/UniAdmin/uniDashboard.dart';
 import 'package:bharatsocials/login/home.dart';
-import 'package:bharatsocials/login/register.dart';
 import 'package:bharatsocials/ngos/ngoDashboard.dart';
 import 'package:bharatsocials/volunteers/volDashboard.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bharatsocials/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
 import 'widgets/text_field_widget.dart';
 import 'widgets/password_field_widget.dart';
 import 'widgets/dot_indicator.dart';
 import 'widgets/login_button.dart';
+import 'userData.dart'; // Import the UserData class to use it
 
 class LoginPage extends StatefulWidget {
-  final String userRole; // Add a field to store the role
-
-  const LoginPage({super.key, required this.userRole});
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -23,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  UserData? _currentUser;
 
   @override
   void dispose() {
@@ -45,14 +50,12 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: backgroundColor,
       body: WillPopScope(
-        // Wrap the Scaffold with WillPopScope to handle back press
         onWillPop: () async {
-          // Handle back navigation and send the user to HomePage
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const HomePage()),
           );
-          return false; // Prevent the default back navigation
+          return false;
         },
         child: SafeArea(
           child: SingleChildScrollView(
@@ -148,15 +151,10 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _onSubmit() {
-    // Print the user role passed from the RegistrationPage
-    print("User Role: ${widget.userRole}");
+  void _onSubmit() async {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
 
-    // Proceed with login logic
-    String email = emailController.text;
-    String password = passwordController.text;
-
-    // Validate email and password (basic validation example)
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter both email and password')),
@@ -164,33 +162,91 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    // Simulate login logic (this can be replaced with real authentication)
-    print("Login Submitted");
+    try {
+      // Sign in with email and password
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
 
-    // Navigate based on the user role
-    if (widget.userRole == 'Volunteer') {
-      // Navigate to Volunteer Dashboard
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const VolunteerDashboard()),
-      );
-    } else if (widget.userRole == 'NGO') {
-      // Navigate to NGO Dashboard
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const NGODashboard()),
-      );
-    } else if (widget.userRole == 'Admin') {
-      // Navigate to Admin Dashboard (or placeholder for Admin)
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Placeholder()),
-      );
-    } else {
-      // If no role or an unknown role is passed, show a placeholder or error
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const RegistrationPage()),
+      // Store the login state in SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+      await prefs.setString('email', email);
+
+      QuerySnapshot snapshot;
+      String userRole = '';
+
+      // Query for volunteer
+      snapshot = await FirebaseFirestore.instance
+          .collection('volunteers')
+          .where('email', isEqualTo: email)
+          .get();
+      if (snapshot.docs.isNotEmpty) {
+        userRole = 'volunteer';
+      }
+
+      // Query for NGO
+      if (snapshot.docs.isEmpty) {
+        snapshot = await FirebaseFirestore.instance
+            .collection('ngos')
+            .where('email', isEqualTo: email)
+            .get();
+        if (snapshot.docs.isNotEmpty) {
+          userRole = 'ngo';
+        }
+      }
+
+      // Query for admin
+      if (snapshot.docs.isEmpty) {
+        snapshot = await FirebaseFirestore.instance
+            .collection('admins')
+            .where('email', isEqualTo: email)
+            .get();
+        if (snapshot.docs.isNotEmpty) {
+          userRole = 'admin';
+        }
+      }
+
+      // Check if user exists
+      if (snapshot.docs.isNotEmpty) {
+        DocumentSnapshot userDoc = snapshot.docs.first;
+
+        // Save document ID and role in SharedPreferences
+        await prefs.setString('userDocId', userDoc.id);
+        await prefs.setString('userRole', userRole);
+
+        // Redirect to respective dashboard
+        if (userRole == 'volunteer') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => VolunteerDashboard()),
+          );
+        } else if (userRole == 'ngo') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => NgoDashboard()),
+          );
+        } else if (userRole == 'admin') {
+          String adminRole = userDoc['role'] ?? '';
+          if (adminRole == 'uni') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => UniDashboard()),
+            );
+          } else if (adminRole == 'college') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => CaDashboardScreen()),
+            );
+          }
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('User not found!')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
       );
     }
   }
