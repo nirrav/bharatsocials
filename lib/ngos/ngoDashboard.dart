@@ -1,11 +1,11 @@
+import 'package:bharatsocials/login/userData.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:bharatsocials/ngos/Sidebar.dart'; // Import the sidebar file
-import 'package:bharatsocials/volunteers/NotiPage.dart'; // Import Notification Page
-import 'package:bharatsocials/ngos/boardcastChannel.dart'; // Import BroadcastChannelScreen
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bharatsocials/ngos/Sidebar.dart';
+import 'package:bharatsocials/volunteers/NotiPage.dart';
+import 'package:bharatsocials/ngos/boardcastChannel.dart';
 import 'package:bharatsocials/ngos/CreateEvent.dart';
-
-
+import 'package:intl/intl.dart'; // To format the event date
 
 class NgoDashboard extends StatefulWidget {
   @override
@@ -13,16 +13,43 @@ class NgoDashboard extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<NgoDashboard> {
-  // Variable to track selected tab
   int _selectedIndex = 0;
+  List<DocumentSnapshot> _events = [];
 
-  // Pages to show based on selected index
-  final List<Widget> _pages = [
-    // Home Page (Placeholder for now)
-    Scaffold(body: Center(child: Text('Home Page'))),
-    // Notifications Page (NotiPage)
-    NotificationPage(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _fetchUpcomingEvents();
+  }
+
+  // Fetch upcoming events from Firestore based on the current user
+  Future<void> _fetchUpcomingEvents() async {
+    if (GlobalUser.currentUser == null) {
+      // Handle the case where there is no current user
+      return;
+    }
+
+    final currentUser = GlobalUser.currentUser!;
+
+    // Get today's date in timestamp format
+    DateTime now = DateTime.now();
+    Timestamp timestampNow = Timestamp.fromDate(now);
+
+    // Fetch events from Firestore for the current NGO and with future dates
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('events')
+        .where('organizationName',
+            isEqualTo:
+                currentUser.organizationName) // Filter by the current NGO
+        .where('eventDateTime',
+            isGreaterThanOrEqualTo: timestampNow) // Only future events
+        .orderBy('eventDateTime') // Sort by event date
+        .get();
+
+    setState(() {
+      _events = querySnapshot.docs;
+    });
+  }
 
   // Function to handle BottomNavigationBar item taps
   void _onItemTapped(int index) {
@@ -30,9 +57,7 @@ class _DashboardScreenState extends State<NgoDashboard> {
       _selectedIndex = index;
     });
 
-    // Check if the bullhorn icon (index 1) is tapped
     if (index == 1) {
-      // Simulate the onPressed behavior for the bullhorn icon
       _navigateToBroadcastChannelScreen();
     }
   }
@@ -52,7 +77,7 @@ class _DashboardScreenState extends State<NgoDashboard> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Row(
-          mainAxisAlignment: MainAxisAlignment.center, // Center the title
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'NGO Dashboard',
@@ -61,11 +86,10 @@ class _DashboardScreenState extends State<NgoDashboard> {
           ],
         ),
         actions: [
-          // Announcement Icon, navigate to NotificationPage
           IconButton(
             icon: const Icon(
               Icons.notifications_active,
-              color: Colors.black, // Bullhorn icon color
+              color: Colors.black,
             ),
             onPressed: () {
               Navigator.push(
@@ -76,7 +100,7 @@ class _DashboardScreenState extends State<NgoDashboard> {
           ),
         ],
       ),
-      drawer: SlideBar(), // Use the SlideBar widget here
+      drawer: SlideBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -85,10 +109,10 @@ class _DashboardScreenState extends State<NgoDashboard> {
             // Upcoming Event Section
             _buildSectionHeader(context, title: 'Upcoming Event'),
             SizedBox(height: 8),
-            _buildHorizontalList(),
+            _buildUpcomingEventsList(),
             SizedBox(height: 16),
 
-            // Activity Section
+            // Activity Section (for other use)
             _buildSectionHeader(context, title: 'Activity'),
             SizedBox(height: 8),
             _buildHorizontalList(),
@@ -96,8 +120,8 @@ class _DashboardScreenState extends State<NgoDashboard> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex, // Handle tab selection
-        onTap: _onItemTapped, // Function to handle tab selection
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
         backgroundColor: Colors.white,
         showSelectedLabels: false,
         showUnselectedLabels: false,
@@ -107,22 +131,19 @@ class _DashboardScreenState extends State<NgoDashboard> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: FaIcon(
-              FontAwesomeIcons.bullhorn, // Bullhorn icon from FontAwesome
-              color: Colors.black,
-            ),
-            label: 'Announcements', // Updated label
+            icon: Icon(Icons.notifications, color: Colors.black),
+            label: 'Announcements',
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
-        onPressed: () { 
-         Navigator.push(
+        onPressed: () {
+          Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MyCustomForm()),
-          ); 
-        }, // Add functionality for FAB
+            MaterialPageRoute(builder: (context) => EventFormPage()),
+          );
+        },
         child: Icon(Icons.add, color: Colors.black),
       ),
     );
@@ -138,7 +159,13 @@ class _DashboardScreenState extends State<NgoDashboard> {
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
         GestureDetector(
-          onTap: () {}, // Add functionality here
+          onTap: () {
+            // Redirect to a separate page to view all upcoming events
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AllUpcomingEventsPage()),
+            );
+          },
           child: Text(
             'See More..',
             style: TextStyle(color: Colors.blue, fontSize: 14),
@@ -148,7 +175,87 @@ class _DashboardScreenState extends State<NgoDashboard> {
     );
   }
 
-  // Horizontal List Widget
+  // Display Upcoming Events
+  Widget _buildUpcomingEventsList() {
+    if (_events.isEmpty) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(
+          _events.length > 3
+              ? 3
+              : _events.length, // Show only the first 3 events
+          (index) {
+            final event = _events[index];
+            final eventDateTime =
+                (event['eventDateTime'] as Timestamp).toDate();
+            final eventDate = DateFormat('yyyy-MM-dd').format(eventDateTime);
+            final eventTime = DateFormat('HH:mm').format(eventDateTime);
+
+            return Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Container(
+                width: 250,
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      offset: Offset(2, 2),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      event['eventName'],
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 45, 45, 45),
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      '$eventDate at $eventTime',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      event['eventLocation'],
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(height: 8),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () {
+                        // Add functionality for viewing more details about the event
+                      },
+                      child: Text('View More'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  // Activity Section Widget (Other content)
   Widget _buildHorizontalList() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -173,29 +280,19 @@ class _DashboardScreenState extends State<NgoDashboard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Event Name',
+                  Text(
+                    'Activity $index',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color:
-                          Color.fromARGB(255, 45, 45, 45), // Updated text color
+                      color: Color.fromARGB(255, 45, 45, 45),
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  const Text(
-                    'Event Date',
-                    style: TextStyle(
-                      color: Colors.black, // Updated text color
-                    ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Description of Activity',
+                    style: TextStyle(color: Colors.black),
                   ),
-                  const SizedBox(height: 4),
-                  const Text(
-                    'Event Location',
-                    style: TextStyle(
-                      color: Colors.black, // Updated text color
-                    ),
-                  ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
@@ -204,14 +301,28 @@ class _DashboardScreenState extends State<NgoDashboard> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    onPressed: () {}, // Add functionality
-                    child: const Text('View More'),
+                    onPressed: () {},
+                    child: Text('View More'),
                   ),
                 ],
               ),
             ),
           );
         }),
+      ),
+    );
+  }
+}
+
+class AllUpcomingEventsPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("All Upcoming Events"),
+      ),
+      body: Center(
+        child: Text('List of all upcoming events will be shown here.'),
       ),
     );
   }

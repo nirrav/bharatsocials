@@ -18,8 +18,9 @@ class SubmitButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // Get the appropriate button and text color based on the current theme
     Color buttonColor =
-        AppColors.getButtonColor(context); // Default button color
-    Color buttonTextColor = AppColors.getButtonTextColor(context); // Text color
+        AppColors.mainButtonColor(context); // Default button color
+    Color buttonTextColor =
+        AppColors.mainButtonTextColor(context); // Text color
 
     return SizedBox(
       height: 60, // Increase the height to ensure the text fits comfortably

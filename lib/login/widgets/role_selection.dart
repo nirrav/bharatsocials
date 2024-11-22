@@ -1,5 +1,5 @@
-import 'package:bharatsocials/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RoleSelectionDialog extends StatelessWidget {
@@ -12,10 +12,10 @@ class RoleSelectionDialog extends StatelessWidget {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     // Use AppColors methods to get the correct colors for the current theme
-    Color backgroundColor = AppColors.getBackgroundColor(context);
-    Color textColor = AppColors.getTextColor(context);
-    Color buttonColor = AppColors.getButtonColor(context);
-    Color buttonTextColor = AppColors.getButtonTextColor(context);
+    Color backgroundColor = AppColors.appBgColor(context);
+    Color textColor = AppColors.defualtTextColor(context);
+    Color buttonColor = AppColors.mainButtonColor(context);
+    Color buttonTextColor = AppColors.mainButtonTextColor(context);
 
     return AlertDialog(
       backgroundColor: backgroundColor,

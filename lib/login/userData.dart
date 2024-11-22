@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UserData {
+  String documentId; // Field to store the document ID
   String email;
   String image;
   bool isVerified;
@@ -21,8 +23,9 @@ class UserData {
   String adminRole;
   String password; // Only for admin to manage registration
 
-  // Constructor for Volunteer and NGO
+  // Constructor for UserData
   UserData({
+    required this.documentId, // Include documentId as a required field
     required this.email,
     required this.image,
     required this.isVerified,
@@ -96,6 +99,7 @@ class UserData {
     var data = doc.data() as Map<String, dynamic>;
 
     return UserData(
+      documentId: doc.id, // Get the document ID from Firestore
       email: data['email'] ?? '',
       image: data['image'] ?? '',
       isVerified: data['isVerified'] ?? false,
@@ -118,6 +122,38 @@ class UserData {
     );
   }
 }
+
 class GlobalUser {
   static UserData? currentUser;
+}
+
+class UserDataService {
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // Fetch the current user's data from Firestore and update GlobalUser
+  Future<void> fetchCurrentUser() async {
+    try {
+      // Get the current user's UID from Firebase Authentication
+      User? user = _auth.currentUser;
+      if (user != null) {
+        // Use the UID to fetch the document from Firestore
+        DocumentSnapshot doc =
+            await _db.collection('users').doc(user.uid).get();
+
+        if (doc.exists) {
+          // Update GlobalUser with the fetched data
+          GlobalUser.currentUser = UserData.fromFirestore(doc);
+        } else {
+          // Handle the case where the user document is not found
+          print("User document not found in Firestore");
+        }
+      } else {
+        // Handle the case where the user is not logged in
+        print("No user is currently logged in");
+      }
+    } catch (e) {
+      print("Error fetching user data: $e");
+    }
+  }
 }

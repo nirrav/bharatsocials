@@ -1,7 +1,7 @@
-import 'package:bharatsocials/login/login.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
+import 'package:bharatsocials/login/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bharatsocials/volunteers/volDashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,10 +18,10 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get theme-dependent colors using the AppColors utility
-    Color backgroundColor = AppColors.getBackgroundColor(context);
-    Color textColor = AppColors.getTextColor(context);
-    Color buttonColor = AppColors.getButtonColor(context);
-    Color buttonTextColor = AppColors.getButtonTextColor(context);
+    Color backgroundColor = AppColors.appBgColor(context);
+    Color textColor = AppColors.defualtTextColor(context);
+    Color buttonColor = AppColors.mainButtonColor(context);
+    Color buttonTextColor = AppColors.mainButtonTextColor(context);
 
     // Get screen width and height for responsive design
     double screenWidth = MediaQuery.of(context).size.width;

@@ -1,5 +1,6 @@
-import 'package:bharatsocials/colors.dart';
+import 'package:bharatsocials/common_widgets/event_details.dart';
 import 'package:flutter/material.dart';
+import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AllEventsPage extends StatelessWidget {
@@ -7,7 +8,7 @@ class AllEventsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final buttonColor = AppColors.getButtonColor(context);
+    final buttonColor = AppColors.mainButtonColor(context);
 
     // EventCard Widget inside AllEventsPage
     Widget eventCard({
@@ -83,7 +84,7 @@ class AllEventsPage extends StatelessWidget {
                     'View More',
                     style: GoogleFonts.poppins(
                       fontSize: 14,
-                      color: AppColors.getButtonTextColor(context),
+                      color: AppColors.mainButtonTextColor(context),
                     ),
                   ),
                 ),
@@ -96,21 +97,30 @@ class AllEventsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.getButtonColor(context),
+        backgroundColor: AppColors.titleColor(context),
         title: Text(
           'All Events',
           style: GoogleFonts.poppins(
             fontSize: 20,
-            color: AppColors.getButtonTextColor(context),
+            color: AppColors.titleTextColor(context),
           ),
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          color: AppColors.getButtonTextColor(
+          color: AppColors.iconColor(
               context), // Set back arrow color to match button text color
           onPressed: () {
             Navigator.pop(context);
           },
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0), // Divider height
+          child: Divider(
+            color:
+                AppColors.dividerColor(context), // Divider color based on theme
+            thickness: 1,
+            height: 1,
+          ),
         ),
       ),
       body: Padding(
@@ -130,6 +140,14 @@ class AllEventsPage extends StatelessWidget {
               eventDate: '14th December 2024', // Example event date
               eventLocation: 'Location $index', // Example event location
               onViewMore: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        Placeholder(), // Pass the event data
+                  ),
+                );
+
                 print("View More button pressed for Event $index");
               },
             );

@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:bharatsocials/login/login.dart';
-import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'register.dart'; // Import the Register screen
 
@@ -10,10 +10,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get theme-dependent colors using the AppColors utility
-    Color backgroundColor = AppColors.getBackgroundColor(context);
-    Color textColor = AppColors.getTextColor(context);
-    Color buttonColor = AppColors.getButtonColor(context);
-    Color buttonTextColor = AppColors.getButtonTextColor(context);
+    Color backgroundColor = AppColors.appBgColor(context);
+    Color textColor = AppColors.defualtTextColor(context);
+    Color buttonColor = AppColors.mainButtonColor(context);
+    Color buttonTextColor = AppColors.mainButtonTextColor(context);
 
     // Get screen width and height for responsive design
     double screenWidth = MediaQuery.of(context).size.width;
@@ -150,8 +150,7 @@ class HomePage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const LoginPage(
-                                  )),
+                              builder: (context) => const LoginPage()),
                         );
                       },
                       child: Text(

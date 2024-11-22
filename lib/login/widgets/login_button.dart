@@ -10,8 +10,8 @@ class LoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get the appropriate button and text color based on the current theme
-    Color buttonColor = AppColors.getButtonColor(context);
-    Color buttonTextColor = AppColors.getButtonTextColor(context);
+    Color buttonColor = AppColors.mainButtonColor(context);
+    Color buttonTextColor = AppColors.mainButtonTextColor(context);
 
     return SizedBox(
       height: 60, // Increase the height to ensure the text fits comfortably

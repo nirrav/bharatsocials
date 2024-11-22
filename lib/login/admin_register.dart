@@ -1,18 +1,18 @@
+import 'dart:io'; // For File handling
+import 'package:flutter/material.dart';
+import 'package:bharatsocials/colors.dart';
 import 'package:bharatsocials/login/home.dart';
 import 'package:bharatsocials/login/login.dart';
-import 'package:bharatsocials/login/widgets/upload_button_widget.dart';
-import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:bharatsocials/colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bharatsocials/login/widgets/dot_indicator.dart';
 import 'package:bharatsocials/login/widgets/submit_button.dart';
 import 'package:bharatsocials/login/widgets/text_field_widget.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart'; // For Image picking
+import 'package:bharatsocials/login/widgets/upload_button_widget.dart';
 import 'package:bharatsocials/login/widgets/password_field_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 import 'package:firebase_storage/firebase_storage.dart'; // Import Firebase Storage
-import 'dart:io'; // For File handling
-import 'package:image_picker/image_picker.dart'; // For Image picking
 
 class AdminRegisterPage extends StatefulWidget {
   const AdminRegisterPage({super.key});
@@ -201,10 +201,10 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    Color backgroundColor = AppColors.getBackgroundColor(context);
-    Color textColor = AppColors.getTextColor(context);
-    Color buttonColor = AppColors.getButtonColor(context);
-    Color buttonTextColor = AppColors.getButtonTextColor(context);
+    Color backgroundColor = AppColors.appBgColor(context);
+    Color textColor = AppColors.defualtTextColor(context);
+    Color buttonColor = AppColors.mainButtonColor(context);
+    Color buttonTextColor = AppColors.mainButtonTextColor(context);
 
     return WillPopScope(
       onWillPop: () async {

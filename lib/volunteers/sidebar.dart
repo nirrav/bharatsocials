@@ -1,21 +1,27 @@
+import 'package:bharatsocials/login/userData.dart';
 import 'package:flutter/material.dart';
+import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bharatsocials/volunteers/settings.dart';
 import 'package:bharatsocials/volunteers/acheivement.dart';
 import 'package:bharatsocials/volunteers/viewProfile.dart';
 import 'package:bharatsocials/volunteers/attendedEvent.dart';
 
-class Sidebar extends StatelessWidget {
-  const Sidebar({Key? key}) : super(key: key);
+class VolunteerSidebar extends StatelessWidget {
+  const VolunteerSidebar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Ensure that you're using the color scheme from AppColors
+    Color defaultTextColor = AppColors.defualtTextColor(context);
+    Color iconColor = AppColors.iconColor(context);
+
     return Drawer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildDrawerHeader(),
-          const Divider(color: Colors.grey), // Divider for separation
+          _buildDrawerHeader(
+              context), // Pass context to the header for color use
           Expanded(
             child: ListView(
               padding: EdgeInsets.zero,
@@ -63,29 +69,47 @@ class Sidebar extends StatelessWidget {
   }
 
   // Drawer Header Widget
-  Widget _buildDrawerHeader() {
+  Widget _buildDrawerHeader(BuildContext context) {
+    String userName = 'User Name'; // Default username
+
+    // Check if the current user is a volunteer and use their first name if available
+    if (GlobalUser.currentUser?.role == 'volunteer') {
+      userName = GlobalUser.currentUser?.firstName ?? 'User Name';
+    }
+
+    // Get user image if available
+    String userImage = GlobalUser.currentUser?.image ?? '';
+
     return DrawerHeader(
-      decoration: const BoxDecoration(
-        color: Colors.black26, // Header background color
+      decoration: BoxDecoration(
+        color: AppColors.titleColor(context), // Use AppColors for background
       ),
       child: Row(
         children: [
-          const CircleAvatar(
+          // Profile Picture with fallback if not available
+          CircleAvatar(
             radius: 30,
-            backgroundColor: Colors.white,
-            child: Icon(
-              Icons.person,
-              size: 40,
-              color: Colors.black12, // Icon color
-            ),
+            backgroundColor: AppColors.appBgColor(context),
+            backgroundImage: userImage.isNotEmpty
+                ? NetworkImage(userImage)
+                : null, // Display image if available
+            child: userImage.isEmpty
+                ? const Icon(
+                    Icons.person,
+                    size: 40,
+                    color: Colors.black, // Icon color from AppColors
+                  )
+                : null, // Show default icon if no image available
           ),
           const SizedBox(width: 16),
+          // Display the first name or default username
           Text(
-            'User Name', // Placeholder for user name
+            userName, // Display the first name if the user is a volunteer
             style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.black, // Text color
+              color: AppColors.defualtTextColor(
+                  context), // Text color from AppColors
             ),
           ),
         ],
@@ -101,13 +125,17 @@ class Sidebar extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     return ListTile(
-      leading: Icon(icon, color: Colors.black), // Icon color
+      leading: Icon(
+        icon,
+        color: AppColors.iconColor(context), // Icon color from AppColors
+      ),
       title: Text(
         title,
         style: GoogleFonts.poppins(
           fontSize: 16,
           fontWeight: FontWeight.w500,
-          color: Colors.black // Text color
+          color:
+              AppColors.defualtTextColor(context), // Text color from AppColors
         ),
       ),
       onTap: onTap,

@@ -1,19 +1,21 @@
-import 'package:bharatsocials/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:bharatsocials/colors.dart';
 
 class TextFieldWidget extends StatelessWidget {
   final String label;
   final TextEditingController controller; // The controller for the text field
 
-  const TextFieldWidget({super.key, 
+  const TextFieldWidget({
+    super.key,
     required this.label,
-    required this.controller, required bool isDarkMode, 
+    required this.controller,
+    required bool isDarkMode,
   });
 
   @override
   Widget build(BuildContext context) {
     // Use AppColors methods to get the correct colors for the current theme
-    Color textColor = AppColors.getTextColor(context);
+    Color textColor = AppColors.defualtTextColor(context);
     Color borderColor =
         AppColors.getLineColor(context); // Use getLineColor for the border
 

@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bharatsocials/colors.dart'; // Import AppColors
-// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:bharatsocials/login/userData.dart'; // Import GlobalUser to get current user data
 
 class EventDetailsPage extends StatelessWidget {
-  const EventDetailsPage({super.key});
+  final Map<String, dynamic>
+      event; // This will hold the event details passed from the previous page
+
+  const EventDetailsPage({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = GlobalUser.currentUser;
+    final isNgo = currentUser?.role == 'ngo';
+
     return Scaffold(
-      backgroundColor: AppColors.getBackgroundColor(context),
+      backgroundColor: AppColors.appBgColor(context),
       appBar: AppBar(
-        backgroundColor: AppColors.getButtonColor(context),
+        backgroundColor: AppColors.appBgColor(context),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back, // Standard back arrow
-            color: AppColors.getButtonTextColor(context),
+            color: AppColors.iconColor(context),
           ),
           onPressed: () {
             Navigator.pop(context); // Go back to the previous screen
@@ -26,11 +32,20 @@ class EventDetailsPage extends StatelessWidget {
           style: GoogleFonts.poppins(
             fontSize: 20,
             fontWeight: FontWeight.w600, // Slightly bold for better visibility
-            color: AppColors.getButtonTextColor(context),
+            color: AppColors.titleTextColor(context),
           ),
         ),
         centerTitle: true, // Center the title in the AppBar
         elevation: 0, // No shadow on app bar for a cleaner look
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0), // Divider height
+          child: Divider(
+            color:
+                AppColors.dividerColor(context), // Divider color based on theme
+            thickness: 1,
+            height: 1,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -43,29 +58,30 @@ class EventDetailsPage extends StatelessWidget {
               SizedBox(height: 16),
               _buildPurposeBox(context, 'Purpose Of Event'),
               SizedBox(height: 30), // Extra space before buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildActionButton(
-                    context,
-                    text: 'Not Interested',
-                    color: Colors.red,
-                    onPressed: () {
-                      // Handle Not Interested action
-                      const Placeholder();
-                    },
-                  ),
-                  _buildActionButton(
-                    context,
-                    text: 'Interested',
-                    color: Colors.green,
-                    onPressed: () {
-                      // Handle Interested action
-                      const Placeholder();
-                    },
-                  ),
-                ],
-              ),
+              if (!isNgo) // Only show these buttons if the user is not an NGO
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildActionButton(
+                      context,
+                      text: 'Not Interested',
+                      color: Colors.red,
+                      onPressed: () {
+                        // Handle Not Interested action
+                        const Placeholder();
+                      },
+                    ),
+                    _buildActionButton(
+                      context,
+                      text: 'Interested',
+                      color: Colors.green,
+                      onPressed: () {
+                        // Handle Interested action
+                        const Placeholder();
+                      },
+                    ),
+                  ],
+                ),
             ],
           ),
         ),
@@ -78,9 +94,10 @@ class EventDetailsPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18.0),
       decoration: BoxDecoration(
-        color: Colors.grey[200], // Lighter grey for a softer look
+        color: AppColors.eventCardBgColor(
+            context), // Lighter grey for a softer look
         borderRadius:
-            BorderRadius.circular(12), // Rounded corners for a more modern feel
+            BorderRadius.circular(13), // Rounded corners for a more modern feel
         boxShadow: [
           BoxShadow(
             color: Colors.black,
@@ -92,11 +109,11 @@ class EventDetailsPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildInfoRow(context, 'Event Name:', 'Volunteer Meet'),
+          _buildInfoRow(context, 'Event Name:', event['eventName']),
           SizedBox(height: 8),
-          _buildInfoRow(context, 'Date:', '14th December 2024'),
+          _buildInfoRow(context, 'Date:', event['eventDate']),
           SizedBox(height: 8),
-          _buildInfoRow(context, 'Location:', 'Borivali'),
+          _buildInfoRow(context, 'Location:', event['eventLocation']),
         ],
       ),
     );
@@ -132,8 +149,9 @@ class EventDetailsPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18.0),
       decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.eventCardBgColor(
+            context), // Lighter grey for a softer look
+        borderRadius: BorderRadius.circular(13),
         boxShadow: [
           BoxShadow(
             color: Colors.black,

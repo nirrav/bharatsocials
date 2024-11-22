@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:bharatsocials/colors.dart'; // Import AppColors from a separate file
 import 'package:bharatsocials/admins/UniAdmin/ColName.dart';
+import 'package:bharatsocials/colors.dart'; // Import AppColors from a separate file
 
 class MyApp extends StatelessWidget {
   @override
@@ -15,10 +15,10 @@ class EventDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get theme-dependent colors using the AppColors utility
-    Color backgroundColor = AppColors.getBackgroundColor(context);
-    Color textColor = AppColors.getTextColor(context);
-    Color buttonColor = AppColors.getButtonColor(context);
-    Color buttonTextColor = AppColors.getButtonTextColor(context);
+    Color backgroundColor = AppColors.appBgColor(context);
+    Color textColor = AppColors.defualtTextColor(context);
+    Color buttonColor = AppColors.mainButtonColor(context);
+    Color buttonTextColor = AppColors.mainButtonTextColor(context);
 
     // Get screen width and height for responsive design
     double screenWidth = MediaQuery.of(context).size.width;
@@ -139,7 +139,7 @@ class EventDetailsScreen extends StatelessWidget {
         onPressed: () {
           // Handle add button press
         },
-        backgroundColor: AppColors.getBackgroundColor(context),
+        backgroundColor: AppColors.appBgColor(context),
         child: Icon(Icons.add, color: textColor),
       ),
     );

@@ -68,7 +68,8 @@ Future<void> initializeLocalNotifications() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
 
-  final InitializationSettings initializationSettings = const InitializationSettings(
+  final InitializationSettings initializationSettings =
+      const InitializationSettings(
     android: initializationSettingsAndroid,
   );
 

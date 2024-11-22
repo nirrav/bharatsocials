@@ -1,20 +1,20 @@
-import 'package:bharatsocials/admins/CollegeAdmin/caDashboard.dart';
-import 'package:bharatsocials/admins/UniAdmin/uniDashboard.dart';
+import 'widgets/login_button.dart';
+import 'widgets/dot_indicator.dart';
+import 'package:flutter/material.dart';
+import 'widgets/text_field_widget.dart';
+import 'package:bharatsocials/colors.dart';
+import 'widgets/password_field_widget.dart';
 import 'package:bharatsocials/login/home.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bharatsocials/ngos/ngoDashboard.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bharatsocials/volunteers/volDashboard.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:bharatsocials/colors.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
-import 'widgets/text_field_widget.dart';
-import 'widgets/password_field_widget.dart';
-import 'widgets/dot_indicator.dart';
-import 'widgets/login_button.dart';
 import 'userData.dart'; // Import the UserData class to use it
+import 'package:bharatsocials/admins/UniAdmin/uniDashboard.dart';
+import 'package:bharatsocials/admins/CollegeAdmin/caDashboard.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isLoading = false; // Add a state variable for loading
   UserData? _currentUser;
 
   @override
@@ -42,10 +43,11 @@ class _LoginPageState extends State<LoginPage> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    Color backgroundColor = AppColors.getBackgroundColor(context);
-    Color textColor = AppColors.getTextColor(context);
-    Color buttonColor = AppColors.getButtonColor(context);
-    Color buttonTextColor = AppColors.getButtonTextColor(context);
+    Color backgroundColor = AppColors.appBgColor(context);
+    Color textColor = AppColors.defualtTextColor(context);
+    Color buttonColor = AppColors.mainButtonColor(context);
+    Color subtext = AppColors.subTextColor(context);
+    Color buttonTextColor = AppColors.mainButtonTextColor(context);
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -130,15 +132,20 @@ class _LoginPageState extends State<LoginPage> {
                             'Forget Password?',
                             style: GoogleFonts.poppins(
                               fontSize: screenWidth > 600 ? 16 : 14,
-                              color: buttonColor,
+                              color: subtext,
                             ),
                           ),
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.05),
-                      LoginButton(
-                        onPressed: _onSubmit,
-                      ),
+                      _isLoading
+                          ? CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(buttonColor),
+                            ) // Show the loading spinner when _isLoading is true
+                          : LoginButton(
+                              onPressed: _onSubmit,
+                            ),
                       const SizedBox(height: 20),
                     ],
                   ),
@@ -152,10 +159,17 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _onSubmit() async {
+    setState(() {
+      _isLoading = true; // Start loading
+    });
+
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
+      setState(() {
+        _isLoading = false; // Stop loading
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter both email and password')),
       );
@@ -214,6 +228,10 @@ class _LoginPageState extends State<LoginPage> {
         await prefs.setString('userDocId', userDoc.id);
         await prefs.setString('userRole', userRole);
 
+        // Fetch user data and store it in GlobalUser.currentUser
+        UserData currentUser = UserData.fromFirestore(userDoc);
+        GlobalUser.currentUser = currentUser;
+
         // Redirect to respective dashboard
         if (userRole == 'volunteer') {
           Navigator.pushReplacement(
@@ -240,11 +258,17 @@ class _LoginPageState extends State<LoginPage> {
           }
         }
       } else {
+        setState(() {
+          _isLoading = false; // Stop loading on error
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('User not found!')),
         );
       }
     } catch (e) {
+      setState(() {
+        _isLoading = false; // Stop loading on error
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );

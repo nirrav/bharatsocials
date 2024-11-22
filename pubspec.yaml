@@ -45,6 +45,10 @@ dependencies:
   firebase_analytics:
   shared_preferences:
   table_calendar:
+  google_maps_flutter:
+  geocoding:
+  intl:
+  flutter_datetime_picker:
 
 dev_dependencies:
   flutter_test:

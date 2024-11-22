@@ -1,3 +1,4 @@
+import 'package:bharatsocials/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/volunteers/volDashboard.dart';
 import 'package:bharatsocials/common_widgets/event_details.dart';
@@ -15,13 +16,6 @@ class SavedEventsApp extends StatelessWidget {
 class SavedEventsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Define custom colors directly
-    Color backgroundColor = Color(0xFF1F1F1F); // Dark background color
-    Color textColor = Color(0xFFFFFFFF); // White text color
-    Color buttonColor = Color(0xFF2196F3); // Blue button color
-    Color buttonTextColor = Color(0xFFFFFFFF); // White text for button
-    Color cardTextColor = Color(0xFFFFFFFF);
-
     // Get screen width and height for responsive design
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -31,10 +25,10 @@ class SavedEventsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Saved Events',
-          style: TextStyle(color: textColor),
+          style: TextStyle(color: AppColors.titleTextColor(context)),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: textColor),
+          icon: Icon(Icons.arrow_back, color: AppColors.iconColor(context)),
           onPressed: () {
             Navigator.push(
               context,
@@ -42,8 +36,17 @@ class SavedEventsPage extends StatelessWidget {
             );
           },
         ),
-        backgroundColor: backgroundColor,
+        backgroundColor: AppColors.titleColor(context),
         elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0), // Divider height
+          child: Divider(
+            color:
+                AppColors.dividerColor(context), // Divider color based on theme
+            thickness: 1,
+            height: 1,
+          ),
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
@@ -161,7 +164,7 @@ class _EventCardState extends State<EventCard> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const EventDetailsPage(),
+                        builder: (context) => const Placeholder(),
                       ),
                     );
                   },

@@ -17,14 +17,14 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final buttonColor = AppColors.getButtonColor(context);
+    final buttonColor = AppColors.mainButtonColor(context);
 
     return Container(
-      width: 200,
+      width: 300,
       margin: const EdgeInsets.only(right: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFFD9D9D9), // Grey background for the event card
-        borderRadius: BorderRadius.circular(8),
+        color: AppColors.eventCardBgColor(context),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
             color: Colors.black26,
@@ -42,7 +42,7 @@ class EventCard extends StatelessWidget {
               'Name: $eventName',
               style: GoogleFonts.poppins(
                 fontSize: 14,
-                color: Colors.black,
+                color: AppColors.eventCardTextColor(context),
               ),
             ),
             SizedBox(height: 8),
@@ -50,7 +50,7 @@ class EventCard extends StatelessWidget {
               'Date: $eventDate',
               style: GoogleFonts.poppins(
                 fontSize: 14,
-                color: Colors.black,
+                color: AppColors.eventCardTextColor(context),
               ),
             ),
             SizedBox(height: 8),
@@ -58,7 +58,7 @@ class EventCard extends StatelessWidget {
               'Location: $eventLocation',
               style: GoogleFonts.poppins(
                 fontSize: 14,
-                color: Colors.black,
+                color: AppColors.eventCardTextColor(context),
               ),
             ),
             Spacer(),
@@ -69,7 +69,7 @@ class EventCard extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => EventDetailsPage(),
+                      builder: (context) => Placeholder(),
                     ),
                   );
                 },
@@ -77,14 +77,14 @@ class EventCard extends StatelessWidget {
                   backgroundColor: buttonColor,
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(13),
                   ),
                 ),
                 child: Text(
                   'View More',
                   style: GoogleFonts.poppins(
                     fontSize: 14,
-                    color: AppColors.getButtonTextColor(context),
+                    color: AppColors.mainButtonTextColor(context),
                   ),
                 ),
               ),

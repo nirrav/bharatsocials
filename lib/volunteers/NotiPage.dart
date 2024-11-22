@@ -16,12 +16,12 @@ class NotificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get theme-dependent colors using the AppColors utility
-    Color backgroundColor = AppColors.getBackgroundColor(context);
-    Color textColor = AppColors.getTextColor(context);
-    Color defautlTextColor = AppColors.getDefaultTextColor(context);
-    Color buttonColor = AppColors.getButtonColor(context);
-    Color buttonTextColor = AppColors.getButtonTextColor(context);
-    Color cardTextColor = AppColors.getCardTextColor(context);
+    Color backgroundColor = AppColors.appBgColor(context);
+    Color textColor = AppColors.titleTextColor(context);
+    Color defautlTextColor = AppColors.defualtTextColor(context);
+    Color buttonColor = AppColors.mainButtonColor(context);
+    Color buttonTextColor = AppColors.mainButtonTextColor(context);
+    Color cardTextColor = AppColors.eventCardTextColor(context);
 
     // Get screen width and height for responsive design
     double screenWidth = MediaQuery.of(context).size.width;
@@ -29,10 +29,19 @@ class NotificationPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications', style: TextStyle(color: textColor)),
+        title: Text('Notifications',
+            style: TextStyle(color: AppColors.titleTextColor(context))),
         centerTitle: true,
-        backgroundColor:
-            buttonColor, // Using button color for AppBar background
+        backgroundColor: AppColors.titleColor(context),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0), // Divider height
+          child: Divider(
+            color:
+                AppColors.dividerColor(context), // Divider color based on theme
+            thickness: 1,
+            height: 1,
+          ),
+        ), // Using button color for AppBar background
       ),
       body: Container(
         color: backgroundColor, // Set background color
@@ -102,7 +111,7 @@ class NotificationRow extends StatelessWidget {
           child: Text(
             'Notification Message', // Example text
             style: TextStyle(
-                color: AppColors.getTextColor(
+                color: AppColors.defualtTextColor(
                     context)), // Use text color from AppColors
           ),
         ),

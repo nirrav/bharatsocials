@@ -1,3 +1,5 @@
+import 'dart:ui';
+import 'package:bharatsocials/common_widgets/upcoming_events_page.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,22 +39,22 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.getBackgroundColor(context),
+      backgroundColor: AppColors.appBgColor(context),
       appBar: AppBar(
-        backgroundColor: AppColors.getButtonColor(context),
+        backgroundColor: AppColors.titleColor(context),
         centerTitle: true,
         title: Text(
           'Vol Dashboard',
           style: GoogleFonts.poppins(
             fontSize: 20,
-            color: AppColors.getButtonTextColor(context),
+            color: AppColors.titleTextColor(context),
           ),
         ),
         actions: [
           IconButton(
             icon: FaIcon(
               FontAwesomeIcons.bell,
-              color: AppColors.getButtonTextColor(context),
+              color: AppColors.titleTextColor(context),
             ),
             onPressed: () {
               Navigator.push(
@@ -60,24 +62,34 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                 MaterialPageRoute(builder: (context) => NotificationPage()),
               );
             },
-          )
+          ),
         ],
         leading: Builder(
           builder: (context) => IconButton(
             icon: FaIcon(
               FontAwesomeIcons.bars,
-              color: AppColors.getButtonTextColor(context),
+              color: AppColors.iconColor(context),
             ),
             onPressed: () {
               Scaffold.of(context).openDrawer(); // Open the sidebar
             },
           ),
         ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0), // Divider height
+          child: Divider(
+            color:
+                AppColors.dividerColor(context), // Divider color based on theme
+            thickness: 1,
+            height: 1,
+          ),
+        ),
       ),
-      drawer: const Sidebar(), // Adding the sidebar
+
+      drawer: const VolunteerSidebar(), // Adding the sidebar
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -88,7 +100,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                     'Upcoming Events',
                     style: GoogleFonts.poppins(
                       fontSize: 18,
-                      color: AppColors.getTextColor(context),
+                      color: AppColors.defualtTextColor(context),
                     ),
                   ),
                   GestureDetector(
@@ -96,14 +108,14 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const EventDetailsPage(),
+                          builder: (context) => const AllEventsPage(),
                         ),
                       );
                     },
-                    child: const Text(
+                    child: Text(
                       'View All...',
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: AppColors.subTextColor(context),
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -111,7 +123,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 20),
               _buildEventList(context),
               const SizedBox(height: 16),
               Row(
@@ -121,17 +133,17 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                     'Attended Events',
                     style: GoogleFonts.poppins(
                       fontSize: 18,
-                      color: AppColors.getTextColor(context),
+                      color: AppColors.defualtTextColor(context),
                     ),
                   ),
                   GestureDetector(
                     onTap: () {
                       print("View All... Attended Events tapped");
                     },
-                    child: const Text(
+                    child: Text(
                       'View All...',
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: AppColors.subTextColor(context),
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -145,26 +157,37 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: AppColors.getButtonColor(context),
-        elevation: 8,
-        shape: const CircularNotchedRectangle(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 80.0, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildNavItem(
-                icon: FontAwesomeIcons.house,
-                index: 0,
-              ),
-              _buildNavItem(
-                icon: FontAwesomeIcons.bookmark,
-                index: 1,
-              ),
-            ],
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Divider with conditional color based on theme
+          Divider(
+            color: AppColors.dividerColor(context), // Color based on theme
+            thickness: 1,
+            height: 1,
           ),
-        ),
+          BottomAppBar(
+            color: AppColors.titleColor(context),
+            shape: const CircularNotchedRectangle(),
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 50.0, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildNavItem(
+                    icon: FontAwesomeIcons.house,
+                    index: 0,
+                  ),
+                  _buildNavItem(
+                    icon: FontAwesomeIcons.bookmark,
+                    index: 1,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -182,8 +205,8 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
           FaIcon(
             icon,
             color: isSelected
-                ? AppColors.getButtonTextColor(context)
-                : AppColors.getButtonTextColor(context).withOpacity(0.6),
+                ? AppColors.iconColor(context)
+                : AppColors.iconColor(context).withOpacity(0.6),
             size: 28,
           ),
         ],

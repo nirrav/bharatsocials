@@ -1,21 +1,21 @@
 import 'dart:io';
-import 'package:bharatsocials/login/admin_register.dart';
+import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:bharatsocials/login/login.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:bharatsocials/login/admin_register.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:bharatsocials/login/widgets/dot_indicator.dart';
-import 'package:bharatsocials/login/widgets/password_field_widget.dart';
-import 'package:bharatsocials/login/widgets/upload_button_widget.dart';
-import 'package:bharatsocials/login/widgets/text_field_widget.dart';
 import 'package:bharatsocials/login/widgets/submit_button.dart';
 import 'package:bharatsocials/login/widgets/role_selection.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:bharatsocials/login/widgets/text_field_widget.dart';
+import 'package:bharatsocials/login/widgets/upload_button_widget.dart';
+import 'package:bharatsocials/login/widgets/password_field_widget.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -140,10 +140,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    Color backgroundColor = AppColors.getBackgroundColor(context);
-    Color textColor = AppColors.getTextColor(context);
-    Color buttonColor = AppColors.getButtonColor(context);
-    Color buttonTextColor = AppColors.getButtonTextColor(context);
+    Color backgroundColor = AppColors.appBgColor(context);
+    Color textColor = AppColors.appBgColor(context);
+    Color buttonColor = AppColors.mainButtonColor(context);
+    Color buttonTextColor = AppColors.mainButtonTextColor(context);
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -368,8 +368,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (_) => const LoginPage(
-              )), // Adjust the LoginPage constructor if necessary
+            builder: (_) =>
+                const LoginPage()), // Adjust the LoginPage constructor if necessary
       );
 
       // After a short delay, show the Snackbar
