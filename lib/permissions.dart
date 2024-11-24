@@ -1,5 +1,4 @@
 import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter/material.dart';
 
 class Permissions {
   // Function to check and request location permission

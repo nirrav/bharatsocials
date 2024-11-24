@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class UserData {
   String documentId; // Field to store the document ID
@@ -16,6 +15,8 @@ class UserData {
   String department;
   String collegeName;
   String organizationName;
+  List<String>
+      eventsPosted; // Changed to List<String> to hold an array of event IDs
   String contactNumber;
   String city;
   String adminName;
@@ -39,6 +40,7 @@ class UserData {
     this.department = '',
     this.collegeName = '',
     this.organizationName = '',
+    this.eventsPosted = const [], // Initialize with an empty list
     this.contactNumber = '',
     this.city = '',
     this.adminName = '',
@@ -72,6 +74,7 @@ class UserData {
         'organization_name': organizationName,
         'contact_number': contactNumber,
         'city': city,
+        'eventsPosted': eventsPosted, // Now an array
       });
     } else if (role == 'admin') {
       data.addAll({
@@ -98,6 +101,17 @@ class UserData {
   factory UserData.fromFirestore(DocumentSnapshot doc) {
     var data = doc.data() as Map<String, dynamic>;
 
+    // Handle eventsPosted as a List<String>
+    List<String> eventsPostedList = [];
+    if (data['eventsPosted'] != null) {
+      if (data['eventsPosted'] is List) {
+        eventsPostedList = List<String>.from(data['eventsPosted']);
+      } else if (data['eventsPosted'] is String) {
+        // If eventsPosted is a string, split it by commas to form a list
+        eventsPostedList = List<String>.from(data['eventsPosted'].split(','));
+      }
+    }
+
     return UserData(
       documentId: doc.id, // Get the document ID from Firestore
       email: data['email'] ?? '',
@@ -113,6 +127,7 @@ class UserData {
       department: data['department'] ?? '',
       collegeName: data['college_name'] ?? '',
       organizationName: data['organization_name'] ?? '',
+      eventsPosted: eventsPostedList, // Use the List<String> for eventsPosted
       contactNumber: data['contact_number'] ?? '',
       city: data['city'] ?? '',
       adminName: data['admin_name'] ?? '',
@@ -125,35 +140,4 @@ class UserData {
 
 class GlobalUser {
   static UserData? currentUser;
-}
-
-class UserDataService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  // Fetch the current user's data from Firestore and update GlobalUser
-  Future<void> fetchCurrentUser() async {
-    try {
-      // Get the current user's UID from Firebase Authentication
-      User? user = _auth.currentUser;
-      if (user != null) {
-        // Use the UID to fetch the document from Firestore
-        DocumentSnapshot doc =
-            await _db.collection('users').doc(user.uid).get();
-
-        if (doc.exists) {
-          // Update GlobalUser with the fetched data
-          GlobalUser.currentUser = UserData.fromFirestore(doc);
-        } else {
-          // Handle the case where the user document is not found
-          print("User document not found in Firestore");
-        }
-      } else {
-        // Handle the case where the user is not logged in
-        print("No user is currently logged in");
-      }
-    } catch (e) {
-      print("Error fetching user data: $e");
-    }
-  }
 }

@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode
           .system, // Auto-switch between light/dark based on system theme
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }
@@ -68,8 +68,8 @@ Future<void> initializeLocalNotifications() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
 
-  final InitializationSettings initializationSettings =
-      const InitializationSettings(
+  const InitializationSettings initializationSettings =
+      InitializationSettings(
     android: initializationSettingsAndroid,
   );
 
@@ -77,7 +77,7 @@ Future<void> initializeLocalNotifications() async {
 
   // Create a default notification channel for Android 8.0+ devices
   if (Platform.isAndroid) {
-    final AndroidNotificationChannel channel = const AndroidNotificationChannel(
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
       'default_channel', // Channel ID
       'Default Notifications', // Channel name
       description:

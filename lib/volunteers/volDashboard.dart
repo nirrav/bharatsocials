@@ -59,7 +59,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => NotificationPage()),
+                MaterialPageRoute(builder: (context) => const NotificationPage()),
               );
             },
           ),

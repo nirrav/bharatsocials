@@ -6,6 +6,8 @@ import 'package:bharatsocials/volunteers/volDashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,6 +17,8 @@ class MyApp extends StatelessWidget {
 }
 
 class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Get theme-dependent colors using the AppColors utility
@@ -29,38 +33,38 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => VolunteerDashboard()),
+              MaterialPageRoute(builder: (context) => const VolunteerDashboard()),
             );
           },
         ),
-        title: Text('Settings'),
+        title: const Text('Settings'),
       ),
       body: ListView(
         children: <Widget>[
           ListTile(
-            title: Text('Theme'),
+            title: const Text('Theme'),
             onTap: () {
               // Add navigation to Theme settings here
             },
           ),
           ListTile(
-            title: Text('Report Bug'),
+            title: const Text('Report Bug'),
             onTap: () {
               // Add navigation to Report Bug page here
             },
           ),
           ListTile(
-            title: Text('Contact Us'),
+            title: const Text('Contact Us'),
             onTap: () {
               // Add navigation to Contact Us page here
             },
           ),
           ListTile(
-            title: Text('Log Out'),
+            title: const Text('Log Out'),
             onTap: () async {
               try {
                 // Sign out the user from Firebase Authentication
@@ -84,7 +88,7 @@ class SettingsPage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        LoginPage(), // Replace with your actual LoginPage
+                        const LoginPage(), // Replace with your actual LoginPage
                   ),
                 );
               } catch (e) {

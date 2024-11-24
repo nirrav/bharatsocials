@@ -104,11 +104,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
     });
   }
 
-  // Show dialog for role selection
   void _showRoleSelectionDialog() {
     showDialog(
       context: context,
-      barrierDismissible: true, // Allow dismissal by tapping outside
+      barrierDismissible: false, // Allow dismissal by tapping outside
       builder: (BuildContext context) {
         return RoleSelectionDialog(
           onRoleSelected: (role) {
@@ -117,14 +116,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
             });
             Navigator.of(context).pop(); // Close the dialog after selection
 
+            // Debugging log to ensure the selected role is being updated
+            print("Role selected: $selectedRole");
+
             // Redirect based on role selection
-            if (role == 'Admin') {
+            if (role == 'admin') {
               // If the user selects 'Admin', navigate to the Admin registration page
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      AdminRegisterPage(), // Admin registration page
+                      const AdminRegisterPage(), // Admin registration page
                 ),
               );
             }
@@ -141,7 +143,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     Color backgroundColor = AppColors.appBgColor(context);
-    Color textColor = AppColors.appBgColor(context);
+    Color textColor = AppColors.defualtTextColor(context);
     Color buttonColor = AppColors.mainButtonColor(context);
     Color buttonTextColor = AppColors.mainButtonTextColor(context);
 
@@ -181,6 +183,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.02),
+                    // Add debugging print statements for role
                     if (selectedRole == 'volunteer')
                       _buildVolunteerForm(isDarkMode),
                     if (selectedRole == 'ngo') _buildNgoForm(isDarkMode),
@@ -353,6 +356,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           'roll_no': rollNoController.text,
           'department': departmentController.text,
           'college_name': collegeNameController.text,
+          'role': "volunteer",
         });
         await FirebaseFirestore.instance.collection('volunteers').add(userData);
       } else if (selectedRole == 'ngo') {
@@ -360,6 +364,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           'organization_name': organizationNameController.text,
           'contact_number': contactNumberController.text,
           'city': cityController.text,
+          'role': "ngo",
         });
         await FirebaseFirestore.instance.collection('ngos').add(userData);
       }

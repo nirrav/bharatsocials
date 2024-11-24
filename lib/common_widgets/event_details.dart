@@ -55,9 +55,9 @@ class EventDetailsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildEventDetailsBox(context),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildPurposeBox(context, 'Purpose Of Event'),
-              SizedBox(height: 30), // Extra space before buttons
+              const SizedBox(height: 30), // Extra space before buttons
               if (!isNgo) // Only show these buttons if the user is not an NGO
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -98,7 +98,7 @@ class EventDetailsPage extends StatelessWidget {
             context), // Lighter grey for a softer look
         borderRadius:
             BorderRadius.circular(13), // Rounded corners for a more modern feel
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black,
             blurRadius: 6,
@@ -110,9 +110,9 @@ class EventDetailsPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildInfoRow(context, 'Event Name:', event['eventName']),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           _buildInfoRow(context, 'Date:', event['eventDate']),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           _buildInfoRow(context, 'Location:', event['eventLocation']),
         ],
       ),
@@ -152,7 +152,7 @@ class EventDetailsPage extends StatelessWidget {
         color: AppColors.eventCardBgColor(
             context), // Lighter grey for a softer look
         borderRadius: BorderRadius.circular(13),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black,
             blurRadius: 6,
@@ -171,7 +171,7 @@ class EventDetailsPage extends StatelessWidget {
               color: Colors.black, // Set text color to black
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             'This event aims to gather volunteers to discuss and plan upcoming community service activities. Your participation will make a difference!',
             style: GoogleFonts.poppins(

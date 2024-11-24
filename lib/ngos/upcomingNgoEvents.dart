@@ -39,7 +39,7 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
     if (currentUser?.role == 'volunteer') {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Access Denied'),
+          title: const Text('Access Denied'),
         ),
         body: Center(
           child: Text(
@@ -63,7 +63,7 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
         decoration: BoxDecoration(
           color: const Color(0xFFD9D9D9), // Grey background for the event card
           borderRadius: BorderRadius.circular(8),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black26,
               blurRadius: 4,
@@ -86,7 +86,7 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
                 overflow: TextOverflow.ellipsis, // Handling text overflow
                 maxLines: 1, // Limiting to 1 line
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               // Event Date
               Text(
                 'Date: $eventDate',
@@ -97,7 +97,7 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               // Event Location
               Text(
                 'Location: $eventLocation',
@@ -108,14 +108,14 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),
-              Spacer(), // Pushes the button to the bottom
+              const Spacer(), // Pushes the button to the bottom
               Align(
                 alignment: Alignment.bottomRight,
                 child: ElevatedButton(
                   onPressed: onViewMore,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.mainButtonColor(context),
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -146,7 +146,7 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           color: AppColors.iconColor(
               context), // Set back arrow color to match button text color
           onPressed: () {
@@ -174,7 +174,7 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
               style: GoogleFonts.poppins(
                   fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Form(
               key: _formKey,
               child: Column(
@@ -185,15 +185,15 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
                     initialValue: currentUser?.role == 'ngo'
                         ? currentUser?.organizationName
                         : currentUser?.adminName,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Host Name',
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   // Event Name
                   TextFormField(
                     controller: eventNameController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Event Name',
                     ),
                     validator: (value) {
@@ -203,11 +203,11 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   // Event Location
                   TextFormField(
                     controller: eventLocationController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Event Location',
                     ),
                     validator: (value) {
@@ -217,7 +217,7 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   // Date Picker
                   GestureDetector(
                     onTap: () async {
@@ -238,7 +238,7 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
                     child: AbsorbPointer(
                       child: TextFormField(
                         controller: eventDateController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Event Date',
                         ),
                       ),
@@ -270,14 +270,14 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
                     child: AbsorbPointer(
                       child: TextFormField(
                         controller: eventTimeController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Event Time',
                         ),
                       ),
                     ),
                   ),
                   // Submit Button
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState?.validate() ?? false) {
@@ -310,24 +310,24 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
                           'requiredVolunteers': requiredVolunteers,
                         });
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
+                          const SnackBar(
                               content: Text('Event submitted successfully!')),
                         );
                       }
                     },
-                    child: Text('Submit Event'),
+                    child: const Text('Submit Event'),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             // Display Upcoming Events
             Text(
               'Upcoming Events',
               style: GoogleFonts.poppins(
                   fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             // Fetch upcoming events from Firestore for the logged-in user
             Expanded(
               child: FutureBuilder<QuerySnapshot>(
@@ -339,13 +339,13 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
                     .get(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return Center(child: Text('No upcoming events.'));
+                    return const Center(child: Text('No upcoming events.'));
                   } else {
                     List<QueryDocumentSnapshot> eventDocs = snapshot.data!.docs;
                     return GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 16.0,
                         mainAxisSpacing: 16.0,

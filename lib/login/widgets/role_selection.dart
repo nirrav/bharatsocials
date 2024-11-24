@@ -30,9 +30,9 @@ class RoleSelectionDialog extends StatelessWidget {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildRoleOption(context, 'Volunteer', buttonColor, buttonTextColor),
-          _buildRoleOption(context, 'NGO', buttonColor, buttonTextColor),
-          _buildRoleOption(context, 'Admin', buttonColor, buttonTextColor),
+          _buildRoleOption(context, 'volunteer', buttonColor, buttonTextColor),
+          _buildRoleOption(context, 'ngo', buttonColor, buttonTextColor),
+          _buildRoleOption(context, 'admin', buttonColor, buttonTextColor),
         ],
       ),
     );

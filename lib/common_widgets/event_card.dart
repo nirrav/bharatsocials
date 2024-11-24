@@ -9,11 +9,11 @@ class EventCard extends StatelessWidget {
   final String eventLocation;
 
   const EventCard({
-    Key? key,
+    super.key,
     required this.eventName,
     required this.eventDate,
     required this.eventLocation,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class EventCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.eventCardBgColor(context),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black26,
             blurRadius: 4,
@@ -45,7 +45,7 @@ class EventCard extends StatelessWidget {
                 color: AppColors.eventCardTextColor(context),
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'Date: $eventDate',
               style: GoogleFonts.poppins(
@@ -53,7 +53,7 @@ class EventCard extends StatelessWidget {
                 color: AppColors.eventCardTextColor(context),
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'Location: $eventLocation',
               style: GoogleFonts.poppins(
@@ -61,7 +61,7 @@ class EventCard extends StatelessWidget {
                 color: AppColors.eventCardTextColor(context),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Align(
               alignment: Alignment.bottomRight,
               child: ElevatedButton(
@@ -69,13 +69,13 @@ class EventCard extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Placeholder(),
+                      builder: (context) => const Placeholder(),
                     ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: buttonColor,
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(13),
                   ),

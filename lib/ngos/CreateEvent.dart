@@ -1,3 +1,4 @@
+import 'package:bharatsocials/colors.dart';
 import 'package:bharatsocials/login/userData.dart';
 import 'package:intl/intl.dart'; // Add this import
 import 'package:flutter/material.dart';
@@ -22,11 +23,26 @@ class _EventFormPageState extends State<EventFormPage> {
   TextEditingController eventDateController = TextEditingController();
   TextEditingController eventTimeController = TextEditingController();
 
+  TextEditingController hostNameController =
+      TextEditingController(); // Added controller for Host Name
+
   bool waterProvided = false;
   bool foodProvided = false;
   bool safetyEquipment = false;
 
   DateTime? eventDateTime;
+
+  @override
+  void initState() {
+    super.initState();
+    // Set the host name based on the current user when the page is initialized
+    final currentUser = GlobalUser.currentUser;
+    if (currentUser != null) {
+      hostNameController.text = currentUser.role == 'ngo'
+          ? currentUser.organizationName ?? ''
+          : currentUser.adminName ?? '';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +52,7 @@ class _EventFormPageState extends State<EventFormPage> {
     if (currentUser?.role == 'volunteer') {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Access Denied'),
+          title: const Text('Access Denied'),
         ),
         body: Center(
           child: Text(
@@ -47,9 +63,11 @@ class _EventFormPageState extends State<EventFormPage> {
       );
     }
 
+    print('Current user organization name: ${currentUser?.organizationName}');
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Event Submission'),
+        title: const Text('Create Events'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -60,33 +78,44 @@ class _EventFormPageState extends State<EventFormPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Host Details',
+                  'Create Events',
                   style: GoogleFonts.poppins(
                       fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
+                // Use the hostNameController for the Host Name field
                 TextFormField(
-                  enabled: false,
-                  initialValue: currentUser?.role == 'ngo'
-                      ? currentUser?.organizationName
-                      : currentUser?.adminName,
+                  enabled: false, // Keep the field disabled
+                  controller: hostNameController, // Use the controller here
                   decoration: InputDecoration(
                     labelText: 'Host Name',
+                    labelStyle: TextStyle(
+                      color: AppColors.defualtTextColor(
+                          context), // Set the label text color
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: AppColors.defualtTextColor(
+                            context), // Set the border color
+                      ),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: AppColors.dividerColor(
+                            context), // Set the border color on focus
+                      ),
+                    ),
+                  ),
+                  style: TextStyle(
+                    color: AppColors.defualtTextColor(
+                        context), // Set the text color
                   ),
                 ),
-                // SizedBox(height: 20),
-                // TextFormField(
-                //   enabled: false,
-                //   initialValue: currentUser
-                //       ?.documentId, // Use documentId instead of email
-                //   decoration: InputDecoration(
-                //     labelText: 'Host ID (Document ID)',
-                //   ),
-                // ),
-                SizedBox(height: 20),
+
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: eventNameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Event Name',
                   ),
                   validator: (value) {
@@ -96,11 +125,11 @@ class _EventFormPageState extends State<EventFormPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 // Event Location TextField
                 TextFormField(
                   controller: eventLocationController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Event Location',
                   ),
                   validator: (value) {
@@ -110,7 +139,7 @@ class _EventFormPageState extends State<EventFormPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 // Date Picker using Flutter's built-in showDatePicker
                 GestureDetector(
                   onTap: () async {
@@ -131,7 +160,7 @@ class _EventFormPageState extends State<EventFormPage> {
                   child: AbsorbPointer(
                     child: TextFormField(
                       controller: eventDateController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Event Date',
                       ),
                     ),
@@ -164,7 +193,7 @@ class _EventFormPageState extends State<EventFormPage> {
                   child: AbsorbPointer(
                     child: TextFormField(
                       controller: eventTimeController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Event Time',
                       ),
                     ),
@@ -172,10 +201,10 @@ class _EventFormPageState extends State<EventFormPage> {
                 ),
 
                 // Remaining fields (POC Full Name, Number, etc.)
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: pocFullNameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'POC Full Name',
                   ),
                   validator: (value) {
@@ -185,10 +214,10 @@ class _EventFormPageState extends State<EventFormPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: pocNumberController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'POC Phone Number',
                   ),
                   keyboardType: TextInputType.phone,
@@ -199,10 +228,10 @@ class _EventFormPageState extends State<EventFormPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: pocLocationController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'POC Location',
                   ),
                   validator: (value) {
@@ -212,7 +241,7 @@ class _EventFormPageState extends State<EventFormPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 // Removed Google Map location picker, no map UI now.
 
                 // Checkbox options
@@ -226,7 +255,7 @@ class _EventFormPageState extends State<EventFormPage> {
                         });
                       },
                     ),
-                    Text('Water Provided'),
+                    const Text('Water Provided'),
                   ],
                 ),
                 Row(
@@ -239,7 +268,7 @@ class _EventFormPageState extends State<EventFormPage> {
                         });
                       },
                     ),
-                    Text('Food Provided'),
+                    const Text('Food Provided'),
                   ],
                 ),
                 Row(
@@ -252,13 +281,13 @@ class _EventFormPageState extends State<EventFormPage> {
                         });
                       },
                     ),
-                    Text('Safety Equipment Provided'),
+                    const Text('Safety Equipment Provided'),
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: requiredVolunteersController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Required Volunteers',
                   ),
                   keyboardType: TextInputType.number,
@@ -269,7 +298,7 @@ class _EventFormPageState extends State<EventFormPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState?.validate() ?? false) {
@@ -288,7 +317,7 @@ class _EventFormPageState extends State<EventFormPage> {
                       int requiredVolunteers =
                           int.tryParse(requiredVolunteersController.text) ?? 0;
 
-                      // Add event to Firestore
+                      // Add event to Firestore with 'posted' timestamp
                       DocumentReference eventDocRef = await FirebaseFirestore
                           .instance
                           .collection('events')
@@ -306,28 +335,64 @@ class _EventFormPageState extends State<EventFormPage> {
                         'foodProvided': foodProvided,
                         'safetyEquipment': safetyEquipment,
                         'requiredVolunteers': requiredVolunteers,
+                        'readBy':
+                            [], // Adding an empty array for 'readBy' field
+                        'posted':
+                            Timestamp.now(), // Add the posted timestamp here
                       });
 
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      // Get the event's document ID
+                      String eventId = eventDocRef.id;
+
+                      // After event is created, update the eventsPosted field in the host's document
+                      if (userRole == 'ngo' || userRole == 'admin') {
+                        // Determine collection name based on user role
+                        String collectionName =
+                            userRole == 'ngo' ? 'ngos' : 'admins';
+
+                        // Get the reference to the host document
+                        DocumentReference hostDocRef = FirebaseFirestore
+                            .instance
+                            .collection(collectionName)
+                            .doc(hostId);
+
+                        // Fetch the host document to update the eventsPosted array
+                        await hostDocRef.get().then((hostDoc) async {
+                          if (hostDoc.exists) {
+                            // Update the 'eventsPosted' array in the host document
+                            await hostDocRef.update({
+                              'eventsPosted': FieldValue.arrayUnion(
+                                  [eventId]) // Add the event ID to the array
+                            });
+                          } else {
+                            // If the host document doesn't exist (shouldn't happen), handle this case
+                            print("Host document not found!");
+                          }
+                        });
+                      }
+
+                      // Show success message
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text('Event submitted successfully!')));
+
+                      // Reset the form fields
+                      _formKey.currentState?.reset();
+                      eventNameController.clear();
+                      eventLocationController.clear();
+                      pocFullNameController.clear();
+                      pocNumberController.clear();
+                      pocLocationController.clear();
+                      requiredVolunteersController.clear();
+                      eventDateController.clear();
+                      eventTimeController.clear();
+                      setState(() {
+                        waterProvided = false;
+                        foodProvided = false;
+                        safetyEquipment = false;
+                      });
                     }
-                    // Reset the form fields
-                    _formKey.currentState?.reset();
-                    eventNameController.clear();
-                    eventLocationController.clear();
-                    pocFullNameController.clear();
-                    pocNumberController.clear();
-                    pocLocationController.clear();
-                    requiredVolunteersController.clear();
-                    eventDateController.clear();
-                    eventTimeController.clear();
-                    setState(() {
-                      waterProvided = false;
-                      foodProvided = false;
-                      safetyEquipment = false;
-                    });
                   },
-                  child: Text('Submit Event'),
+                  child: const Text('Submit'),
                 ),
               ],
             ),

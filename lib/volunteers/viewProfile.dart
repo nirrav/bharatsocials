@@ -5,6 +5,8 @@ import 'package:bharatsocials/volunteers/volDashboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ViewProfilePage extends StatefulWidget {
+  const ViewProfilePage({super.key});
+
   @override
   _ViewProfilePageState createState() => _ViewProfilePageState();
 }
@@ -125,7 +127,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => VolunteerDashboard(),
+                builder: (context) => const VolunteerDashboard(),
               ),
             );
           },
@@ -214,7 +216,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
               ),
               child: Text(
                 isEditing ? 'Submit' : 'Edit Profile',
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               ),
             ),
           ],

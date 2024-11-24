@@ -236,7 +236,7 @@ class _LoginPageState extends State<LoginPage> {
         if (userRole == 'volunteer') {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => VolunteerDashboard()),
+            MaterialPageRoute(builder: (context) => const VolunteerDashboard()),
           );
         } else if (userRole == 'ngo') {
           Navigator.pushReplacement(
@@ -248,7 +248,7 @@ class _LoginPageState extends State<LoginPage> {
           if (adminRole == 'uni') {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => UniDashboard()),
+              MaterialPageRoute(builder: (context) => const UniDashboard()),
             );
           } else if (adminRole == 'college') {
             Navigator.pushReplacement(

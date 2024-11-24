@@ -87,7 +87,7 @@ class _SplashScreenState extends State<SplashScreen>
           if (userRole == 'volunteer') {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => VolunteerDashboard()),
+              MaterialPageRoute(builder: (context) => const VolunteerDashboard()),
             );
           } else if (userRole == 'ngo') {
             Navigator.pushReplacement(
@@ -98,7 +98,7 @@ class _SplashScreenState extends State<SplashScreen>
             if (currentUser.adminRole == 'uni') {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => UniDashboard()),
+                MaterialPageRoute(builder: (context) => const UniDashboard()),
               );
             } else if (currentUser.adminRole == 'college') {
               Navigator.pushReplacement(

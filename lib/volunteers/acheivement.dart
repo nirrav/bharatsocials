@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart'; // Import the AppColors utility
 
 class AchievementPage extends StatelessWidget {
-  const AchievementPage({Key? key}) : super(key: key);
+  const AchievementPage({super.key});
 
   @override
   Widget build(BuildContext context) {

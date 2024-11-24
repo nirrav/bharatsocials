@@ -8,7 +8,7 @@ import 'package:bharatsocials/volunteers/viewProfile.dart';
 import 'package:bharatsocials/volunteers/attendedEvent.dart';
 
 class VolunteerSidebar extends StatelessWidget {
-  const VolunteerSidebar({Key? key}) : super(key: key);
+  const VolunteerSidebar({super.key});
 
   @override
   Widget build(BuildContext context) {

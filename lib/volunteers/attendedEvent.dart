@@ -7,6 +7,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,6 +18,8 @@ class MyApp extends StatelessWidget {
 }
 
 class AttendedEventPage extends StatelessWidget {
+  const AttendedEventPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Get theme-dependent colors using AppColors utility
@@ -58,11 +62,11 @@ class AttendedEventPage extends StatelessWidget {
                   firstDay: DateTime.utc(2020, 1, 1),
                   lastDay: DateTime.utc(2030, 12, 31),
                   focusedDay: DateTime.now(),
-                  headerStyle: HeaderStyle(
+                  headerStyle: const HeaderStyle(
                     formatButtonVisible: false,
                     titleCentered: true,
                   ),
-                  calendarStyle: CalendarStyle(
+                  calendarStyle: const CalendarStyle(
                     todayDecoration: BoxDecoration(
                       color: Colors.blue,
                       shape: BoxShape.circle,
@@ -70,7 +74,7 @@ class AttendedEventPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               // Month Button
               Center(
                 child: ElevatedButton(
@@ -85,7 +89,7 @@ class AttendedEventPage extends StatelessWidget {
                           color: buttonTextColor)), // Button text color
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               // Event Details Section
               Container(
                 decoration: BoxDecoration(
@@ -102,13 +106,13 @@ class AttendedEventPage extends StatelessWidget {
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: textColor)),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text('Event Date: 20/11/2024',
                         style: TextStyle(fontSize: 16, color: textColor)),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text('Event Location: Online',
                         style: TextStyle(fontSize: 16, color: textColor)),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Align(
                       alignment: Alignment.bottomRight,
                       child: ElevatedButton(

@@ -23,7 +23,7 @@ class AllEventsPage extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFFD9D9D9), // Grey background for the event card
           borderRadius: BorderRadius.circular(8),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black26,
               blurRadius: 4,
@@ -46,7 +46,7 @@ class AllEventsPage extends StatelessWidget {
                 overflow: TextOverflow.ellipsis, // Handling text overflow
                 maxLines: 1, // Limiting to 1 line
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               // Event Date
               Text(
                 'Date: $eventDate',
@@ -57,7 +57,7 @@ class AllEventsPage extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               // Event Location
               Text(
                 'Location: $eventLocation',
@@ -68,14 +68,14 @@ class AllEventsPage extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),
-              Spacer(), // Pushes the button to the bottom
+              const Spacer(), // Pushes the button to the bottom
               Align(
                 alignment: Alignment.bottomRight,
                 child: ElevatedButton(
                   onPressed: onViewMore,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: buttonColor,
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -106,7 +106,7 @@ class AllEventsPage extends StatelessWidget {
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           color: AppColors.iconColor(
               context), // Set back arrow color to match button text color
           onPressed: () {
@@ -127,7 +127,7 @@ class AllEventsPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: GridView.builder(
           shrinkWrap: true, // Shrink the grid to fit its children
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, // Create a 2-column grid
             crossAxisSpacing: 16, // Horizontal space between items
             mainAxisSpacing: 16, // Vertical space between items
@@ -144,7 +144,7 @@ class AllEventsPage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        Placeholder(), // Pass the event data
+                        const Placeholder(), // Pass the event data
                   ),
                 );
 

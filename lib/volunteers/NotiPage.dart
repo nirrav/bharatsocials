@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
@@ -57,12 +59,12 @@ class NotificationPage extends StatelessWidget {
                 NotificationRow(),
                 NotificationRow(),
                 NotificationRow(),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 SectionTitle(
                     title: 'Today', defautlTextColor: defautlTextColor),
                 NotificationRow(),
                 NotificationRow(),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 SectionTitle(title: 'Date', defautlTextColor: defautlTextColor),
                 NotificationRow(),
               ],
@@ -78,7 +80,7 @@ class SectionTitle extends StatelessWidget {
   final String title;
   final Color defautlTextColor; // Added defautlTextColor parameter
 
-  SectionTitle({required this.title, required this.defautlTextColor});
+  const SectionTitle({super.key, required this.title, required this.defautlTextColor});
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +98,8 @@ class SectionTitle extends StatelessWidget {
 }
 
 class NotificationRow extends StatelessWidget {
+  const NotificationRow({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(

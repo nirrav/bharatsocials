@@ -4,6 +4,8 @@ import 'package:bharatsocials/volunteers/volDashboard.dart';
 import 'package:bharatsocials/common_widgets/event_details.dart';
 
 class SavedEventsApp extends StatelessWidget {
+  const SavedEventsApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,6 +16,8 @@ class SavedEventsApp extends StatelessWidget {
 }
 
 class SavedEventsPage extends StatelessWidget {
+  const SavedEventsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Get screen width and height for responsive design
@@ -32,7 +36,7 @@ class SavedEventsPage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => VolunteerDashboard()),
+              MaterialPageRoute(builder: (context) => const VolunteerDashboard()),
             );
           },
         ),
@@ -72,6 +76,8 @@ class SavedEventsPage extends StatelessWidget {
 }
 
 class EventCard extends StatefulWidget {
+  const EventCard({super.key});
+
   @override
   _EventCardState createState() => _EventCardState();
 }
@@ -82,11 +88,11 @@ class _EventCardState extends State<EventCard> {
   @override
   Widget build(BuildContext context) {
     // Define custom colors directly
-    Color backgroundColor = Color(0xFF1F1F1F); // Dark background color
-    Color textColor = Color(0xFFFFFFFF); // White text color
-    Color buttonColor = Color(0xFF1F1F1F); // Blue button color
-    Color buttonTextColor = Color(0xFFFFFFFF); // Black text for button
-    Color cardTextColor = Color(0xFF1F1F1F); // Black text for Card
+    Color backgroundColor = const Color(0xFF1F1F1F); // Dark background color
+    Color textColor = const Color(0xFFFFFFFF); // White text color
+    Color buttonColor = const Color(0xFF1F1F1F); // Blue button color
+    Color buttonTextColor = const Color(0xFFFFFFFF); // Black text for button
+    Color cardTextColor = const Color(0xFF1F1F1F); // Black text for Card
 
     // Get screen size for responsive design
     final size = MediaQuery.of(context).size;
@@ -99,7 +105,7 @@ class _EventCardState extends State<EventCard> {
           BoxShadow(
             color: backgroundColor,
             blurRadius: 5,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
