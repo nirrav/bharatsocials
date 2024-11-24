@@ -1,11 +1,12 @@
-import 'package:bharatsocials/login/userData.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:bharatsocials/login/userData.dart';
 import 'package:bharatsocials/volunteers/settings.dart';
 import 'package:bharatsocials/volunteers/acheivement.dart';
 import 'package:bharatsocials/volunteers/viewProfile.dart';
 import 'package:bharatsocials/volunteers/attendedEvent.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class VolunteerSidebar extends StatelessWidget {
   const VolunteerSidebar({super.key});
@@ -13,8 +14,6 @@ class VolunteerSidebar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Ensure that you're using the color scheme from AppColors
-    Color defaultTextColor = AppColors.defualtTextColor(context);
-    Color iconColor = AppColors.iconColor(context);
 
     return Drawer(
       child: Column(
@@ -50,16 +49,16 @@ class VolunteerSidebar extends StatelessWidget {
                   title: 'Settings',
                   onTap: () => _navigateTo(context, SettingsPage()),
                 ),
-                _buildMenuItem(
-                  context: context,
-                  icon: Icons.info,
-                  title: 'Dummy Button', // Dummy button for demonstration
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Dummy Button Pressed!')),
-                    );
-                  },
-                ),
+                // _buildMenuItem(
+                //   context: context,
+                //   icon: Icons.info,
+                //   title: 'Dummy Button', // Dummy button for demonstration
+                //   onTap: () {
+                //     ScaffoldMessenger.of(context).showSnackBar(
+                //       const SnackBar(content: Text('Dummy Button Pressed!')),
+                //     );
+                //   },
+                // ),
               ],
             ),
           ),
@@ -70,11 +69,11 @@ class VolunteerSidebar extends StatelessWidget {
 
   // Drawer Header Widget
   Widget _buildDrawerHeader(BuildContext context) {
-    String userName = 'User Name'; // Default username
+    String userName = 'User  Name'; // Default username
 
     // Check if the current user is a volunteer and use their first name if available
     if (GlobalUser.currentUser?.role == 'volunteer') {
-      userName = GlobalUser.currentUser?.firstName ?? 'User Name';
+      userName = GlobalUser.currentUser?.firstName ?? 'User  Name';
     }
 
     // Get user image if available
@@ -82,7 +81,7 @@ class VolunteerSidebar extends StatelessWidget {
 
     return DrawerHeader(
       decoration: BoxDecoration(
-        color: AppColors.titleColor(context), // Use AppColors for background
+        color: AppColors.appBgColor(context), // Use AppColors for background
       ),
       child: Row(
         children: [
@@ -91,13 +90,14 @@ class VolunteerSidebar extends StatelessWidget {
             radius: 30,
             backgroundColor: AppColors.appBgColor(context),
             backgroundImage: userImage.isNotEmpty
-                ? NetworkImage(userImage)
-                : null, // Display image if available
+                ? NetworkImage(userImage) // Display image if available
+                : null, // No image if empty
             child: userImage.isEmpty
-                ? const Icon(
-                    Icons.person,
+                ? Icon(
+                    FontAwesomeIcons.user, // Use Font Awesome icon
                     size: 40,
-                    color: Colors.black, // Icon color from AppColors
+                    color: AppColors.iconColor(
+                        context), // Icon color from AppColors
                   )
                 : null, // Show default icon if no image available
           ),

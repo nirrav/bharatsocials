@@ -1,29 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: NotificationPage(),
-    );
-  }
-}
-
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     // Get theme-dependent colors using the AppColors utility
-    Color backgroundColor = AppColors.appBgColor(context);
-    Color textColor = AppColors.titleTextColor(context);
-    Color defautlTextColor = AppColors.defualtTextColor(context);
-    Color buttonColor = AppColors.mainButtonColor(context);
-    Color buttonTextColor = AppColors.mainButtonTextColor(context);
-    Color cardTextColor = AppColors.eventCardTextColor(context);
 
     // Get screen width and height for responsive design
     double screenWidth = MediaQuery.of(context).size.width;
@@ -46,7 +29,7 @@ class NotificationPage extends StatelessWidget {
         ), // Using button color for AppBar background
       ),
       body: Container(
-        color: backgroundColor, // Set background color
+        color: AppColors.appBgColor(context), // Set background color
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -54,18 +37,22 @@ class NotificationPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SectionTitle(
-                    title: 'Unread', defautlTextColor: defautlTextColor),
+                    title: 'Unread',
+                    defautlTextColor: AppColors.defualtTextColor(context)),
                 NotificationRow(),
                 NotificationRow(),
                 NotificationRow(),
                 NotificationRow(),
                 const SizedBox(height: 20),
                 SectionTitle(
-                    title: 'Today', defautlTextColor: defautlTextColor),
+                    title: 'Today',
+                    defautlTextColor: AppColors.defualtTextColor(context)),
                 NotificationRow(),
                 NotificationRow(),
                 const SizedBox(height: 20),
-                SectionTitle(title: 'Date', defautlTextColor: defautlTextColor),
+                SectionTitle(
+                    title: 'Date',
+                    defautlTextColor: AppColors.defualtTextColor(context)),
                 NotificationRow(),
               ],
             ),
@@ -80,7 +67,8 @@ class SectionTitle extends StatelessWidget {
   final String title;
   final Color defautlTextColor; // Added defautlTextColor parameter
 
-  const SectionTitle({super.key, required this.title, required this.defautlTextColor});
+  const SectionTitle(
+      {super.key, required this.title, required this.defautlTextColor});
 
   @override
   Widget build(BuildContext context) {
@@ -107,15 +95,15 @@ class NotificationRow extends StatelessWidget {
       child: Container(
         height: 50,
         decoration: BoxDecoration(
-          color: Colors.grey[
-              300], // You might want to replace this with a color from AppColors
+          color: AppColors.eventCardBgColor(
+              context), // You might want to replace this with a color from AppColors
           borderRadius: BorderRadius.circular(10),
         ),
         child: Center(
           child: Text(
             'Notification Message', // Example text
             style: TextStyle(
-                color: AppColors.defualtTextColor(
+                color: AppColors.eventCardTextColor(
                     context)), // Use text color from AppColors
           ),
         ),

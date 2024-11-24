@@ -11,28 +11,28 @@ class RoleSelectionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    // Use AppColors methods to get the correct colors for the current theme
-    Color backgroundColor = AppColors.appBgColor(context);
-    Color textColor = AppColors.defualtTextColor(context);
-    Color buttonColor = AppColors.mainButtonColor(context);
-    Color buttonTextColor = AppColors.mainButtonTextColor(context);
-
     return AlertDialog(
-      backgroundColor: backgroundColor,
+      backgroundColor: AppColors.appBgColor(context),
       title: Text(
         'Who are you?',
         style: GoogleFonts.poppins(
           fontSize: 20,
           fontWeight: FontWeight.w500,
-          color: textColor,
+          color: AppColors.defualtTextColor(context),
         ),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildRoleOption(context, 'volunteer', buttonColor, buttonTextColor),
-          _buildRoleOption(context, 'ngo', buttonColor, buttonTextColor),
-          _buildRoleOption(context, 'admin', buttonColor, buttonTextColor),
+          _buildRoleOption(
+              context,
+              'volunteer',
+              AppColors.mainButtonColor(context),
+              AppColors.mainButtonTextColor(context)),
+          _buildRoleOption(context, 'ngo', AppColors.mainButtonColor(context),
+              AppColors.mainButtonTextColor(context)),
+          _buildRoleOption(context, 'admin', AppColors.mainButtonColor(context),
+              AppColors.mainButtonTextColor(context)),
         ],
       ),
     );

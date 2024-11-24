@@ -10,17 +10,14 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get theme-dependent colors using the AppColors utility
-    Color backgroundColor = AppColors.appBgColor(context);
-    Color textColor = AppColors.defualtTextColor(context);
-    Color buttonColor = AppColors.mainButtonColor(context);
-    Color buttonTextColor = AppColors.mainButtonTextColor(context);
 
     // Get screen width and height for responsive design
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: backgroundColor, // Set the background color
+      backgroundColor:
+          AppColors.appBgColor(context), // Set the background color
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -84,7 +81,8 @@ class HomePage extends StatelessWidget {
                 style: GoogleFonts.poppins(
                   fontSize: screenWidth > 600 ? 28 : 24,
                   fontWeight: FontWeight.w500,
-                  color: textColor, // Use textColor based on theme
+                  color: AppColors.defualtTextColor(
+                      context), // Use textColor based on theme
                 ),
               ),
               Text(
@@ -92,7 +90,8 @@ class HomePage extends StatelessWidget {
                 style: GoogleFonts.poppins(
                   fontSize: screenWidth > 600 ? 40 : 32,
                   fontWeight: FontWeight.bold,
-                  color: textColor, // Use textColor based on theme
+                  color: AppColors.defualtTextColor(
+                      context), // Use textColor based on theme
                 ),
               ),
               SizedBox(height: screenHeight * 0.05),
@@ -109,7 +108,8 @@ class HomePage extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: buttonColor, // Button background color
+                  backgroundColor: AppColors.mainButtonColor(
+                      context), // Button background color
                   padding: EdgeInsets.symmetric(
                     horizontal: screenWidth * 0.15,
                     vertical: 16,
@@ -123,7 +123,8 @@ class HomePage extends StatelessWidget {
                   'Get Started',
                   style: GoogleFonts.poppins(
                     fontSize: 20,
-                    color: buttonTextColor, // Button text color
+                    color: AppColors.mainButtonTextColor(
+                        context), // Button text color
                   ),
                 ),
               ),
@@ -141,7 +142,7 @@ class HomePage extends StatelessWidget {
                         'Already Member?',
                         style: GoogleFonts.poppins(
                           fontSize: 20,
-                          color: textColor,
+                          color: AppColors.defualtTextColor(context),
                         ),
                       ),
                     ),
@@ -157,7 +158,7 @@ class HomePage extends StatelessWidget {
                         'Log In',
                         style: GoogleFonts.poppins(
                           fontSize: 20,
-                          color: textColor,
+                          color: AppColors.defualtTextColor(context),
                         ),
                       ),
                     )

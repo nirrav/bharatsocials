@@ -1,7 +1,7 @@
+import 'package:bharatsocials/admins/UniAdmin/uniDashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/admins/UniAdmin/UniProfile.dart';
 import 'package:bharatsocials/admins/UniAdmin/Unisettings.dart';
-import 'package:bharatsocials/admins/UniAdmin/UniDashboard.dart';
 
 class SlideBar extends StatelessWidget {
   @override
@@ -55,7 +55,7 @@ class SlideBar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => UniAdmins()),
+                MaterialPageRoute(builder: (context) => UniAdminDashboard()),
               );
             },
           ),

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:bharatsocials/colors.dart';
 import 'package:bharatsocials/volunteers/NotiPage.dart';
 import 'package:bharatsocials/admins/UniAdmin/Boardcast.dart';
 import 'package:bharatsocials/admins/UniAdmin/collegeAct.dart';
 import 'package:bharatsocials/admins/UniAdmin/EventDetails.dart';
 import 'package:bharatsocials/admins/UniAdmin/Unisidebar.dart'; // Import the SlideBar widget
-
-
 
 class UniAdminDashboard extends StatefulWidget {
   @override
@@ -26,21 +25,22 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
     return Scaffold(
       key: _scaffoldKey, // Attach the scaffold key to Scaffold
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.appBgColor(context),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.menu, color: Colors.black),
+          icon: Icon(Icons.menu, color: AppColors.iconColor(context)),
           onPressed: () {
             _scaffoldKey.currentState?.openDrawer(); // Open the drawer
           },
         ),
         title: Text(
           'Dashboard',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: AppColors.titleTextColor(context)),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications, color: Colors.black),
+            icon:
+                Icon(Icons.notifications, color: AppColors.iconColor(context)),
             onPressed: () {
               Navigator.push(
                 context,
@@ -56,7 +56,7 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Upcoming Event',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
@@ -160,7 +160,7 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
 
   Widget _buildEventCard(int index) {
     return Card(
-      color: Colors.grey[300],
+      color: AppColors.eventCardBgColor(context),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -188,14 +188,15 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
+                  backgroundColor: AppColors.mainButtonColor(context),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
                 child: Text(
                   'View More →',
-                  style: TextStyle(color: Colors.white),
+                  style:
+                      TextStyle(color: AppColors.mainButtonTextColor(context)),
                 ),
               ),
             ),
@@ -207,7 +208,7 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
 
   Widget _buildCollegeCard(int index) {
     return Card(
-      color: Colors.grey[300],
+      color: AppColors.eventCardBgColor(context),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -223,7 +224,8 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
               backgroundColor: const Color.fromARGB(255, 66, 66, 66),
               child: Text(
                 'Logo',
-                style: TextStyle(color: Colors.white, fontSize: 12),
+                style: TextStyle(
+                    color: AppColors.eventCardTextColor(context), fontSize: 12),
               ),
             ),
           ),
@@ -238,6 +240,7 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
                   Text('College Name $index', style: TextStyle(fontSize: 16)),
                   SizedBox(height: 8),
                   ElevatedButton(
+                    //Button
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -246,14 +249,15 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
+                      backgroundColor: AppColors.mainButtonColor(context),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
                     child: Text(
                       'View More →',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                          color: AppColors.mainButtonTextColor(context)),
                     ),
                   ),
                 ],

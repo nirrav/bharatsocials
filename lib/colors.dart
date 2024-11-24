@@ -45,6 +45,13 @@ class AppColors {
             255, 0, 0, 0); // Lighter text for dark mode, bright white for light
   }
 
+  static Color FAB(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return isDarkMode
+        ? const Color.fromARGB(255, 255, 255, 255) // Dark mode color (rgba(117, 117, 117, 1))
+        : const Color.fromARGB(255, 155, 152, 152); // Light mode color (rgba(217, 217, 217, 1))
+  }
+
   static Color mainButtonTextColor(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return isDarkMode

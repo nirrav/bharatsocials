@@ -1,8 +1,9 @@
-import 'package:bharatsocials/login/userData.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
-import 'package:bharatsocials/volunteers/volDashboard.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:bharatsocials/login/userData.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bharatsocials/volunteers/volDashboard.dart';
 
 class ViewProfilePage extends StatefulWidget {
   const ViewProfilePage({super.key});
@@ -62,8 +63,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
 
       if (userQuerySnapshot.docs.isNotEmpty) {
         // Assuming there's only one document per email, get the first document's id
-        uid = userQuerySnapshot
-            .docs.first.id; // This is the Firestore-generated document ID
+        uid = userQuerySnapshot.docs.first.id;
       }
     } catch (e) {
       print("Error fetching user data: $e");
@@ -82,7 +82,10 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
       String updatedDepartment = _departmentController.text;
 
       // Update the user document in Firestore
-      await FirebaseFirestore.instance.collection('volunteers').doc(uid).update({
+      await FirebaseFirestore.instance
+          .collection('volunteers')
+          .doc(uid)
+          .update({
         'first_name': updatedName,
         'email': updatedEmail,
         'roll_no': updatedRollNo,
@@ -103,26 +106,23 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Get theme-dependent colors using the AppColors utility
-    Color backgroundColor = AppColors.appBgColor(context);
-    Color textColor = AppColors.defualtTextColor(context);
-    Color buttonColor = AppColors.mainButtonColor(context);
-    Color buttonTextColor = AppColors.mainButtonTextColor(context);
-
-    // Get screen width and height for responsive design
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'View Profile',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+            color: AppColors.titleTextColor(
+                context), // Use dynamic color from AppColors
+            fontFamily: GoogleFonts.poppins()
+                .fontFamily, // Apply the font family properly
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.titleColor(context),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: AppColors.iconColor(context)),
           onPressed: () {
             Navigator.push(
               context,
@@ -135,91 +135,95 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Profile Picture (Placeholder for now, can be replaced with actual image)
-            CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.grey.shade300,
-              backgroundImage: GlobalUser.currentUser?.image.isNotEmpty ?? false
-                  ? NetworkImage(GlobalUser.currentUser!.image)
-                  : null, // Replace with actual image if available
-              child: GlobalUser.currentUser?.image.isEmpty ?? true
-                  ? const Icon(
-                      Icons.person,
-                      size: 50,
-                      color: Colors.black54,
-                    )
-                  : null,
-            ),
-            const SizedBox(height: 20),
-            // Name (Display first name of the user)
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-                border: UnderlineInputBorder(),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Profile Picture
+              CircleAvatar(
+                radius: 50,
+                backgroundColor: AppColors.titleColor(context),
+                backgroundImage:
+                    (GlobalUser.currentUser?.image?.isNotEmpty ?? false)
+                        ? NetworkImage(GlobalUser.currentUser!.image!)
+                        : null,
+                child: (GlobalUser.currentUser?.image?.isEmpty ?? true)
+                    ? const Icon(
+                        Icons.person,
+                        size: 50,
+                        color: Colors.black54,
+                      )
+                    : null,
               ),
-              readOnly: !isEditing,
-            ),
-            const SizedBox(height: 10),
-            // College Name (Read-only)
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: UnderlineInputBorder(),
-              ),
-              readOnly: !isEditing,
-            ),
-            const SizedBox(height: 10),
-            // Roll No
-            TextField(
-              controller: _rollNoController,
-              decoration: const InputDecoration(
-                labelText: 'Roll No',
-                border: UnderlineInputBorder(),
-              ),
-              readOnly: !isEditing,
-            ),
-            const SizedBox(height: 10),
-            // Department
-            TextField(
-              controller: _departmentController,
-              decoration: const InputDecoration(
-                labelText: 'Department',
-                border: UnderlineInputBorder(),
-              ),
-              readOnly: !isEditing,
-            ),
-            const SizedBox(height: 20),
-            // Edit Profile Button
-            ElevatedButton(
-              onPressed: () {
-                if (isEditing) {
-                  // When the button is pressed in edit mode, update data
-                  _updateUserData();
-                }
-                setState(() {
-                  isEditing = !isEditing; // Toggle edit state
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+              const SizedBox(height: 20),
+              // Name
+              TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Name',
+                  border: UnderlineInputBorder(),
                 ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 50,
-                  vertical: 15,
+                readOnly: !isEditing,
+              ),
+              const SizedBox(height: 10),
+              // Email
+              TextField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  border: UnderlineInputBorder(),
+                ),
+                readOnly: !isEditing,
+              ),
+              const SizedBox(height: 10),
+              // Roll No
+              TextField(
+                controller: _rollNoController,
+                decoration: const InputDecoration(
+                  labelText: 'Roll No',
+                  border: UnderlineInputBorder(),
+                ),
+                readOnly: !isEditing,
+              ),
+              const SizedBox(height: 10),
+              // Department
+              TextField(
+                controller: _departmentController,
+                decoration: const InputDecoration(
+                  labelText: 'Department',
+                  border: UnderlineInputBorder(),
+                ),
+                readOnly: !isEditing,
+              ),
+              const SizedBox(height: 20),
+              // Edit/Submit Button
+              ElevatedButton(
+                onPressed: () {
+                  if (isEditing) {
+                    _updateUserData();
+                  }
+                  setState(() {
+                    isEditing = !isEditing; // Toggle edit state
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 50,
+                    vertical: 15,
+                  ),
+                ),
+                child: Text(
+                  isEditing ? 'Submit' : 'Edit Profile',
+                  style:
+                      TextStyle(color: AppColors.mainButtonTextColor(context)),
                 ),
               ),
-              child: Text(
-                isEditing ? 'Submit' : 'Edit Profile',
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

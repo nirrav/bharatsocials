@@ -142,13 +142,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    Color backgroundColor = AppColors.appBgColor(context);
-    Color textColor = AppColors.defualtTextColor(context);
-    Color buttonColor = AppColors.mainButtonColor(context);
-    Color buttonTextColor = AppColors.mainButtonTextColor(context);
-
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: AppColors.appBgColor(context),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -179,7 +174,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       style: GoogleFonts.poppins(
                         fontSize: screenWidth > 600 ? 30 : 26,
                         fontWeight: FontWeight.w500,
-                        color: textColor,
+                        color: AppColors.defualtTextColor(context),
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.02),
@@ -234,14 +229,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               _isTermsAgreed = value ?? false;
                             });
                           },
-                          activeColor: buttonColor,
+                          activeColor: AppColors.mainButtonColor(context),
                         ),
                         Expanded(
                           child: Text(
                             'I Agree To Term And Condition',
                             style: GoogleFonts.poppins(
                               fontSize: screenWidth > 600 ? 16 : 14,
-                              color: textColor,
+                              color: AppColors.defualtTextColor(context),
                             ),
                           ),
                         ),
@@ -251,7 +246,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             '(READ T&C)',
                             style: GoogleFonts.poppins(
                               fontSize: screenWidth > 600 ? 16 : 14,
-                              color: buttonColor,
+                              color: AppColors.defualtTextColor(context),
                             ),
                           ),
                         ),

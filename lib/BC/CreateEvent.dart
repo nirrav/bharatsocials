@@ -29,6 +29,7 @@ class _EventFormPageState extends State<EventFormPage> {
   bool waterProvided = false;
   bool foodProvided = false;
   bool safetyEquipment = false;
+  String? currentUserId;
 
   DateTime? eventDateTime;
 
@@ -37,6 +38,9 @@ class _EventFormPageState extends State<EventFormPage> {
     super.initState();
     // Set the host name based on the current user when the page is initialized
     final currentUser = GlobalUser.currentUser;
+    var currentUserId = GlobalUser.currentUser?.documentId; // Get current user ID
+    print(currentUser);
+    print(currentUserId);
     if (currentUser != null) {
       hostNameController.text = currentUser.role == 'ngo'
           ? currentUser.organizationName ?? ''
@@ -301,95 +305,139 @@ class _EventFormPageState extends State<EventFormPage> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      // Collect data and save it to Firestore
-                      String hostId =
-                          currentUser?.documentId ?? ''; // Use documentId here
-                      String userRole = currentUser?.role ?? '';
-                      String hostName = currentUser?.role == 'ngo'
-                          ? currentUser?.organizationName ?? ''
-                          : currentUser?.adminName ?? '';
-                      String eventName = eventNameController.text;
-                      String eventLocation = eventLocationController.text;
-                      String pocFullName = pocFullNameController.text;
-                      String pocNumber = pocNumberController.text;
-                      String pocLocation = pocLocationController.text;
-                      int requiredVolunteers =
-                          int.tryParse(requiredVolunteersController.text) ?? 0;
+                    try {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        // Collect data from form fields
+                        String hostId = currentUser?.documentId ??
+                            ''; // Use documentId here
+                        String userRole = currentUser?.role ?? '';
+                        String hostName = currentUser?.role == 'ngo'
+                            ? currentUser?.organizationName ?? ''
+                            : currentUser?.adminName ?? '';
+                        String eventName = eventNameController.text;
+                        String eventLocation = eventLocationController.text;
+                        String pocFullName = pocFullNameController.text;
+                        String pocNumber = pocNumberController.text;
+                        String pocLocation = pocLocationController.text;
+                        int requiredVolunteers =
+                            int.tryParse(requiredVolunteersController.text) ??
+                                0;
 
-                      // Add event to Firestore with 'posted' timestamp
-                      DocumentReference eventDocRef = await FirebaseFirestore
-                          .instance
-                          .collection('events')
-                          .add({
-                        'hostId': hostId,
-                        'role': userRole,
-                        'hostName': hostName,
-                        'eventName': eventName,
-                        'eventLocation': eventLocation,
-                        'eventDateTime': eventDateTime ?? Timestamp.now(),
-                        'pocFullName': pocFullName,
-                        'pocNumber': pocNumber,
-                        'pocLocation': pocLocation,
-                        'waterProvided': waterProvided,
-                        'foodProvided': foodProvided,
-                        'safetyEquipment': safetyEquipment,
-                        'requiredVolunteers': requiredVolunteers,
-                        'readBy':
-                            [], // Adding an empty array for 'readBy' field
-                        'posted':
-                            Timestamp.now(), // Add the posted timestamp here
-                      });
-
-                      // Get the event's document ID
-                      String eventId = eventDocRef.id;
-
-                      // After event is created, update the eventsPosted field in the host's document
-                      if (userRole == 'ngo' || userRole == 'admin') {
-                        // Determine collection name based on user role
-                        String collectionName =
-                            userRole == 'ngo' ? 'ngos' : 'admins';
-
-                        // Get the reference to the host document
-                        DocumentReference hostDocRef = FirebaseFirestore
+                        // Add event to Firestore with 'posted' timestamp
+                        DocumentReference eventDocRef = await FirebaseFirestore
                             .instance
-                            .collection(collectionName)
-                            .doc(hostId);
+                            .collection('events')
+                            .add({
+                          'hostId': hostId,
+                          'role': userRole,
+                          'hostName': hostName,
+                          'eventName': eventName,
+                          'eventLocation': eventLocation,
+                          'eventDateTime': eventDateTime ?? Timestamp.now(),
+                          'pocFullName': pocFullName,
+                          'pocNumber': pocNumber,
+                          'pocLocation': pocLocation,
+                          'waterProvided': waterProvided,
+                          'foodProvided': foodProvided,
+                          'safetyEquipment': safetyEquipment,
+                          'requiredVolunteers': requiredVolunteers,
+                          'readBy':
+                              [], // Adding an empty array for 'readBy' field
+                          'posted':
+                              Timestamp.now(), // Add the posted timestamp here
+                        });
 
-                        // Fetch the host document to update the eventsPosted array
-                        await hostDocRef.get().then((hostDoc) async {
-                          if (hostDoc.exists) {
-                            // Update the 'eventsPosted' array in the host document
-                            await hostDocRef.update({
-                              'eventsPosted': FieldValue.arrayUnion(
-                                  [eventId]) // Add the event ID to the array
+                        // Get the event's document ID
+                        String eventId = eventDocRef.id;
+
+                        // After event is created, update the eventsPosted field in the host's document
+                        if (userRole == 'ngo' || userRole == 'admin') {
+                          String collectionName =
+                              userRole == 'ngo' ? 'ngos' : 'admins';
+                          DocumentReference hostDocRef = FirebaseFirestore
+                              .instance
+                              .collection(collectionName)
+                              .doc(hostId);
+
+                          // Fetch the host document to update the eventsPosted array
+                          await hostDocRef.get().then((hostDoc) async {
+                            if (hostDoc.exists) {
+                              // Update the 'eventsPosted' array in the host document
+                              await hostDocRef.update({
+                                'eventsPosted': FieldValue.arrayUnion(
+                                    [eventId]) // Add the event ID to the array
+                              });
+                            } else {
+                              // If the host document doesn't exist (shouldn't happen), handle this case
+                              print("Host document not found!");
+                            }
+                          });
+                        }
+
+                        // Reference to the admin document (assuming currentAdminCollege is used to find the admin)
+                        DocumentReference adminDoc = FirebaseFirestore.instance
+                            .collection(
+                                'admins') // Collection that holds admin documents
+                            .doc(
+                                currentUserId); // Assuming the admin's document ID is the college name
+
+                        // Get the admin document to check for the existing upcomingEvents array
+                        DocumentSnapshot adminSnapshot = await adminDoc.get();
+
+                        // Check if the admin document exists and if it has an upcomingEvents array
+                        if (adminSnapshot.exists) {
+                          List<dynamic> upcomingEvents =
+                              adminSnapshot['interestedEvents'] ?? [];
+
+                          // Check if the eventId is already in the array, if not, add it
+                          if (!upcomingEvents.contains(eventId)) {
+                            upcomingEvents.add(eventId);
+
+                            // Update the admin document with the new upcomingEvents array
+                            await adminDoc.update({
+                              'interestedEvents': upcomingEvents,
                             });
+
+                            print(
+                                "Admin's upcoming events updated with event ID: $eventId");
                           } else {
-                            // If the host document doesn't exist (shouldn't happen), handle this case
-                            print("Host document not found!");
+                            print(
+                                "Event ID is already in the upcoming events array.");
                           }
+                        } else {
+                          print(
+                              "Admin document does not exist for the given college.");
+                        }
+
+                        // Show success message
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Event submitted successfully!')),
+                        );
+
+                        // Reset the form fields
+                        _formKey.currentState?.reset();
+                        eventNameController.clear();
+                        eventLocationController.clear();
+                        pocFullNameController.clear();
+                        pocNumberController.clear();
+                        pocLocationController.clear();
+                        requiredVolunteersController.clear();
+                        eventDateController.clear();
+                        eventTimeController.clear();
+                        setState(() {
+                          waterProvided = false;
+                          foodProvided = false;
+                          safetyEquipment = false;
                         });
                       }
-
-                      // Show success message
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text('Event submitted successfully!')));
-
-                      // Reset the form fields
-                      _formKey.currentState?.reset();
-                      eventNameController.clear();
-                      eventLocationController.clear();
-                      pocFullNameController.clear();
-                      pocNumberController.clear();
-                      pocLocationController.clear();
-                      requiredVolunteersController.clear();
-                      eventDateController.clear();
-                      eventTimeController.clear();
-                      setState(() {
-                        waterProvided = false;
-                        foodProvided = false;
-                        safetyEquipment = false;
-                      });
+                    } catch (e) {
+                      print("Error submitting event details: $e");
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content:
+                                Text('Error submitting event details: $e')),
+                      );
                     }
                   },
                   child: const Text('Submit'),

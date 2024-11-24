@@ -5,8 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bharatsocials/login/userData.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class NgoSlideBar extends StatelessWidget {
-  const NgoSlideBar({super.key});
+class AdminSidebar extends StatelessWidget {
+  const AdminSidebar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +29,12 @@ class NgoSlideBar extends StatelessWidget {
                     color: AppColors.iconColor(context), size: 50),
                 const SizedBox(height: 8),
                 Text(
-                  'Hello, ${currentUser?.organizationName ?? 'User'}!', // Show user's first name if available
+                  'Hello, ${currentUser?.adminName ?? 'User'}!', // Show user's first name if available
                   style: TextStyle(
                       color: AppColors.iconColor(context), fontSize: 18),
                 ),
                 Text(
-                  currentUser?.email ??
+                  currentUser?.adminEmail ??
                       'user@example.com', // Show user's email if available
                   style: TextStyle(
                       color: AppColors.iconColor(context), fontSize: 14),

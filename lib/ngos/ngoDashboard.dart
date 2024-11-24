@@ -1,15 +1,15 @@
-import 'package:bharatsocials/colors.dart';
-import 'package:bharatsocials/login/userData.dart';
-import 'package:bharatsocials/ngos/ngoEventDetails.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bharatsocials/BC/broadcastChannel.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:bharatsocials/colors.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:bharatsocials/BC/CreateEvent.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bharatsocials/BC/eventDetails.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bharatsocials/ngos/Sidebar.dart'; // Import the sidebar file
 import 'package:bharatsocials/volunteers/NotiPage.dart'; // Import Notification Page
 import 'package:bharatsocials/ngos/ngoBroaddcastChannel.dart'; // Import NgoBroadcastChannelScreen
-import 'package:bharatsocials/ngos/CreateEvent.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
 class NgoDashboard extends StatefulWidget {
   const NgoDashboard({super.key});
@@ -39,34 +39,34 @@ class _DashboardScreenState extends State<NgoDashboard> {
   void _navigateToNgoBroadcastChannelScreen() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => NgoBroadcastChannelScreen()),
+      MaterialPageRoute(builder: (context) => BroadcastChannel()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.appBgColor(context),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.titleColor(context),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Dashboard',
+              'NGO Dashboard',
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: AppColors.titleTextColor(context),
               ),
             ),
           ],
         ),
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.notifications_active,
-              color: Colors.black,
+              color: AppColors.iconColor(context),
             ),
             onPressed: () {
               Navigator.push(
@@ -87,7 +87,7 @@ class _DashboardScreenState extends State<NgoDashboard> {
           ),
         ),
       ),
-      drawer: const SlideBar(),
+      drawer:  NgoSlideBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -95,11 +95,11 @@ class _DashboardScreenState extends State<NgoDashboard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildSectionHeader(context, title: 'Upcoming Campaigns'),
-              const SizedBox(height: 8),
+              const SizedBox(height: 18),
               _buildUpcomingEventsHorizontalList(),
               const SizedBox(height: 16),
               _buildSectionHeader(context, title: 'Our Campaigns'),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               _buildAllEventsHorizontalList(),
             ],
           ),
@@ -108,12 +108,12 @@ class _DashboardScreenState extends State<NgoDashboard> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.titleColor(context),
         showSelectedLabels: true,
         showUnselectedLabels: false,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.black),
+            icon: Icon(Icons.home, color: AppColors.iconColor(context)),
             label: 'Dashboard',
           ),
           BottomNavigationBarItem(
@@ -126,14 +126,14 @@ class _DashboardScreenState extends State<NgoDashboard> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.eventCardBgColor(context),
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const EventFormPage()),
           );
         },
-        child: const Icon(Icons.add, color: Colors.black),
+        child: Icon(Icons.add, color: AppColors.eventCardTextColor(context)),
       ),
     );
   }
@@ -144,7 +144,8 @@ class _DashboardScreenState extends State<NgoDashboard> {
       children: [
         Text(
           title,
-          style: const TextStyle(color: Colors.black, fontSize: 18),
+          style: TextStyle(
+              color: AppColors.defualtTextColor(context), fontSize: 18),
         ),
         GestureDetector(
           onTap: () {
@@ -161,9 +162,10 @@ class _DashboardScreenState extends State<NgoDashboard> {
               );
             }
           },
-          child: const Text(
+          child: Text(
             'See More..',
-            style: TextStyle(color: Colors.blue, fontSize: 14),
+            style:
+                TextStyle(color: AppColors.subTextColor(context), fontSize: 14),
           ),
         ),
       ],
@@ -215,8 +217,8 @@ class _DashboardScreenState extends State<NgoDashboard> {
                   width: 250,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.eventCardBgColor(context),
+                    borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
@@ -230,26 +232,29 @@ class _DashboardScreenState extends State<NgoDashboard> {
                     children: [
                       Text(
                         eventName,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 45, 45, 45),
+                          color: AppColors.eventCardTextColor(context),
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'Event Date: $eventDate',
-                        style: const TextStyle(color: Colors.black),
+                        style: TextStyle(
+                            color: AppColors.eventCardTextColor(context)),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'Event Location: $eventLocation',
-                        style: const TextStyle(color: Colors.black),
+                        style: TextStyle(
+                            color: AppColors.eventCardTextColor(context)),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          foregroundColor: Colors.white,
+                          backgroundColor: AppColors.mainButtonColor(context),
+                          foregroundColor:
+                              AppColors.mainButtonTextColor(context),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -331,8 +336,8 @@ class _DashboardScreenState extends State<NgoDashboard> {
                   width: 250,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.eventCardBgColor(context),
+                    borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
@@ -346,30 +351,34 @@ class _DashboardScreenState extends State<NgoDashboard> {
                     children: [
                       Text(
                         eventName,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 45, 45, 45),
+                          color: AppColors.eventCardTextColor(context),
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'Event Date: $eventDate',
-                        style: const TextStyle(color: Colors.black),
+                        style: TextStyle(
+                            color: AppColors.eventCardTextColor(context)),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'Event Location: $eventLocation',
-                        style: const TextStyle(color: Colors.black),
+                        style: TextStyle(
+                            color: AppColors.eventCardTextColor(context)),
                       ),
                       const SizedBox(height: 8),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          foregroundColor: Colors.white,
+                          backgroundColor: AppColors.mainButtonColor(context),
+                          foregroundColor:
+                              AppColors.mainButtonTextColor(context),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
+                        child: const Text('View More'),
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -379,7 +388,6 @@ class _DashboardScreenState extends State<NgoDashboard> {
                             ),
                           );
                         },
-                        child: const Text('View More'),
                       ),
                     ],
                   ),
@@ -393,7 +401,6 @@ class _DashboardScreenState extends State<NgoDashboard> {
   }
 }
 
-
 class AllCampaignsPage extends StatefulWidget {
   const AllCampaignsPage({super.key});
 
@@ -406,13 +413,16 @@ class _AllCampaignsPageState extends State<AllCampaignsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('All Campaigns', style: TextStyle(color: Colors.black)),
+        backgroundColor: AppColors.titleColor(context),
+        elevation: 8,
+        title: Text('All Campaigns',
+            style: TextStyle(color: AppColors.titleTextColor(context))),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('events')
-            .orderBy('posted', descending: false) // Order by the 'posted' field, oldest first
+            .orderBy('posted',
+                descending: false) // Order by the 'posted' field, oldest first
             .snapshots(), // Listen for changes in the 'events' collection
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -451,9 +461,9 @@ class _AllCampaignsPageState extends State<AllCampaignsPage> {
               }
 
               return Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
+                padding: const EdgeInsets.only(bottom: 15.0),
                 child: Card(
-                  color: Colors.grey[300],
+                  color: AppColors.eventCardBgColor(context),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
@@ -478,12 +488,19 @@ class _AllCampaignsPageState extends State<AllCampaignsPage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => NgoEventDetailsPage(
-                                    eventId: event.id), // Pass the event ID
+                                  eventId: event.id, // Pass the event ID
+                                ),
                               ),
                             );
                           },
-                          child: const Text('View More'),
-                        ),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor:
+                                AppColors.mainButtonTextColor(context),
+                            backgroundColor: AppColors.mainButtonColor(
+                                context), // Set text color
+                          ),
+                          child: Text('View More'),
+                        )
                       ],
                     ),
                   ),
@@ -494,20 +511,18 @@ class _AllCampaignsPageState extends State<AllCampaignsPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.eventCardBgColor(context),
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const EventFormPage()),
           );
         },
-        child: const Icon(Icons.add, color: Colors.black),
+        child: Icon(Icons.add, color: AppColors.iconColor(context)),
       ),
     );
   }
 }
-
-
 
 class UpcomingCampaignsPage extends StatefulWidget {
   const UpcomingCampaignsPage({super.key});
@@ -519,22 +534,26 @@ class UpcomingCampaignsPage extends StatefulWidget {
 class _UpcomingCampaignsPageState extends State<UpcomingCampaignsPage> {
   @override
   Widget build(BuildContext context) {
-    // Get the current date and time
     DateTime currentDateTime = DateTime.now();
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text(
+        backgroundColor: AppColors.appBgColor(context),
+        title: Text(
           'Upcoming Campaigns',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+            color: AppColors.titleTextColor(context),
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
         ),
+        elevation: 10,
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('events')
-            .orderBy('eventDateTime', descending: false) // Order events by eventDateTime (ascending)
-            .snapshots(), // Listen for changes in the 'events' collection
+            .orderBy('eventDateTime', descending: false)
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -549,73 +568,132 @@ class _UpcomingCampaignsPageState extends State<UpcomingCampaignsPage> {
                 child: Text('No upcoming campaigns available.'));
           }
 
-          // Filter the events to show only upcoming ones
           var events = snapshot.data!.docs.where((event) {
             if (event['eventDateTime'] != null) {
-              Timestamp timestamp = event['eventDateTime']; // Get the timestamp
-              DateTime eventDateTime =
-                  timestamp.toDate(); // Convert to DateTime
-              return eventDateTime.isAfter(currentDateTime); // Only future events
+              Timestamp timestamp = event['eventDateTime'];
+              DateTime eventDateTime = timestamp.toDate();
+              return eventDateTime.isAfter(currentDateTime);
             }
-            return false; // Exclude events without a valid date
+            return false;
           }).toList();
 
           return ListView.builder(
-            padding: const EdgeInsets.all(16.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             itemCount: events.length,
             itemBuilder: (context, index) {
               DocumentSnapshot event = events[index];
 
-              // Fetch and handle the event details
               String eventName = event['eventName'] ?? 'Event Name';
               String eventLocation = event['eventLocation'] ?? 'Event Location';
-
-              // Handle eventDateTime (timestamp)
               String eventDate = 'Event Date';
               if (event['eventDateTime'] != null) {
-                Timestamp timestamp =
-                    event['eventDateTime']; // Get the timestamp
-                DateTime eventDateTime =
-                    timestamp.toDate(); // Convert to DateTime
-                eventDate = DateFormat('d MMMM yyyy, h:mm a')
-                    .format(eventDateTime); // Format the date
+                Timestamp timestamp = event['eventDateTime'];
+                DateTime eventDateTime = timestamp.toDate();
+                eventDate =
+                    DateFormat('d MMMM yyyy, h:mm a').format(eventDateTime);
               }
 
               return Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Card(
-                  color: Colors.grey[300],
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          eventName,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            NgoEventDetailsPage(eventId: event.id),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    color: AppColors.eventCardBgColor(context),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Event Title
+                          Text(
+                            eventName,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: AppColors.titleTextColor(context),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text('Event Date: $eventDate'),
-                        const SizedBox(height: 8),
-                        Text('Event Location: $eventLocation'),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Navigate to event details or perform any other action
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => NgoEventDetailsPage(
-                                    eventId: event.id), // Pass the event ID
+                          const SizedBox(height: 8),
+                          // Event Date
+                          Row(
+                            children: [
+                              Icon(Icons.calendar_today,
+                                  color: AppColors.iconColor(context)),
+                              const SizedBox(width: 8),
+                              Text(
+                                eventDate,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: AppColors.titleTextColor(context)),
                               ),
-                            );
-                          },
-                          child: const Text('View More'),
-                        ),
-                      ],
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          // Event Location
+                          Row(
+                            children: [
+                              Icon(Icons.location_on,
+                                  color: AppColors.iconColor(context)),
+                              const SizedBox(width: 8),
+                              Text(
+                                eventLocation,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color:
+                                        AppColors.eventCardTextColor(context)),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          // "View More" Button
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        NgoEventDetailsPage(eventId: event.id),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    AppColors.mainButtonColor(context),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0, vertical: 12.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              label: Text(
+                                'View More',
+                                style: TextStyle(
+                                  color: AppColors.mainButtonTextColor(context),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              icon: Icon(Icons.arrow_forward,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

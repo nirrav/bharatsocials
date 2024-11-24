@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/admins/UniAdmin/ColProfile.dart';
+import 'package:bharatsocials/colors.dart';
 
 void main() {
   runApp(MaterialApp(

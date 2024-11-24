@@ -1,3 +1,4 @@
+import 'package:bharatsocials/admins/CollegeAdmin/caDashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,17 +9,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bharatsocials/BC/eventDetails.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class NgoBroadcastChannelScreen extends StatefulWidget {
-  const NgoBroadcastChannelScreen({super.key});
+class BroadcastChannel extends StatefulWidget {
+  const BroadcastChannel({super.key});
 
   @override
-  _NgoBroadcastChannelScreenState createState() =>
-      _NgoBroadcastChannelScreenState();
+  _BroadcastChannelState createState() => _BroadcastChannelState();
 }
 
-class _NgoBroadcastChannelScreenState extends State<NgoBroadcastChannelScreen> {
+class _BroadcastChannelState extends State<BroadcastChannel> {
   int _selectedIndex = 1;
   String? currentUserId;
+  String? currentUserRole;
+  String? currentAdminRole;
+  String? currentAdminCollege;
   ScrollController _scrollController = ScrollController();
 
   void _onItemTapped(int index) {
@@ -27,21 +30,43 @@ class _NgoBroadcastChannelScreenState extends State<NgoBroadcastChannelScreen> {
     });
 
     if (index == 0) {
-      _navigateToNgoBroadcastChannelScreen();
+      _navigateToBroadcastChannel();
     }
   }
 
-  void _navigateToNgoBroadcastChannelScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => NgoDashboard()),
-    );
+  void _navigateToBroadcastChannel() {
+    if (currentUserRole == 'ngo') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => NgoDashboard()),
+      );
+    } else if (currentUserRole == 'admin') {
+      if (currentAdminRole == 'uni') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CaDashboardScreen()),
+        );
+      } else if (currentAdminRole == 'college') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CaDashboardScreen()),
+        );
+      }
+    }
   }
 
   @override
   void initState() {
     super.initState();
     currentUserId = GlobalUser.currentUser?.documentId; // Get current user ID
+    currentUserRole = GlobalUser.currentUser?.role; // Get current user ID
+    currentAdminRole = GlobalUser.currentUser?.adminRole; // Get current user ID
+    currentAdminCollege =
+        GlobalUser.currentUser?.adminCollege; // Get current user ID
+    print('Current user id is $currentUserId');
+    print('Current user role is $currentUserRole');
+    print('Current admin role is $currentAdminRole');
+    print('Current admin college is $currentAdminCollege');
   }
 
   @override
@@ -237,7 +262,9 @@ class EventCard extends StatelessWidget {
             padding: EdgeInsets.only(
               left: 16.0,
               right: 16.0,
-              top: isReadByUser ? 16.0 : 32.0, // Conditionally add top padding
+              top: isReadByUser || isSelfSent
+                  ? 16.0
+                  : 32.0, // Conditionally add top padding
             ),
             alignment: cardAlignment,
             child: Column(
@@ -317,7 +344,7 @@ class EventCard extends StatelessWidget {
           ),
 
           // Show a "NEW" badge for unread messages
-          if (!isReadByUser)
+          if (!isReadByUser && !isSelfSent)
             Positioned(
               top: 8,
               left: 8,

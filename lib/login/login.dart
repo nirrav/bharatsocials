@@ -43,14 +43,8 @@ class _LoginPageState extends State<LoginPage> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    Color backgroundColor = AppColors.appBgColor(context);
-    Color textColor = AppColors.defualtTextColor(context);
-    Color buttonColor = AppColors.mainButtonColor(context);
-    Color subtext = AppColors.subTextColor(context);
-    Color buttonTextColor = AppColors.mainButtonTextColor(context);
-
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: AppColors.appBgColor(context),
       body: WillPopScope(
         onWillPop: () async {
           Navigator.pushReplacement(
@@ -89,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: GoogleFonts.poppins(
                           fontSize: screenWidth > 600 ? 30 : 26,
                           fontWeight: FontWeight.w500,
-                          color: textColor,
+                          color: AppColors.defualtTextColor(context),
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.02),
@@ -97,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                         'Enter your details to log in to your account',
                         style: GoogleFonts.poppins(
                           fontSize: screenWidth > 600 ? 16 : 14,
-                          color: textColor,
+                          color: AppColors.defualtTextColor(context),
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.05),
@@ -132,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                             'Forget Password?',
                             style: GoogleFonts.poppins(
                               fontSize: screenWidth > 600 ? 16 : 14,
-                              color: subtext,
+                              color: AppColors.subTextColor(context),
                             ),
                           ),
                         ),
@@ -140,8 +134,8 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: screenHeight * 0.05),
                       _isLoading
                           ? CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(buttonColor),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  AppColors.defualtTextColor(context)),
                             ) // Show the loading spinner when _isLoading is true
                           : LoginButton(
                               onPressed: _onSubmit,
@@ -213,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
       if (snapshot.docs.isEmpty) {
         snapshot = await FirebaseFirestore.instance
             .collection('admins')
-            .where('email', isEqualTo: email)
+            .where('admin_email', isEqualTo: email)
             .get();
         if (snapshot.docs.isNotEmpty) {
           userRole = 'admin';
@@ -244,7 +238,7 @@ class _LoginPageState extends State<LoginPage> {
             MaterialPageRoute(builder: (context) => NgoDashboard()),
           );
         } else if (userRole == 'admin') {
-          String adminRole = userDoc['role'] ?? '';
+          String adminRole = userDoc['admin_role'] ?? '';
           if (adminRole == 'uni') {
             Navigator.pushReplacement(
               context,

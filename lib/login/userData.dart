@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserData {
   String documentId; // Field to store the document ID
   String email;
+  String adminEmail;
   String image;
   bool isVerified;
   String fcmToken;
@@ -20,6 +21,7 @@ class UserData {
   String contactNumber;
   String city;
   String adminName;
+  String adminCollege;
   String adminPhone;
   String adminRole;
   String password; // Only for admin to manage registration
@@ -28,6 +30,7 @@ class UserData {
   UserData({
     required this.documentId, // Include documentId as a required field
     required this.email,
+    required this.adminEmail,
     required this.image,
     required this.isVerified,
     required this.fcmToken,
@@ -45,6 +48,7 @@ class UserData {
     this.city = '',
     this.adminName = '',
     this.adminPhone = '',
+    this.adminCollege = '',
     this.adminRole = '',
     this.password = '', // Admin's password for registration
   });
@@ -79,8 +83,10 @@ class UserData {
     } else if (role == 'admin') {
       data.addAll({
         'admin_name': adminName,
+        'admin_email': adminEmail,
         'admin_phone': adminPhone,
         'admin_role': adminRole,
+        'college_name': adminCollege,
         'password':
             password, // Do not store password in plain text in real applications
       });
@@ -115,6 +121,7 @@ class UserData {
     return UserData(
       documentId: doc.id, // Get the document ID from Firestore
       email: data['email'] ?? '',
+      adminEmail: data['admin_email'] ?? '',
       image: data['image'] ?? '',
       isVerified: data['isVerified'] ?? false,
       fcmToken: data['fcmToken'] ?? '',
@@ -132,6 +139,7 @@ class UserData {
       city: data['city'] ?? '',
       adminName: data['admin_name'] ?? '',
       adminPhone: data['admin_phone'] ?? '',
+      adminCollege: data['college_name'] ?? '',
       adminRole: data['admin_role'] ?? '',
       password: data['password'] ?? '',
     );

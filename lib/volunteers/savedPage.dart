@@ -1,7 +1,7 @@
-import 'package:bharatsocials/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:bharatsocials/colors.dart';
 import 'package:bharatsocials/volunteers/volDashboard.dart';
-import 'package:bharatsocials/common_widgets/event_details.dart';
+// import 'package:bharatsocials/common_widgets/event_details.dart';
 
 class SavedEventsApp extends StatelessWidget {
   const SavedEventsApp({super.key});
@@ -36,7 +36,8 @@ class SavedEventsPage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const VolunteerDashboard()),
+              MaterialPageRoute(
+                  builder: (context) => const VolunteerDashboard()),
             );
           },
         ),
@@ -87,23 +88,17 @@ class _EventCardState extends State<EventCard> {
 
   @override
   Widget build(BuildContext context) {
-    // Define custom colors directly
-    Color backgroundColor = const Color(0xFF1F1F1F); // Dark background color
-    Color textColor = const Color(0xFFFFFFFF); // White text color
-    Color buttonColor = const Color(0xFF1F1F1F); // Blue button color
-    Color buttonTextColor = const Color(0xFFFFFFFF); // Black text for button
-    Color cardTextColor = const Color(0xFF1F1F1F); // Black text for Card
-
     // Get screen size for responsive design
     final size = MediaQuery.of(context).size;
 
     return Container(
       decoration: BoxDecoration(
-        color: textColor, // Using white for the card background
+        color: AppColors.eventCardBgColor(
+            context), // Using white for the card background
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: backgroundColor,
+            color: Colors.black,
             blurRadius: 5,
             offset: const Offset(0, 3),
           ),
@@ -119,7 +114,8 @@ class _EventCardState extends State<EventCard> {
               style: TextStyle(
                 fontSize: size.width * 0.045,
                 fontWeight: FontWeight.bold,
-                color: cardTextColor, // White text color
+                color:
+                    AppColors.eventCardTextColor(context), // White text color
               ),
             ),
             SizedBox(height: size.height * 0.005),
@@ -127,7 +123,8 @@ class _EventCardState extends State<EventCard> {
               'Event Date',
               style: TextStyle(
                 fontSize: size.width * 0.04,
-                color: cardTextColor, // White text color
+                color:
+                    AppColors.eventCardTextColor(context), // White text color
               ),
             ),
             SizedBox(height: size.height * 0.005),
@@ -135,7 +132,8 @@ class _EventCardState extends State<EventCard> {
               'Event Location',
               style: TextStyle(
                 fontSize: size.width * 0.04,
-                color: cardTextColor, // White text color
+                color:
+                    AppColors.eventCardTextColor(context), // White text color
               ),
             ),
             SizedBox(height: size.height * 0.02),
@@ -150,8 +148,9 @@ class _EventCardState extends State<EventCard> {
                             .bookmark_border, // Toggle between filled and unfilled bookmark
                     size: size.width * 0.06,
                     color: _isSaved
-                        ? backgroundColor
-                        : Colors.grey, // Change color based on state
+                        ? AppColors.iconColor(context)
+                        : AppColors.iconColor(
+                            context), // Change color based on state
                   ),
                   onPressed: () {
                     setState(() {
@@ -164,7 +163,8 @@ class _EventCardState extends State<EventCard> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    backgroundColor: buttonColor, // Blue button color
+                    backgroundColor:
+                        AppColors.mainButtonColor(context), // Blue button color
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -179,14 +179,16 @@ class _EventCardState extends State<EventCard> {
                       Text(
                         'View More',
                         style: TextStyle(
-                          color: buttonTextColor, // White text for the button
+                          color: AppColors.mainButtonTextColor(
+                              context), // White text for the button
                           fontSize: size.width * 0.04,
                         ),
                       ),
                       SizedBox(width: size.width * 0.02),
                       Icon(
                         Icons.arrow_forward,
-                        color: buttonTextColor, // White icon for the button
+                        color: AppColors.iconColor(
+                            context), // White icon for the button
                         size: size.width * 0.05,
                       ),
                     ],

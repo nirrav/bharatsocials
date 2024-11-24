@@ -21,12 +21,6 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get theme-dependent colors using the AppColors utility
-    Color backgroundColor = AppColors.appBgColor(context);
-    Color textColor = AppColors.defualtTextColor(context);
-    Color buttonColor = AppColors.mainButtonColor(context);
-    Color buttonTextColor = AppColors.mainButtonTextColor(context);
-
     // Get screen width and height for responsive design
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -37,7 +31,8 @@ class SettingsPage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const VolunteerDashboard()),
+              MaterialPageRoute(
+                  builder: (context) => const VolunteerDashboard()),
             );
           },
         ),
@@ -70,12 +65,11 @@ class SettingsPage extends StatelessWidget {
                 // Sign out the user from Firebase Authentication
                 await FirebaseAuth.instance.signOut();
 
-                // Clear SharedPreferences to remove login state and user email
+                // Clear login-related data from SharedPreferences
                 SharedPreferences prefs = await SharedPreferences.getInstance();
-                await prefs.setBool('isLoggedIn', false);
-                await prefs.remove('email'); // Optionally remove user email
-
-                // Optionally clear any other relevant data if necessary
+                await prefs.remove('isLoggedIn');
+                await prefs.remove('userRole');
+                await prefs.remove('userDocId');
 
                 // Show a message that the user has logged out
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -87,9 +81,8 @@ class SettingsPage extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        const LoginPage(), // Replace with your actual LoginPage
-                  ),
+                      builder: (context) =>
+                          const LoginPage()), // Redirect to LoginPage
                 );
               } catch (e) {
                 // Handle any errors during logout

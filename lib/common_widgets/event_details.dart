@@ -196,7 +196,7 @@ class EventDetailsPage extends StatelessWidget {
         backgroundColor: color, // Button color
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8), // Rounded corners for button
+          borderRadius: BorderRadius.circular(13), // Rounded corners for button
         ),
         elevation: 4, // Slight elevation for the button
       ),

@@ -6,12 +6,6 @@ class AchievementPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get theme-dependent colors using the AppColors utility
-    Color backgroundColor = AppColors.appBgColor(context);
-    Color textColor = AppColors.defualtTextColor(context);
-    Color buttonColor = AppColors.mainButtonColor(context);
-    Color buttonTextColor = AppColors.mainButtonTextColor(context);
-
     // Get screen width and height for responsive design
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -19,7 +13,8 @@ class AchievementPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Achievement'),
-        backgroundColor: buttonTextColor, // Customize AppBar color
+        backgroundColor:
+            AppColors.defualtTextColor(context), // Customize AppBar color
       ),
       body: Center(
         child: Column(
@@ -30,7 +25,7 @@ class AchievementPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: screenWidth * 0.08, // Responsive font size
                 fontWeight: FontWeight.bold,
-                color: textColor, // Dynamic text color
+                color: AppColors.titleTextColor(context), // Dynamic text color
               ),
             ),
             SizedBox(
@@ -41,12 +36,14 @@ class AchievementPage extends StatelessWidget {
                 // Your button action here
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: buttonColor, // Dynamic button color
+                backgroundColor:
+                    AppColors.mainButtonColor(context), // Dynamic button color
               ),
               child: Text(
                 'Celebrate',
                 style: TextStyle(
-                    color: buttonTextColor), // Dynamic button text color
+                    color: AppColors.mainButtonTextColor(
+                        context)), // Dynamic button text color
               ),
             ),
           ],

@@ -1,14 +1,5 @@
 import 'package:flutter/material.dart';
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: BroadcastChannelPage(),
-    );
-  }
-}
+import 'package:bharatsocials/colors.dart';
 
 class BroadcastChannelPage extends StatelessWidget {
   // Function to show the confirmation dialog
@@ -46,7 +37,7 @@ class BroadcastChannelPage extends StatelessWidget {
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(13),
           ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -210,7 +201,7 @@ class BroadcastChannelPage extends StatelessWidget {
             label: '',
           ),
         ],
-        selectedItemColor: Colors.black,
+        selectedItemColor: AppColors.titleTextColor(context),
         unselectedItemColor: Colors.black,
         showSelectedLabels: false,
         showUnselectedLabels: false,
@@ -249,7 +240,7 @@ class EventCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        color: Colors.white,
+        color: AppColors.eventCardBgColor(context),
         margin: EdgeInsets.symmetric(vertical: 12.0),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -259,7 +250,9 @@ class EventCard extends StatelessWidget {
               if (eventName.isNotEmpty)
                 RichText(
                   text: TextSpan(
-                    style: TextStyle(fontSize: 16, color: Colors.black),
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: AppColors.eventCardTextColor(context)),
                     children: [
                       const TextSpan(
                         text: "Event Name: ",
@@ -275,9 +268,11 @@ class EventCard extends StatelessWidget {
               if (eventDate.isNotEmpty)
                 RichText(
                   text: TextSpan(
-                    style: TextStyle(fontSize: 16, color: Colors.black),
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: AppColors.eventCardTextColor(context)),
                     children: [
-                      TextSpan(
+                      const TextSpan(
                         text: "Event Date: ",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -287,13 +282,14 @@ class EventCard extends StatelessWidget {
                     ],
                   ),
                 ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               if (eventLocation.isNotEmpty)
                 RichText(
                   text: TextSpan(
-                    style: TextStyle(fontSize: 16, color: Colors.black),
+                    style: TextStyle(
+                        fontSize: 16, color: AppColors.titleTextColor(context)),
                     children: [
-                      TextSpan(
+                      const TextSpan(
                         text: "Event Location: ",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -307,7 +303,7 @@ class EventCard extends StatelessWidget {
               Text(
                 "View More",
                 style: TextStyle(
-                  color: Colors.blue,
+                  color: AppColors.subTextColor(context),
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
@@ -321,15 +317,18 @@ class EventCard extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: onDeny, // Call the passed in deny method
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.red), // Red border
+                        backgroundColor: AppColors.appBgColor(context),
+                        side: BorderSide(
+                            color: AppColors.acceptButtonColor(
+                                context)), // Red border
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Deny',
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(
+                            color: AppColors.acceptButtonTextColor(context)),
                       ),
                     ),
                   ),
@@ -339,15 +338,17 @@ class EventCard extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: onAccept, // Call the passed in accept method
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.green),
+                        backgroundColor: AppColors.appBgColor(context),
+                        side: BorderSide(
+                            color: AppColors.acceptButtonColor(context)),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Accept',
-                        style: TextStyle(color: Colors.green),
+                        style: TextStyle(
+                            color: AppColors.acceptButtonTextColor(context)),
                       ),
                     ),
                   ),

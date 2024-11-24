@@ -23,10 +23,6 @@ class AttendedEventPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get theme-dependent colors using AppColors utility
-    Color backgroundColor = AppColors.appBgColor(context);
-    Color textColor = AppColors.defualtTextColor(context);
-    Color buttonColor = AppColors.mainButtonColor(context);
-    Color buttonTextColor = AppColors.mainButtonTextColor(context);
 
     // Get screen width and height for responsive design
     double screenWidth = MediaQuery.of(context).size.width;
@@ -35,13 +31,14 @@ class AttendedEventPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: textColor),
+          icon: Icon(Icons.arrow_back, color: AppColors.iconColor(context)),
           onPressed: () {
             Navigator.pop(context); // Navigate back
           },
         ),
-        title: Text('Attended Event', style: TextStyle(color: textColor)),
-        backgroundColor: backgroundColor, // AppBar background
+        title: Text('Attended Event',
+            style: TextStyle(color: AppColors.titleTextColor(context))),
+        backgroundColor: AppColors.titleColor(context), // AppBar background
       ),
       body: SingleChildScrollView(
         // Add scrolling for small screens
@@ -82,11 +79,13 @@ class AttendedEventPage extends StatelessWidget {
                     // Add month button logic here
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: buttonColor, // Button color
+                    backgroundColor:
+                        AppColors.mainButtonColor(context), // Button color
                   ),
                   child: Text('Month',
                       style: TextStyle(
-                          color: buttonTextColor)), // Button text color
+                          color: AppColors.mainButtonTextColor(
+                              context))), // Button text color
                 ),
               ),
               const SizedBox(height: 16),
@@ -105,13 +104,17 @@ class AttendedEventPage extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: textColor)),
+                            color: AppColors.defualtTextColor(context))),
                     const SizedBox(height: 8),
                     Text('Event Date: 20/11/2024',
-                        style: TextStyle(fontSize: 16, color: textColor)),
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.defualtTextColor(context))),
                     const SizedBox(height: 8),
                     Text('Event Location: Online',
-                        style: TextStyle(fontSize: 16, color: textColor)),
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.defualtTextColor(context))),
                     const SizedBox(height: 16),
                     Align(
                       alignment: Alignment.bottomRight,
@@ -120,11 +123,13 @@ class AttendedEventPage extends StatelessWidget {
                           // Add view more button logic here
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: buttonColor, // Button color
+                          backgroundColor: AppColors.mainButtonColor(
+                              context), // Button color
                         ),
                         child: Text('View More',
                             style: TextStyle(
-                                color: buttonTextColor)), // Button text color
+                                color: AppColors.mainButtonTextColor(
+                                    context))), // Button text color
                       ),
                     ),
                   ],

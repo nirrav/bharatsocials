@@ -1,11 +1,14 @@
-import 'package:bharatsocials/ngos/CreateEvent.dart';
+import 'package:bharatsocials/BC/broadcastChannel.dart';
+import 'package:bharatsocials/login/userData.dart';
 import 'package:flutter/material.dart';
+import 'package:bharatsocials/colors.dart';
+import 'package:bharatsocials/BC/CreateEvent.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bharatsocials/admins/adminSidebar.dart';
+import 'package:bharatsocials/volunteers/NotiPage.dart';
+import 'package:bharatsocials/BC/eventDetails.dart';
+import 'package:intl/intl.dart'; // Import Notification Page
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:bharatsocials/admins/CollegeAdmin/caBoardcast.dart';
-import 'package:bharatsocials/ngos/Sidebar.dart'; // Import the sidebar file
-import 'package:bharatsocials/volunteers/NotiPage.dart'; // Import Notification Page
-
-
 
 class CaDashboardScreen extends StatefulWidget {
   @override
@@ -41,31 +44,39 @@ class _CaDashboardScreenState extends State<CaDashboardScreen> {
   void _navigateToBroadcastChannelScreen() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => BroadcastChannelPage()),
+      MaterialPageRoute(builder: (context) => const BroadcastChannel()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    var currentUserId =
+        GlobalUser.currentUser?.documentId; // Get current user ID
+    var currentUserRole = GlobalUser.currentUser?.role; // Get current user ID
+    var currentAdminRole =
+        GlobalUser.currentUser?.adminRole; // Get current user ID
+    print('Current user id is $currentUserId');
+    print('Current user role is $currentUserRole');
+    print('Current admin role is $currentAdminRole');
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.appBgColor(context),
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Row(
+        backgroundColor: AppColors.titleColor(context),
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.center, // Center the title
           children: [
             Text(
-              'Dashboard',
-              style: TextStyle(color: Colors.black),
+              'College Admin Dashboard',
+              style: TextStyle(color: AppColors.titleTextColor(context)),
             ),
           ],
         ),
         actions: [
           // Announcement Icon, navigate to NotificationPage
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.notifications_active,
-              color: Colors.black, // Bullhorn icon color
+              color: AppColors.iconColor(context), // Bullhorn icon color
             ),
             onPressed: () {
               Navigator.push(
@@ -76,34 +87,34 @@ class _CaDashboardScreenState extends State<CaDashboardScreen> {
           ),
         ],
       ),
-      drawer: SlideBar(), // Use the SlideBar widget here
+      drawer: AdminSidebar(), // Use the SlideBar widget here
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Upcoming Event Section
-            _buildSectionHeader(context, title: 'Upcoming Event'),
+            _buildSectionHeader(context, title: 'Upcoming Campaigns'),
             SizedBox(height: 8),
-            _buildHorizontalList(),
+            _buildUpcomingEventsHorizontalList(),
             SizedBox(height: 16),
 
             // Activity Section
-            _buildSectionHeader(context, title: 'Activity'),
+            _buildSectionHeader(context, title: 'Our Campaigns'),
             SizedBox(height: 8),
-            _buildHorizontalList(),
+            _buildAllEventsHorizontalList(),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex, // Handle tab selection
         onTap: _onItemTapped, // Function to handle tab selection
-        backgroundColor: Colors.white,
-        showSelectedLabels: false,
+        backgroundColor: AppColors.titleColor(context),
+        showSelectedLabels: true,
         showUnselectedLabels: false,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.black),
+            icon: Icon(Icons.home, color: AppColors.iconColor(context)),
             label: 'Home',
           ),
           BottomNavigationBarItem(
@@ -116,102 +127,602 @@ class _CaDashboardScreenState extends State<CaDashboardScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.eventCardBgColor(context),
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => EventFormPage()),
+            MaterialPageRoute(builder: (context) => const EventFormPage()),
           );
-        }, // Add functionality for FAB
-        child: Icon(Icons.add, color: Colors.black),
+        },
+        child: Icon(Icons.add, color: AppColors.eventCardTextColor(context)),
       ),
     );
   }
 
-  // Section Header Widget
   Widget _buildSectionHeader(BuildContext context, {required String title}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
-          style: TextStyle(color: Colors.white, fontSize: 18),
+          style: TextStyle(
+              color: AppColors.defualtTextColor(context), fontSize: 18),
         ),
         GestureDetector(
-          onTap: () {}, // Add functionality here
+          onTap: () {
+            if (title == 'Upcoming Campaigns') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const UpcomingCampaignsPage()),
+              );
+            } else if (title == 'Our Campaigns') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AllCampaignsPage()),
+              );
+            }
+          },
           child: Text(
             'See More..',
-            style: TextStyle(color: Colors.blue, fontSize: 14),
+            style:
+                TextStyle(color: AppColors.subTextColor(context), fontSize: 14),
           ),
         ),
       ],
     );
   }
 
-  // Horizontal List Widget
-  Widget _buildHorizontalList() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: List.generate(5, (index) {
-          return Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Container(
-              width: 250,
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    offset: Offset(2, 2),
-                    blurRadius: 4,
+  Widget _buildAllEventsHorizontalList() {
+    // Get the current user ID
+    var currentUserId =
+        GlobalUser.currentUser?.documentId; // Get current user ID
+
+    if (currentUserId == null) {
+      return const Center(child: Text('User is not logged in.'));
+    }
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('events')
+          .where('hostId', isEqualTo: currentUserId) // Filter events by hostId
+          .snapshots(), // Listen for changes in the 'events' collection
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return const Center(child: Text('Error loading events'));
+        }
+
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Center(child: Text('No events found.'));
+        }
+
+        var events = snapshot.data!.docs.take(3).toList(); // Take only 3 events
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(events.length, (index) {
+              DocumentSnapshot event = events[index];
+
+              // Fetch and handle event details
+              String eventName = event['eventName'] ?? 'Event Name';
+              String eventLocation = event['eventLocation'] ?? 'Event Location';
+              String eventDate = 'Event Date';
+              if (event['eventDateTime'] != null) {
+                Timestamp timestamp =
+                    event['eventDateTime']; // Get the timestamp
+                DateTime eventDateTime =
+                    timestamp.toDate(); // Convert to DateTime
+                eventDate = DateFormat('d MMMM yyyy, h:mm a')
+                    .format(eventDateTime); // Format the date
+              }
+
+              return Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Container(
+                  width: 250,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColors.eventCardBgColor(context),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        offset: const Offset(2, 2),
+                        blurRadius: 4,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Event Name',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color:
-                          Color.fromARGB(255, 45, 45, 45), // Updated text color
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        eventName,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.eventCardTextColor(context),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Event Date: $eventDate',
+                        style: TextStyle(
+                          color: AppColors.eventCardTextColor(context),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Event Location: $eventLocation',
+                        style: TextStyle(
+                          color: AppColors.eventCardTextColor(context),
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.mainButtonColor(context),
+                          foregroundColor:
+                              AppColors.mainButtonTextColor(context),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NgoEventDetailsPage(
+                                  eventId: event.id), // Pass the event ID
+                            ),
+                          );
+                        },
+                        child: const Text('View More'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildUpcomingEventsHorizontalList() {
+    DateTime currentDateTime = DateTime.now();
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('events')
+          .snapshots(), // Listen for changes in the 'events' collection
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return const Center(child: Text('Error loading upcoming events'));
+        }
+
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Center(child: Text('No upcoming campaigns available.'));
+        }
+
+        // Filter events for upcoming ones
+        var events = snapshot.data!.docs.take(3).where((event) {
+          if (event['eventDateTime'] != null) {
+            Timestamp timestamp = event['eventDateTime']; // Get the timestamp
+            DateTime eventDateTime = timestamp.toDate(); // Convert to DateTime
+            return eventDateTime.isAfter(currentDateTime); // Only future events
+          }
+          return false; // Exclude events without a valid date
+        }).toList();
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(events.length, (index) {
+              DocumentSnapshot event = events[index];
+
+              // Fetch and handle event details
+              String eventName = event['eventName'] ?? 'Event Name';
+              String eventLocation = event['eventLocation'] ?? 'Event Location';
+              String eventDate = 'Event Date';
+              if (event['eventDateTime'] != null) {
+                Timestamp timestamp =
+                    event['eventDateTime']; // Get the timestamp
+                DateTime eventDateTime =
+                    timestamp.toDate(); // Convert to DateTime
+                eventDate = DateFormat('d MMMM yyyy, h:mm a')
+                    .format(eventDateTime); // Format the date
+              }
+
+              return Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Container(
+                  width: 250,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColors.eventCardBgColor(context),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        offset: const Offset(2, 2),
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        eventName,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.eventCardTextColor(context),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Event Date: $eventDate',
+                        style: TextStyle(
+                            color: AppColors.eventCardTextColor(context)),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Event Location: $eventLocation',
+                        style: TextStyle(
+                            color: AppColors.eventCardTextColor(context)),
+                      ),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.mainButtonColor(context),
+                          foregroundColor:
+                              AppColors.mainButtonTextColor(context),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text('View More'),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NgoEventDetailsPage(
+                                  eventId: event.id), // Pass the event ID
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class AllCampaignsPage extends StatefulWidget {
+  const AllCampaignsPage({super.key});
+
+  @override
+  _AllCampaignsPageState createState() => _AllCampaignsPageState();
+}
+
+class _AllCampaignsPageState extends State<AllCampaignsPage> {
+  @override
+  Widget build(BuildContext context) {
+    // Get the current user ID
+    var currentUserId =
+        GlobalUser.currentUser?.documentId; // Get current user ID
+
+    if (currentUserId == null) {
+      return const Center(child: Text('User is not logged in.'));
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.titleColor(context),
+        elevation: 8,
+        title: Text('All Campaigns',
+            style: TextStyle(color: AppColors.titleTextColor(context))),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('events')
+            .where('hostId', isEqualTo: currentUserId) // Filter by hostId
+            .orderBy('posted',
+                descending: false) // Order by 'posted' field, oldest first
+            .snapshots(), // Listen for changes in the 'events' collection
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return const Center(child: Text('Error loading events'));
+          }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(child: Text('No events found.'));
+          }
+
+          var events = snapshot.data!.docs;
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(16.0),
+            itemCount: events.length,
+            itemBuilder: (context, index) {
+              DocumentSnapshot event = events[index];
+
+              // Fetch and handle the event details
+              String eventName = event['eventName'] ?? 'Event Name';
+              String eventLocation = event['eventLocation'] ?? 'Event Location';
+
+              // Handle eventDateTime (timestamp)
+              String eventDate = 'Event Date';
+              if (event['eventDateTime'] != null) {
+                Timestamp timestamp =
+                    event['eventDateTime']; // Get the timestamp
+                DateTime eventDateTime =
+                    timestamp.toDate(); // Convert to DateTime
+                eventDate = DateFormat('d MMMM yyyy, h:mm a')
+                    .format(eventDateTime); // Format the date
+              }
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                child: Card(
+                  color: AppColors.eventCardBgColor(context),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          eventName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text('Event Date: $eventDate'),
+                        const SizedBox(height: 8),
+                        Text('Event Location: $eventLocation'),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Navigate to event details or perform any other action
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => NgoEventDetailsPage(
+                                  eventId: event.id, // Pass the event ID
+                                ),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor:
+                                AppColors.mainButtonTextColor(context),
+                            backgroundColor: AppColors.mainButtonColor(
+                                context), // Set text color
+                          ),
+                          child: Text('View More'),
+                        )
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  const Text(
-                    'Event Date',
-                    style: TextStyle(
-                      color: Colors.black, // Updated text color
+                ),
+              );
+            },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.eventCardBgColor(context),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const EventFormPage()),
+          );
+        },
+        child: Icon(Icons.add, color: AppColors.iconColor(context)),
+      ),
+    );
+  }
+}
+
+class UpcomingCampaignsPage extends StatefulWidget {
+  const UpcomingCampaignsPage({super.key});
+
+  @override
+  _UpcomingCampaignsPageState createState() => _UpcomingCampaignsPageState();
+}
+
+class _UpcomingCampaignsPageState extends State<UpcomingCampaignsPage> {
+  @override
+  Widget build(BuildContext context) {
+    DateTime currentDateTime = DateTime.now();
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.appBgColor(context),
+        title: Text(
+          'Upcoming Campaigns',
+          style: TextStyle(
+            color: AppColors.titleTextColor(context),
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
+        ),
+        elevation: 10,
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('events')
+            .orderBy('eventDateTime', descending: false)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return const Center(child: Text('Error loading upcoming events'));
+          }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(
+                child: Text('No upcoming campaigns available.'));
+          }
+
+          var events = snapshot.data!.docs.where((event) {
+            if (event['eventDateTime'] != null) {
+              Timestamp timestamp = event['eventDateTime'];
+              DateTime eventDateTime = timestamp.toDate();
+              return eventDateTime.isAfter(currentDateTime);
+            }
+            return false;
+          }).toList();
+
+          return ListView.builder(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            itemCount: events.length,
+            itemBuilder: (context, index) {
+              DocumentSnapshot event = events[index];
+
+              String eventName = event['eventName'] ?? 'Event Name';
+              String eventLocation = event['eventLocation'] ?? 'Event Location';
+              String eventDate = 'Event Date';
+              if (event['eventDateTime'] != null) {
+                Timestamp timestamp = event['eventDateTime'];
+                DateTime eventDateTime = timestamp.toDate();
+                eventDate =
+                    DateFormat('d MMMM yyyy, h:mm a').format(eventDateTime);
+              }
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            NgoEventDetailsPage(eventId: event.id),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  const Text(
-                    'Event Location',
-                    style: TextStyle(
-                      color: Colors.black, // Updated text color
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                    color: AppColors.eventCardBgColor(context),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Event Title
+                          Text(
+                            eventName,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: AppColors.titleTextColor(context),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          // Event Date
+                          Row(
+                            children: [
+                              Icon(Icons.calendar_today,
+                                  color: AppColors.iconColor(context)),
+                              const SizedBox(width: 8),
+                              Text(
+                                eventDate,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: AppColors.titleTextColor(context)),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          // Event Location
+                          Row(
+                            children: [
+                              Icon(Icons.location_on,
+                                  color: AppColors.iconColor(context)),
+                              const SizedBox(width: 8),
+                              Text(
+                                eventLocation,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color:
+                                        AppColors.eventCardTextColor(context)),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          // "View More" Button
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        NgoEventDetailsPage(eventId: event.id),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    AppColors.mainButtonColor(context),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0, vertical: 12.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              label: Text(
+                                'View More',
+                                style: TextStyle(
+                                  color: AppColors.mainButtonTextColor(context),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              icon: Icon(Icons.arrow_forward,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    onPressed: () {}, // Add functionality
-                    child: const Text('View More'),
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           );
-        }),
+        },
       ),
     );
   }
