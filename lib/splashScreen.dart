@@ -98,7 +98,7 @@ class _SplashScreenState extends State<SplashScreen>
             if (currentUser.adminRole == 'uni') {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const UniDashboard()),
+                MaterialPageRoute(builder: (context) => UniAdminDashboard()),
               );
             } else if (currentUser.adminRole == 'college') {
               Navigator.pushReplacement(

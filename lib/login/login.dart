@@ -248,7 +248,7 @@ class _LoginPageState extends State<LoginPage> {
           if (adminRole == 'uni') {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const UniDashboard()),
+              MaterialPageRoute(builder: (context) => UniAdminDashboard()),
             );
           } else if (adminRole == 'college') {
             Navigator.pushReplacement(
