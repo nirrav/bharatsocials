@@ -3,9 +3,9 @@ import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bharatsocials/login/userData.dart';
 import 'package:bharatsocials/BC/CreateEvent.dart';
+import 'package:bharatsocials/BC/eventDetails.dart';
 import 'package:bharatsocials/ngos/ngoDashboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:bharatsocials/BC/eventDetails.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class NgoBroadcastChannelScreen extends StatefulWidget {
@@ -157,7 +157,7 @@ class _NgoBroadcastChannelScreenState extends State<NgoBroadcastChannelScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.eventCardBgColor(context),
+        backgroundColor: AppColors.UpcomingeventCardBgColor(context),
         onPressed: () {
           Navigator.push(
             context,
@@ -216,8 +216,8 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color cardColor = isSelfSent
-        ? AppColors.eventCardBgColor(context)
-        : AppColors.eventCardBgColor(context);
+        ? AppColors.UpcomingeventCardBgColor(context)
+        : AppColors.UpcomingeventCardBgColor(context);
 
     Alignment cardAlignment =
         isSelfSent ? Alignment.centerRight : Alignment.centerLeft;

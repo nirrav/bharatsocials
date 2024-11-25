@@ -70,6 +70,7 @@ class SettingsPage extends StatelessWidget {
                 await prefs.remove('isLoggedIn');
                 await prefs.remove('userRole');
                 await prefs.remove('userDocId');
+                await prefs.remove('email');
 
                 // Show a message that the user has logged out
                 ScaffoldMessenger.of(context).showSnackBar(

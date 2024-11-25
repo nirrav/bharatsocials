@@ -1,13 +1,13 @@
-import 'package:bharatsocials/admins/CollegeAdmin/caDashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bharatsocials/login/userData.dart';
 import 'package:bharatsocials/BC/CreateEvent.dart';
+import 'package:bharatsocials/BC/eventDetails.dart';
 import 'package:bharatsocials/ngos/ngoDashboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:bharatsocials/BC/eventDetails.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:bharatsocials/admins/CollegeAdmin/caDashboard.dart';
 
 class BroadcastChannel extends StatefulWidget {
   const BroadcastChannel({super.key});
@@ -182,7 +182,7 @@ class _BroadcastChannelState extends State<BroadcastChannel> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.eventCardBgColor(context),
+        backgroundColor: AppColors.UpcomingeventCardBgColor(context),
         onPressed: () {
           Navigator.push(
             context,
@@ -195,17 +195,22 @@ class _BroadcastChannelState extends State<BroadcastChannel> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         backgroundColor: AppColors.titleColor(context),
-        showSelectedLabels: true,
+        showSelectedLabels: false,
         showUnselectedLabels: false,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: AppColors.iconColor(context)),
-            label: 'Home',
+            icon: Icon(
+              Icons.home_rounded,
+              color: AppColors.iconColor(context),
+              size: 32.0,
+            ),
+            label: 'Dashboard',
           ),
           BottomNavigationBarItem(
             icon: FaIcon(
               FontAwesomeIcons.bullhorn,
               color: AppColors.iconColor(context),
+              size: 22.0,
             ),
             label: 'Broadcast Channel',
           ),
@@ -241,8 +246,8 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color cardColor = isSelfSent
-        ? AppColors.eventCardBgColor(context)
-        : AppColors.eventCardBgColor(context);
+        ? AppColors.UpcomingeventCardBgColor(context)
+        : AppColors.UpcomingeventCardBgColor(context);
 
     Alignment cardAlignment =
         isSelfSent ? Alignment.centerRight : Alignment.centerLeft;
@@ -274,7 +279,7 @@ class EventCard extends StatelessWidget {
                 Text(
                   eventName,
                   style: TextStyle(
-                    color: textColor,
+                    color: AppColors.eventCardTextColor(context),
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     fontFamily: GoogleFonts.poppins().fontFamily,
@@ -286,7 +291,7 @@ class EventCard extends StatelessWidget {
                 Text(
                   'Date: ${eventDate.toLocal().toString().split(' ')[0]}',
                   style: TextStyle(
-                    color: textColor,
+                    color: AppColors.eventCardTextColor(context),
                     fontSize: 16,
                     fontFamily: GoogleFonts.poppins().fontFamily,
                   ),
@@ -295,7 +300,7 @@ class EventCard extends StatelessWidget {
                 Text(
                   'Location: $eventLocation',
                   style: TextStyle(
-                    color: textColor,
+                    color: AppColors.eventCardTextColor(context),
                     fontSize: 16,
                     fontFamily: GoogleFonts.poppins().fontFamily,
                   ),

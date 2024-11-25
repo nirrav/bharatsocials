@@ -18,6 +18,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
   late TextEditingController _emailController;
   late TextEditingController _rollNoController;
   late TextEditingController _departmentController;
+  late TextEditingController _collegeController;
 
   String uid = ""; // This will hold the Firestore document ID
 
@@ -26,14 +27,22 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
     super.initState();
     var currentUser = GlobalUser.currentUser;
 
+    // Concatenate first_name, middle_name, and last_name to form the full name
+    String fullName = '';
+    if (currentUser != null) {
+      fullName =
+          '${currentUser.firstName ?? ''} ${currentUser.middleName ?? ''} ${currentUser.lastName ?? ''}';
+    }
+
     // Initialize controllers with the current user data
-    _nameController =
-        TextEditingController(text: currentUser?.firstName ?? 'N/A');
+    _nameController = TextEditingController(text: fullName.trim());
     _emailController = TextEditingController(text: currentUser?.email ?? 'N/A');
     _rollNoController =
         TextEditingController(text: currentUser?.rollNo ?? 'N/A');
     _departmentController =
         TextEditingController(text: currentUser?.department ?? 'N/A');
+    _collegeController =
+        TextEditingController(text: currentUser?.collegeName ?? 'N/A');
 
     // Fetch the document ID (uid) for the current user from Firestore
     _getUserId();
@@ -46,6 +55,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
     _emailController.dispose();
     _rollNoController.dispose();
     _departmentController.dispose();
+    _collegeController.dispose();
     super.dispose();
   }
 
@@ -80,16 +90,23 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
       String updatedEmail = _emailController.text;
       String updatedRollNo = _rollNoController.text;
       String updatedDepartment = _departmentController.text;
+      String updatedCollege = _collegeController.text;
 
       // Update the user document in Firestore
       await FirebaseFirestore.instance
           .collection('volunteers')
           .doc(uid)
           .update({
-        'first_name': updatedName,
+        'first_name':
+            updatedName.split(' ')[0], // Assume first part is first_name
+        'middle_name':
+            updatedName.split(' ').length > 1 ? updatedName.split(' ')[1] : '',
+        'last_name':
+            updatedName.split(' ').length > 2 ? updatedName.split(' ')[2] : '',
         'email': updatedEmail,
         'roll_no': updatedRollNo,
         'department': updatedDepartment,
+        'college_name': updatedCollege,
       });
 
       // Show confirmation after update
@@ -156,14 +173,14 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                     : null,
               ),
               const SizedBox(height: 20),
-              // Name
+              // Name (uneditable)
               TextField(
                 controller: _nameController,
                 decoration: const InputDecoration(
                   labelText: 'Name',
                   border: UnderlineInputBorder(),
                 ),
-                readOnly: !isEditing,
+                readOnly: true, // Make name uneditable
               ),
               const SizedBox(height: 10),
               // Email
@@ -185,6 +202,17 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                 ),
                 readOnly: !isEditing,
               ),
+              const SizedBox(height: 10),
+              // Department
+              TextField(
+                controller: _collegeController,
+                decoration: const InputDecoration(
+                  labelText: 'College',
+                  border: UnderlineInputBorder(),
+                ),
+                readOnly: true,
+              ),
+              const SizedBox(height: 20),
               const SizedBox(height: 10),
               // Department
               TextField(

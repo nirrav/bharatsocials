@@ -93,7 +93,7 @@ class _EventCardState extends State<EventCard> {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.eventCardBgColor(
+        color: AppColors.UpcomingeventCardBgColor(
             context), // Using white for the card background
         borderRadius: BorderRadius.circular(10),
         boxShadow: [

@@ -94,7 +94,7 @@ class EventDetailsPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18.0),
       decoration: BoxDecoration(
-        color: AppColors.eventCardBgColor(
+        color: AppColors.UpcomingeventCardBgColor(
             context), // Lighter grey for a softer look
         borderRadius:
             BorderRadius.circular(13), // Rounded corners for a more modern feel
@@ -149,7 +149,7 @@ class EventDetailsPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18.0),
       decoration: BoxDecoration(
-        color: AppColors.eventCardBgColor(
+        color: AppColors.UpcomingeventCardBgColor(
             context), // Lighter grey for a softer look
         borderRadius: BorderRadius.circular(13),
         boxShadow: const [

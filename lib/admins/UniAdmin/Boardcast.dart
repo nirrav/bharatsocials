@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bharatsocials/admins/UniAdmin/uniDashboard.dart';
 
 class BroadcastChannelScreen extends StatefulWidget {
@@ -65,13 +66,13 @@ class _BroadcastChannelScreenState extends State<BroadcastChannelScreen> {
               EventCard(
                 width: screenWidth * 0.9,
                 height: screenHeight * 0.35,
-                textColor: AppColors.eventCardBgColor(context),
+                textColor: AppColors.UpcomingeventCardBgColor(context),
               ),
               SizedBox(height: 16),
               EventCard(
                 width: screenWidth * 0.9,
                 height: screenHeight * 0.35,
-                textColor: AppColors.eventCardBgColor(context),
+                textColor: AppColors.UpcomingeventCardBgColor(context),
               ),
             ],
           ),
@@ -90,20 +91,27 @@ class _BroadcastChannelScreenState extends State<BroadcastChannelScreen> {
         child: Icon(Icons.add, color: AppColors.iconColor(context)),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
         backgroundColor: AppColors.titleColor(context),
-        selectedItemColor: AppColors.titleTextColor(context),
-        unselectedItemColor: AppColors.titleTextColor(context).withOpacity(0.6),
-        currentIndex: _selectedIndex, // Set current index
-        onTap: _onItemTapped, // Handle onTap for navigation
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: AppColors.titleTextColor(context)),
-            label: '',
+            icon: Icon(
+              Icons.home_rounded,
+              color: AppColors.iconColor(context),
+              size: 32.0,
+            ),
+            label: 'Dashboard',
           ),
           BottomNavigationBarItem(
-            icon:
-                Icon(Icons.campaign, color: AppColors.titleTextColor(context)),
-            label: '',
+            icon: FaIcon(
+              FontAwesomeIcons.bullhorn,
+              color: AppColors.iconColor(context),
+              size: 22.0,
+            ),
+            label: 'Broadcast Channel',
           ),
         ],
       ),
@@ -125,7 +133,7 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: AppColors.eventCardBgColor(context),
+      color: AppColors.UpcomingeventCardBgColor(context),
       elevation: 4,
       child: Container(
         width: width,

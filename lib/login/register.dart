@@ -47,6 +47,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   bool _isConfirmPasswordVisible = false;
 
   bool _isTermsAgreed = false;
+  bool _isLoading = false;
 
   String selectedRole = '';
   File? _image; // Variable to hold the selected image
@@ -253,6 +254,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ],
                     ),
                     SizedBox(height: screenHeight * 0.05),
+                    if (_isLoading)
+                      Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.mainButtonColor(
+                              context), // You can customize the color
+                        ),
+                      ),
+                    SizedBox(height: screenHeight * 0.05),
                     SubmitButtonWidget(
                       isTermsAgreed: _isTermsAgreed,
                       selectedRole: selectedRole,
@@ -284,21 +293,35 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   void _onSubmit() async {
+    // Start loading
+    setState(() {
+      _isLoading = true;
+    });
+
     // Check if terms and conditions are agreed
     if (!_isTermsAgreed) {
       _showErrorSnackbar('Please agree to the terms and conditions.');
+      setState(() {
+        _isLoading = false; // Stop loading
+      });
       return;
     }
 
     // Check if proof of identity (image) is provided
     if (_image == null) {
       _showErrorSnackbar('Please upload a proof of identity.');
+      setState(() {
+        _isLoading = false; // Stop loading
+      });
       return;
     }
 
     // Check form validity
     if (!_isFormValid()) {
       _showErrorSnackbar('Please fill all required fields correctly.');
+      setState(() {
+        _isLoading = false; // Stop loading
+      });
       return; // Don't proceed further if form is invalid
     }
 
@@ -329,6 +352,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
         } catch (e) {
           print("Error during image upload: $e");
           _showErrorSnackbar('Error uploading image.');
+          setState(() {
+            _isLoading = false; // Stop loading
+          });
           return;
         }
       }
@@ -364,15 +390,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
         await FirebaseFirestore.instance.collection('ngos').add(userData);
       }
 
-      // Navigate to the Login Page first
+      // Navigate to the Login Page
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (_) =>
-                const LoginPage()), // Adjust the LoginPage constructor if necessary
+        MaterialPageRoute(builder: (_) => const LoginPage()),
       );
 
-      // After a short delay, show the Snackbar
+      // Show success snackbar after a short delay
       Future.delayed(const Duration(seconds: 1), () {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -381,11 +405,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
         );
       });
 
-      // Clear all the form fields after successful submission
+      // Clear the form fields
       _clearFormFields();
     } catch (e) {
       print("Error occurred during form submission: ${e.toString()}");
       _showErrorSnackbar('Error: ${e.toString()}');
+    } finally {
+      // Stop loading when all processes are complete
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -546,13 +575,108 @@ class _RegistrationPageState extends State<RegistrationPage> {
           controller: departmentController,
           isDarkMode: isDarkMode,
         ),
-        TextFieldWidget(
-          label: 'College Name',
-          controller: collegeNameController,
-          isDarkMode: isDarkMode,
-        ),
+        _buildCollegeNameDropdown(isDarkMode),
       ],
     );
+  }
+
+  Widget _buildCollegeNameDropdown(bool isDarkMode) {
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('admins').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          }
+
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+
+          // Extract the college names from the fetched data
+          List<String> collegeNames = snapshot.data!.docs
+              .map((doc) => doc['college_name'] as String)
+              .toList();
+
+          return Autocomplete<String>(
+            optionsBuilder: (TextEditingValue textEditingValue) {
+              // Show suggestions only when the user starts typing
+              if (textEditingValue.text.isEmpty) {
+                return [];
+              }
+              // Return filtered college names based on user input
+              return collegeNames.where((college) {
+                return college
+                    .toLowerCase()
+                    .contains(textEditingValue.text.toLowerCase());
+              }).toList();
+            },
+            onSelected: (String selectedCollege) {
+              // Set the selected college name in the controller
+              collegeNameController.text = selectedCollege;
+            },
+            fieldViewBuilder:
+                (context, textEditingController, focusNode, onFieldSubmitted) {
+              return Column(
+                children: [
+                  Autocomplete<String>(
+                    optionsBuilder: (TextEditingValue textEditingValue) {
+                      // Show suggestions only when the user starts typing
+                      if (textEditingValue.text.isEmpty) {
+                        return [];
+                      }
+                      // Return filtered college names based on user input
+                      return collegeNames.where((college) {
+                        return college
+                            .toLowerCase()
+                            .contains(textEditingValue.text.toLowerCase());
+                      }).toList();
+                    },
+                    onSelected: (String selectedCollege) {
+                      // Set the selected college name in the controller
+                      collegeNameController.text = selectedCollege;
+                    },
+                    fieldViewBuilder: (context, textEditingController,
+                        focusNode, onFieldSubmitted) {
+                      return Column(
+                        children: [
+                          TextField(
+                            controller: textEditingController,
+                            focusNode: focusNode,
+                            decoration: InputDecoration(
+                              labelText: 'College Name',
+                              labelStyle: TextStyle(
+                                color: AppColors.defualtTextColor(context),
+                                height: 1.5,
+                              ),
+                              border: InputBorder.none,
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: AppColors.getLineColor(context),
+                                ),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: AppColors.getLineColor(context),
+                                ),
+                              ),
+                            ),
+                            style: TextStyle(
+                                color:
+                                    isDarkMode ? Colors.white : Colors.black),
+                          ),
+                          // SizedBox added below the TextField
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        });
   }
 
   Widget _buildNgoForm(bool isDarkMode) {

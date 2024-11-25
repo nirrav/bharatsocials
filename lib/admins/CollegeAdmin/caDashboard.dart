@@ -1,12 +1,13 @@
-import 'package:bharatsocials/BC/broadcastChannel.dart';
-import 'package:bharatsocials/login/userData.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bharatsocials/login/userData.dart';
 import 'package:bharatsocials/BC/CreateEvent.dart';
+import 'package:bharatsocials/BC/eventDetails.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bharatsocials/BC/broadcastChannel.dart';
 import 'package:bharatsocials/admins/adminSidebar.dart';
 import 'package:bharatsocials/volunteers/NotiPage.dart';
-import 'package:bharatsocials/BC/eventDetails.dart';
 import 'package:intl/intl.dart'; // Import Notification Page
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -127,7 +128,7 @@ class _CaDashboardScreenState extends State<CaDashboardScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.eventCardBgColor(context),
+        backgroundColor: AppColors.UpcomingeventCardBgColor(context),
         onPressed: () {
           Navigator.push(
             context,
@@ -228,7 +229,7 @@ class _CaDashboardScreenState extends State<CaDashboardScreen> {
                   width: 250,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.eventCardBgColor(context),
+                    color: AppColors.AlleventCardBgColor(context),
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
@@ -297,32 +298,39 @@ class _CaDashboardScreenState extends State<CaDashboardScreen> {
   Widget _buildUpcomingEventsHorizontalList() {
     DateTime currentDateTime = DateTime.now();
 
+    // Check if the currentUser is available
+    if (GlobalUser.currentUser == null) {
+      return const Center(child: Text('User data not available.'));
+    }
+
+    // Get the upcoming events from the current user's data
+    List<String> upcomingEventIds = GlobalUser.currentUser!.eventsPosted;
+
+    if (upcomingEventIds.isEmpty) {
+      return const Center(child: Text('No upcoming campaigns available.'));
+    }
+
+    // Fetch events based on event IDs from Firestore
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('events')
-          .snapshots(), // Listen for changes in the 'events' collection
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+          .where(FieldPath.documentId,
+              whereIn: upcomingEventIds) // Fetch events by IDs
+          .snapshots(), // Listen for changes in the events collection for these specific event IDs
+      builder: (context, eventSnapshot) {
+        if (eventSnapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (snapshot.hasError) {
+        if (eventSnapshot.hasError) {
           return const Center(child: Text('Error loading upcoming events'));
         }
 
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        if (!eventSnapshot.hasData || eventSnapshot.data!.docs.isEmpty) {
           return const Center(child: Text('No upcoming campaigns available.'));
         }
 
-        // Filter events for upcoming ones
-        var events = snapshot.data!.docs.take(3).where((event) {
-          if (event['eventDateTime'] != null) {
-            Timestamp timestamp = event['eventDateTime']; // Get the timestamp
-            DateTime eventDateTime = timestamp.toDate(); // Convert to DateTime
-            return eventDateTime.isAfter(currentDateTime); // Only future events
-          }
-          return false; // Exclude events without a valid date
-        }).toList();
+        var events = eventSnapshot.data!.docs;
 
         return SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -349,7 +357,7 @@ class _CaDashboardScreenState extends State<CaDashboardScreen> {
                   width: 250,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.eventCardBgColor(context),
+                    color: AppColors.UpcomingeventCardBgColor(context),
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
@@ -485,7 +493,7 @@ class _AllCampaignsPageState extends State<AllCampaignsPage> {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 15.0),
                 child: Card(
-                  color: AppColors.eventCardBgColor(context),
+                  color: AppColors.AlleventCardBgColor(context),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
@@ -533,7 +541,7 @@ class _AllCampaignsPageState extends State<AllCampaignsPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.eventCardBgColor(context),
+        backgroundColor: AppColors.UpcomingeventCardBgColor(context),
         onPressed: () {
           Navigator.push(
             context,
@@ -633,7 +641,7 @@ class _UpcomingCampaignsPageState extends State<UpcomingCampaignsPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
                     ),
-                    color: AppColors.eventCardBgColor(context),
+                    color: AppColors.UpcomingeventCardBgColor(context),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(

@@ -1,11 +1,11 @@
-import 'package:bharatsocials/BC/broadcastChannel.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bharatsocials/BC/CreateEvent.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bharatsocials/BC/eventDetails.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bharatsocials/BC/broadcastChannel.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bharatsocials/ngos/Sidebar.dart'; // Import the sidebar file
 import 'package:bharatsocials/volunteers/NotiPage.dart'; // Import Notification Page
@@ -56,7 +56,7 @@ class _DashboardScreenState extends State<NgoDashboard> {
               'NGO Dashboard',
               style: GoogleFonts.poppins(
                 fontSize: 20,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
                 color: AppColors.titleTextColor(context),
               ),
             ),
@@ -65,7 +65,7 @@ class _DashboardScreenState extends State<NgoDashboard> {
         actions: [
           IconButton(
             icon: Icon(
-              Icons.notifications_active,
+              Icons.notifications_active_outlined,
               color: AppColors.iconColor(context),
             ),
             onPressed: () {
@@ -87,7 +87,7 @@ class _DashboardScreenState extends State<NgoDashboard> {
           ),
         ),
       ),
-      drawer:  NgoSlideBar(),
+      drawer: NgoSlideBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -109,31 +109,46 @@ class _DashboardScreenState extends State<NgoDashboard> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         backgroundColor: AppColors.titleColor(context),
-        showSelectedLabels: true,
+        showSelectedLabels: false,
         showUnselectedLabels: false,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: AppColors.iconColor(context)),
+            icon: Icon(
+              Icons.home_rounded,
+              color: AppColors.iconColor(context),
+              size: 32.0,
+            ),
+            // icon: Icon(
+            //   Icons.home_outlined,
+            //   color: AppColors.iconColor(context),
+            //   size: 32.0,
+            // ),
             label: 'Dashboard',
           ),
           BottomNavigationBarItem(
-            icon: FaIcon(
-              FontAwesomeIcons.bullhorn,
-              color: Colors.black,
+            icon: Icon(
+              Icons.cell_tower_rounded,
+              color: AppColors.iconColor(context),
+              size: 32.0,
             ),
+            // icon: Icon(
+            //   Icons.cell_tower_outlined,
+            //   color: AppColors.iconColor(context),
+            //   size: 32.0,
+            // ),
             label: 'Broadcast Channel',
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.eventCardBgColor(context),
+        backgroundColor: AppColors.titleColor(context),
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const EventFormPage()),
           );
         },
-        child: Icon(Icons.add, color: AppColors.eventCardTextColor(context)),
+        child: Icon(Icons.add, color: AppColors.titleTextColor(context)),
       ),
     );
   }
@@ -145,7 +160,9 @@ class _DashboardScreenState extends State<NgoDashboard> {
         Text(
           title,
           style: TextStyle(
-              color: AppColors.defualtTextColor(context), fontSize: 18),
+              fontWeight: FontWeight.w800,
+              color: AppColors.defualtTextColor(context),
+              fontSize: 20),
         ),
         GestureDetector(
           onTap: () {
@@ -163,9 +180,12 @@ class _DashboardScreenState extends State<NgoDashboard> {
             }
           },
           child: Text(
-            'See More..',
-            style:
-                TextStyle(color: AppColors.subTextColor(context), fontSize: 14),
+            'View More..',
+            style: TextStyle(
+              color: AppColors.subTextColor(context),
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ],
@@ -217,8 +237,8 @@ class _DashboardScreenState extends State<NgoDashboard> {
                   width: 250,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.eventCardBgColor(context),
-                    borderRadius: BorderRadius.circular(16),
+                    color: AppColors.AlleventCardBgColor(context),
+                    borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
@@ -256,7 +276,7 @@ class _DashboardScreenState extends State<NgoDashboard> {
                           foregroundColor:
                               AppColors.mainButtonTextColor(context),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(16),
                           ),
                         ),
                         onPressed: () {
@@ -336,8 +356,8 @@ class _DashboardScreenState extends State<NgoDashboard> {
                   width: 250,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.eventCardBgColor(context),
-                    borderRadius: BorderRadius.circular(16),
+                    color: AppColors.UpcomingeventCardBgColor(context),
+                    borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
@@ -375,7 +395,7 @@ class _DashboardScreenState extends State<NgoDashboard> {
                           foregroundColor:
                               AppColors.mainButtonTextColor(context),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(16),
                           ),
                         ),
                         child: const Text('View More'),
@@ -463,7 +483,7 @@ class _AllCampaignsPageState extends State<AllCampaignsPage> {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 15.0),
                 child: Card(
-                  color: AppColors.eventCardBgColor(context),
+                  color: AppColors.AlleventCardBgColor(context),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
@@ -511,7 +531,7 @@ class _AllCampaignsPageState extends State<AllCampaignsPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.eventCardBgColor(context),
+        backgroundColor: AppColors.appBgColor(context),
         onPressed: () {
           Navigator.push(
             context,
@@ -609,9 +629,9 @@ class _UpcomingCampaignsPageState extends State<UpcomingCampaignsPage> {
                   child: Card(
                     elevation: 5,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
-                    color: AppColors.eventCardBgColor(context),
+                    color: AppColors.UpcomingeventCardBgColor(context),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
@@ -677,7 +697,7 @@ class _UpcomingCampaignsPageState extends State<UpcomingCampaignsPage> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12.0, vertical: 12.0),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(16.0),
                                 ),
                               ),
                               label: Text(

@@ -400,7 +400,7 @@ class _NgoEventDetailsPageState extends State<NgoEventDetailsPage> {
                       Container(
                         padding: const EdgeInsets.all(16.0),
                         decoration: BoxDecoration(
-                          color: AppColors.eventCardBgColor(context),
+                          color: AppColors.UpcomingeventCardBgColor(context),
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
@@ -484,7 +484,7 @@ class _NgoEventDetailsPageState extends State<NgoEventDetailsPage> {
                       Container(
                         padding: const EdgeInsets.all(16.0),
                         decoration: BoxDecoration(
-                          color: AppColors.eventCardBgColor(context),
+                          color: AppColors.UpcomingeventCardBgColor(context),
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
@@ -518,7 +518,7 @@ class _NgoEventDetailsPageState extends State<NgoEventDetailsPage> {
                       Container(
                         padding: const EdgeInsets.all(16.0),
                         decoration: BoxDecoration(
-                          color: AppColors.eventCardBgColor(context),
+                          color: AppColors.UpcomingeventCardBgColor(context),
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(

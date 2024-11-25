@@ -95,7 +95,7 @@ class NotificationRow extends StatelessWidget {
       child: Container(
         height: 50,
         decoration: BoxDecoration(
-          color: AppColors.eventCardBgColor(
+          color: AppColors.UpcomingeventCardBgColor(
               context), // You might want to replace this with a color from AppColors
           borderRadius: BorderRadius.circular(10),
         ),

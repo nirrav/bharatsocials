@@ -64,7 +64,7 @@ class HomePage extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(13),
+                  borderRadius: BorderRadius.circular(15),
                   child: Image.asset(
                     'assets/app_icon.png', // Path to your logo asset
                     width: screenWidth * 0.45,
@@ -116,7 +116,7 @@ class HomePage extends StatelessWidget {
                   ),
                   elevation: 4, // Adding shadow
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(13),
+                    borderRadius: BorderRadius.circular(35),
                   ),
                 ),
                 child: Text(

@@ -160,7 +160,7 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
 
   Widget _buildEventCard(int index) {
     return Card(
-      color: AppColors.eventCardBgColor(context),
+      color: AppColors.UpcomingeventCardBgColor(context),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -208,7 +208,7 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
 
   Widget _buildCollegeCard(int index) {
     return Card(
-      color: AppColors.eventCardBgColor(context),
+      color: AppColors.UpcomingeventCardBgColor(context),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),

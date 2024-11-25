@@ -20,7 +20,7 @@ class AdminSidebar extends StatelessWidget {
           // Drawer Header
           DrawerHeader(
             decoration: BoxDecoration(
-              color: AppColors.eventCardBgColor(context),
+              color: AppColors.appBgColor(context),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,6 +83,7 @@ class AdminSidebar extends StatelessWidget {
                 await prefs.remove('isLoggedIn');
                 await prefs.remove('userRole');
                 await prefs.remove('userDocId');
+                await prefs.remove('email');
 
                 // Show a message that the user has logged out
                 ScaffoldMessenger.of(context).showSnackBar(
