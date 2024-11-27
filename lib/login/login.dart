@@ -1,3 +1,5 @@
+import 'package:bharatsocials/login/userData.dart';
+
 import 'widgets/login_button.dart';
 import 'widgets/dot_indicator.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +13,6 @@ import 'package:bharatsocials/ngos/ngoDashboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bharatsocials/volunteers/volDashboard.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'userData.dart'; // Import the UserData class to use it
 import 'package:bharatsocials/admins/UniAdmin/uniDashboard.dart';
 import 'package:bharatsocials/admins/CollegeAdmin/caDashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
@@ -28,7 +29,6 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
   bool _isPasswordVisible = false;
   bool _isLoading = false; // Add a state variable for loading
-  UserData? _currentUser;
 
   @override
   void dispose() {
@@ -151,8 +151,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-  void _onSubmit() async {
+void _onSubmit() async {
     setState(() {
       _isLoading = true; // Start loading
     });
@@ -175,58 +174,58 @@ class _LoginPageState extends State<LoginPage> {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
-      // Store the login state in SharedPreferences
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', true);
-      await prefs.setString('email', email);
+      // Fetch current user after login
+      User? user = userCredential.user;
+      if (user == null) {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to fetch user data')),
+        );
+        return;
+      }
 
-      QuerySnapshot snapshot;
+      String userId = user.uid; // Access current user's UID
+
+      // Query for volunteer, NGO, and admin roles
       String userRole = '';
-
-      // Query for volunteer
-      snapshot = await FirebaseFirestore.instance
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('volunteers')
           .where('email', isEqualTo: email)
           .get();
+
       if (snapshot.docs.isNotEmpty) {
         userRole = 'volunteer';
-      }
-
-      // Query for NGO
-      if (snapshot.docs.isEmpty) {
+      } else {
+        // If not a volunteer, check for NGO
         snapshot = await FirebaseFirestore.instance
             .collection('ngos')
             .where('email', isEqualTo: email)
             .get();
         if (snapshot.docs.isNotEmpty) {
           userRole = 'ngo';
+        } else {
+          // If not an NGO, check for admin
+          snapshot = await FirebaseFirestore.instance
+              .collection('admins')
+              .where('admin_email', isEqualTo: email)
+              .get();
+          if (snapshot.docs.isNotEmpty) {
+            userRole = 'admin';
+          }
         }
       }
 
-      // Query for admin
-      if (snapshot.docs.isEmpty) {
-        snapshot = await FirebaseFirestore.instance
-            .collection('admins')
-            .where('admin_email', isEqualTo: email)
-            .get();
-        if (snapshot.docs.isNotEmpty) {
-          userRole = 'admin';
-        }
-      }
-
-      // Check if user exists
+      // Check if the user exists in any role
       if (snapshot.docs.isNotEmpty) {
         DocumentSnapshot userDoc = snapshot.docs.first;
-
-        // Save document ID and role in SharedPreferences
-        await prefs.setString('userDocId', userDoc.id);
-        await prefs.setString('userRole', userRole);
 
         // Fetch user data and store it in GlobalUser.currentUser
         UserData currentUser = UserData.fromFirestore(userDoc);
         GlobalUser.currentUser = currentUser;
 
-        // Redirect to respective dashboard
+        // Redirect to respective dashboard based on role
         if (userRole == 'volunteer') {
           Navigator.pushReplacement(
             context,
@@ -253,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
         }
       } else {
         setState(() {
-          _isLoading = false; // Stop loading on error
+          _isLoading = false; // Stop loading if no user is found
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('User not found!')),
@@ -268,6 +267,7 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
   }
+
 
   Widget _buildConnectingLine() {
     return Container(

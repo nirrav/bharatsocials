@@ -29,13 +29,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
-  TextEditingController middleNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
+ 
   TextEditingController phoneNoController = TextEditingController();
   TextEditingController rollNoController = TextEditingController();
   TextEditingController departmentController = TextEditingController();
   TextEditingController collegeNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  List<String> collegeNames = [];
 
 // Controllers for NGO form
   TextEditingController organizationNameController = TextEditingController();
@@ -57,8 +57,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     passwordController.dispose();
     confirmPasswordController.dispose();
     firstNameController.dispose();
-    middleNameController.dispose();
-    lastNameController.dispose();
+
     phoneNoController.dispose();
     rollNoController.dispose();
     departmentController.dispose();
@@ -100,8 +99,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   void initState() {
     super.initState();
+    _fetchCollegeNames();
+
     Future.delayed(Duration.zero, () {
       _showRoleSelectionDialog();
+    });
+  }
+
+  void _fetchCollegeNames() async {
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('admins').get();
+    setState(() {
+      collegeNames = snapshot.docs
+          .where((doc) =>
+              doc['adminRole'] == 'college' && doc['collegeName'] != null)
+          .map((doc) => doc['collegeName'] as String)
+          .toList();
     });
   }
 
@@ -362,30 +375,33 @@ class _RegistrationPageState extends State<RegistrationPage> {
       // Firestore data save
       Map<String, dynamic> userData = {
         'email': emailController.text,
-        'image': imageUrl,
-        'isVerified': false,
-        'fcmToken': fcmToken, // Store the FCM token
+
       };
 
       // Store user data based on the role
       if (selectedRole == 'volunteer') {
         userData.addAll({
-          'first_name': firstNameController.text,
-          'middle_name': middleNameController.text,
-          'last_name': lastNameController.text,
+          'name': firstNameController.text,
+   
           'phone': phoneNoController.text,
-          'roll_no': rollNoController.text,
+          'rollno': rollNoController.text,
           'department': departmentController.text,
-          'college_name': collegeNameController.text,
+          'collegeName': collegeNameController.text,
           'role': "volunteer",
+                  'image': imageUrl,
+          'isVerified': false,
+          'fcmToken': fcmToken, // Store the FCM token
         });
         await FirebaseFirestore.instance.collection('volunteers').add(userData);
       } else if (selectedRole == 'ngo') {
         userData.addAll({
-          'organization_name': organizationNameController.text,
-          'contact_number': contactNumberController.text,
+          'name': organizationNameController.text,
+          'phone': contactNumberController.text,
           'city': cityController.text,
           'role': "ngo",
+                  'image': imageUrl,
+          'isVerified': false,
+          'fcmToken': fcmToken, // Store the FCM token
         });
         await FirebaseFirestore.instance.collection('ngos').add(userData);
       }
@@ -431,8 +447,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void _clearFormFields() {
     // Clear all text fields
     firstNameController.clear();
-    middleNameController.clear();
-    lastNameController.clear();
+
     phoneNoController.clear();
     rollNoController.clear();
     departmentController.clear();
@@ -484,10 +499,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         print("First name is empty for Volunteer.");
         return false;
       }
-      if (lastNameController.text.isEmpty) {
-        print("Last name is empty for Volunteer.");
-        return false;
-      }
+    
       if (rollNoController.text.isEmpty) {
         print("Roll number is empty for Volunteer.");
         return false;
@@ -541,18 +553,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFieldWidget(
-          label: 'First Name',
+          label: 'Full Name',
           controller: firstNameController,
-          isDarkMode: isDarkMode,
-        ),
-        TextFieldWidget(
-          label: 'Middle Name',
-          controller: middleNameController,
-          isDarkMode: isDarkMode,
-        ),
-        TextFieldWidget(
-          label: 'Last Name',
-          controller: lastNameController,
           isDarkMode: isDarkMode,
         ),
         TextFieldWidget(
@@ -565,118 +567,77 @@ class _RegistrationPageState extends State<RegistrationPage> {
           controller: phoneNoController,
           isDarkMode: isDarkMode,
         ),
-        TextFieldWidget(
-          label: 'Roll Number',
-          controller: rollNoController,
-          isDarkMode: isDarkMode,
-        ),
+        _buildCollegeNameDropdown(isDarkMode),
         TextFieldWidget(
           label: 'Department',
           controller: departmentController,
           isDarkMode: isDarkMode,
         ),
-        _buildCollegeNameDropdown(isDarkMode),
+        TextFieldWidget(
+          label: 'Roll Number',
+          controller: rollNoController,
+          isDarkMode: isDarkMode,
+        ),
       ],
     );
   }
 
   Widget _buildCollegeNameDropdown(bool isDarkMode) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('admins').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          }
+    if (collegeNames.isEmpty) {
+      return Text("No colleges found");
+    }
 
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-
-          // Extract the college names from the fetched data
-          List<String> collegeNames = snapshot.data!.docs
-              .map((doc) => doc['college_name'] as String)
-              .toList();
-
-          return Autocomplete<String>(
-            optionsBuilder: (TextEditingValue textEditingValue) {
-              // Show suggestions only when the user starts typing
-              if (textEditingValue.text.isEmpty) {
-                return [];
-              }
-              // Return filtered college names based on user input
-              return collegeNames.where((college) {
-                return college
-                    .toLowerCase()
-                    .contains(textEditingValue.text.toLowerCase());
-              }).toList();
-            },
-            onSelected: (String selectedCollege) {
-              // Set the selected college name in the controller
-              collegeNameController.text = selectedCollege;
-            },
-            fieldViewBuilder:
-                (context, textEditingController, focusNode, onFieldSubmitted) {
-              return Column(
-                children: [
-                  Autocomplete<String>(
-                    optionsBuilder: (TextEditingValue textEditingValue) {
-                      // Show suggestions only when the user starts typing
-                      if (textEditingValue.text.isEmpty) {
-                        return [];
-                      }
-                      // Return filtered college names based on user input
-                      return collegeNames.where((college) {
-                        return college
-                            .toLowerCase()
-                            .contains(textEditingValue.text.toLowerCase());
-                      }).toList();
-                    },
-                    onSelected: (String selectedCollege) {
-                      // Set the selected college name in the controller
-                      collegeNameController.text = selectedCollege;
-                    },
-                    fieldViewBuilder: (context, textEditingController,
-                        focusNode, onFieldSubmitted) {
-                      return Column(
-                        children: [
-                          TextField(
-                            controller: textEditingController,
-                            focusNode: focusNode,
-                            decoration: InputDecoration(
-                              labelText: 'College Name',
-                              labelStyle: TextStyle(
-                                color: AppColors.defualtTextColor(context),
-                                height: 1.5,
-                              ),
-                              border: InputBorder.none,
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: AppColors.getLineColor(context),
-                                ),
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: AppColors.getLineColor(context),
-                                ),
-                              ),
-                            ),
-                            style: TextStyle(
-                                color:
-                                    isDarkMode ? Colors.white : Colors.black),
-                          ),
-                          // SizedBox added below the TextField
-                          SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.02),
-                        ],
-                      );
-                    },
+    return Autocomplete<String>(
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        // Show suggestions only when the user starts typing
+        if (textEditingValue.text.isEmpty) {
+          return [];
+        }
+        // Return filtered college names based on user input
+        return collegeNames.where((college) {
+          return college
+              .toLowerCase()
+              .contains(textEditingValue.text.toLowerCase());
+        }).toList();
+      },
+      onSelected: (String selectedCollege) {
+        // Set the selected college name in the controller
+        collegeNameController.text = selectedCollege;
+      },
+      fieldViewBuilder:
+          (context, textEditingController, focusNode, onFieldSubmitted) {
+        return Column(
+          children: [
+            TextField(
+              controller: textEditingController,
+              focusNode: focusNode,
+              decoration: InputDecoration(
+                labelText: 'College Name',
+                labelStyle: TextStyle(
+                  color: AppColors.defualtTextColor(context),
+                  height: 1.5,
+                ),
+                border: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: AppColors.getLineColor(context),
                   ),
-                ],
-              );
-            },
-          );
-        });
+                ),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: AppColors.getLineColor(context),
+                  ),
+                ),
+              ),
+              style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.02,
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildNgoForm(bool isDarkMode) {
@@ -684,12 +645,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFieldWidget(
-          label: 'Organization Name',
+          label: 'NGO Name',
           controller: organizationNameController,
           isDarkMode: isDarkMode,
         ),
         TextFieldWidget(
-          label: 'Organization Email',
+          label: 'NGO Email',
           controller: emailController,
           isDarkMode: isDarkMode,
         ),

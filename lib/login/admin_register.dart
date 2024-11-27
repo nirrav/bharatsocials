@@ -38,6 +38,7 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
   String passwordStrength = 'weak'; // Default password strength
   File? _identityProof; // To hold the identity proof image
   File? _image; // Variable to hold the selected image
+  bool _isLoading = false; // Track the loading state
 
   @override
   void dispose() {
@@ -90,13 +91,21 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
     }
   }
 
-  Future<void> _onSubmit() async {
+  Future<void> _onRegister() async {
+    setState(() {
+      _isLoading = true; // Show loader when submitting
+    });
+
     // Check if proof of identity (image) is provided
     if (_image == null) {
       _showErrorSnackbar('Please upload a proof of identity.');
+      setState(() {
+        _isLoading = false; // Hide loader after error
+      });
       return;
     }
-    // Validate fields
+
+    // Validate fields (same validation logic as before)
     if (adminNameController.text.isEmpty ||
         adminEmailController.text.isEmpty ||
         passwordController.text.isEmpty ||
@@ -104,22 +113,31 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please fill in all required fields.")),
       );
+      setState(() {
+        _isLoading = false; // Hide loader after error
+      });
       return;
     }
 
-    // Check if password and confirm password match
+    // Check if password and confirm password match (same validation)
     if (passwordController.text != confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Passwords do not match.")),
       );
+      setState(() {
+        _isLoading = false; // Hide loader after error
+      });
       return;
     }
 
-    // Check password strength
+    // Check password strength (same validation)
     if (passwordStrength == 'weak') {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Password is too weak.")),
       );
+      setState(() {
+        _isLoading = false; // Hide loader after error
+      });
       return;
     }
 
@@ -146,38 +164,41 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
         } catch (e) {
           print("Error during image upload: $e");
           _showErrorSnackbar('Error uploading image.');
+          setState(() {
+            _isLoading = false; // Hide loader after error
+          });
           return;
         }
       }
 
       // Create the data map to be sent to Firestore
       Map<String, dynamic> adminData = {
-        'admin_name': adminNameController.text.trim(),
-        'admin_email': adminEmailController.text.trim(),
-        'admin_phone': adminPhoneController.text.trim(),
+        'name': adminNameController.text.trim(),
+        'email': adminEmailController.text.trim(),
+        'phone': adminPhoneController.text.trim(),
         'role': 'admin', // Always set to admin
-        'admin_role': selectedRole,
+        'adminRole': selectedRole,
         'isVerified': false,
-        'image': imageUrl,
+        'POIurl': imageUrl,
       };
 
-      // Add role-specific data
+      // Add role-specific data (same logic as before)
       if (selectedRole == 'college') {
-        adminData['college_name'] = collegeFieldController.text.trim();
+        adminData['collegeName'] = collegeFieldController.text.trim();
       } else if (selectedRole == 'uni') {
-        adminData['university_name'] = universityFieldController.text.trim();
+        adminData['uniName'] = universityFieldController.text.trim();
       }
 
       // Store data in Firestore under 'admins' collection
       await FirebaseFirestore.instance.collection('admins').add(adminData);
       print("Admin registered successfully");
 
-      // Navigate to the Login Page first
+      // Navigate to the Login Page after a short delay
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => const LoginPage(),
-        ), // Assuming LoginPage is your login screen
+        ),
       );
 
       // After a short delay, show the Snackbar
@@ -192,6 +213,10 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: $e")),
       );
+    } finally {
+      setState(() {
+        _isLoading = false; // Hide loader after the operation completes
+      });
     }
   }
 
@@ -431,11 +456,18 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
 
                         // Submit Button
                         SizedBox(height: screenHeight * 0.05),
-                        SubmitButtonWidget(
-                          isTermsAgreed: _isTermsAgreed,
-                          selectedRole: selectedRole,
-                          onSubmit: _onSubmit,
-                        ),
+                        _isLoading // Show loader if _isLoading is true
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  color:
+                                      buttonColor, // Customize color if needed
+                                ),
+                              )
+                            : SubmitButtonWidget(
+                                isTermsAgreed: _isTermsAgreed,
+                                selectedRole: selectedRole,
+                                onSubmit: _onRegister,
+                              ),
                         const SizedBox(height: 20),
                       ],
                     ),
