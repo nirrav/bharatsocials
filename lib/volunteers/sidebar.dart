@@ -1,123 +1,140 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:bharatsocials/login/userData.dart';
 import 'package:bharatsocials/volunteers/settings.dart';
 import 'package:bharatsocials/volunteers/acheivement.dart';
 import 'package:bharatsocials/volunteers/viewProfile.dart';
 import 'package:bharatsocials/volunteers/attendedEvent.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:bharatsocials/volunteers/volunteerData.dart'; // Import the VolunteerData class
 
-class VolunteerSidebar extends StatelessWidget {
+class VolunteerSidebar extends StatefulWidget {
   const VolunteerSidebar({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Ensure that you're using the color scheme from AppColors
+  _VolunteerSidebarState createState() => _VolunteerSidebarState();
+}
 
-    return Drawer(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildDrawerHeader(
-              context), // Pass context to the header for color use
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                _buildMenuItem(
-                  context: context,
-                  icon: Icons.person,
-                  title: 'View Profile',
-                  onTap: () => _navigateTo(context, ViewProfilePage()),
+class _VolunteerSidebarState extends State<VolunteerSidebar> {
+  late Future<VolunteerData?> _volunteerDataFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _volunteerDataFuture =
+        VolunteerData.fetchVolunteerData(); // Trigger data fetch
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<VolunteerData?>(
+      future: _volunteerDataFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData) {
+          return const Center(child: Text('No Data Found'));
+        }
+
+        VolunteerData volunteerData = snapshot.data!;
+
+        return Drawer(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildDrawerHeader(context, volunteerData),
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    _buildMenuItem(
+                      context: context,
+                      icon: Icons.person,
+                      title: 'View Profile',
+                      onTap: () =>
+                          _navigateTo(context, const ViewProfilePage()),
+                    ),
+                    _buildMenuItem(
+                      context: context,
+                      icon: Icons.event,
+                      title: 'Attended Events',
+                      onTap: () =>
+                          _navigateTo(context, const AttendedEventPage()),
+                    ),
+                    _buildMenuItem(
+                      context: context,
+                      icon: Icons.emoji_events,
+                      title: 'Achievements',
+                      onTap: () =>
+                          _navigateTo(context, const AchievementPage()),
+                    ),
+                    _buildMenuItem(
+                      context: context,
+                      icon: Icons.settings,
+                      title: 'Settings',
+                      onTap: () => _navigateTo(context, const SettingsPage()),
+                    ),
+                  ],
                 ),
-                _buildMenuItem(
-                  context: context,
-                  icon: Icons.event,
-                  title: 'Attended Events',
-                  onTap: () => _navigateTo(context, AttendedEventPage()),
-                ),
-                _buildMenuItem(
-                  context: context,
-                  icon: Icons.emoji_events,
-                  title: 'Achievements',
-                  onTap: () => _navigateTo(context, const AchievementPage()),
-                ),
-                _buildMenuItem(
-                  context: context,
-                  icon: Icons.settings,
-                  title: 'Settings',
-                  onTap: () => _navigateTo(context, SettingsPage()),
-                ),
-                // _buildMenuItem(
-                //   context: context,
-                //   icon: Icons.info,
-                //   title: 'Dummy Button', // Dummy button for demonstration
-                //   onTap: () {
-                //     ScaffoldMessenger.of(context).showSnackBar(
-                //       const SnackBar(content: Text('Dummy Button Pressed!')),
-                //     );
-                //   },
-                // ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  // Drawer Header Widget
-  Widget _buildDrawerHeader(BuildContext context) {
-    String userName = 'User  Name'; // Default username
-
-    // Check if the current user is a volunteer and use their first name if available
-    if (GlobalUser.currentUser?.role == 'volunteer') {
-      userName = GlobalUser.currentUser?.firstName ?? 'User  Name';
-    }
-
-    // Get user image if available
-    String userImage = GlobalUser.currentUser?.image ?? '';
+  Widget _buildDrawerHeader(BuildContext context, VolunteerData volunteerData) {
+    String userName = volunteerData.name;
+    String userEmail = volunteerData.email;
 
     return DrawerHeader(
       decoration: BoxDecoration(
-        color: AppColors.appBgColor(context), // Use AppColors for background
+        color: AppColors.appBgColor(context),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          // Profile Picture with fallback if not available
           CircleAvatar(
             radius: 30,
             backgroundColor: AppColors.appBgColor(context),
-            backgroundImage: userImage.isNotEmpty
-                ? NetworkImage(userImage) // Display image if available
-                : null, // No image if empty
-            child: userImage.isEmpty
-                ? Icon(
-                    FontAwesomeIcons.user, // Use Font Awesome icon
-                    size: 40,
-                    color: AppColors.iconColor(
-                        context), // Icon color from AppColors
-                  )
-                : null, // Show default icon if no image available
+            child: Icon(
+              FontAwesomeIcons.user,
+              size: 40,
+              color: AppColors.iconColor(context),
+            ),
           ),
           const SizedBox(width: 16),
-          // Display the first name or default username
-          Text(
-            userName, // Display the first name if the user is a volunteer
-            style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: AppColors.defualtTextColor(
-                  context), // Text color from AppColors
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                userName,
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.defualtTextColor(context),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                userEmail,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal,
+                  color: AppColors.defualtTextColor(context),
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  // Menu Item Widget
   Widget _buildMenuItem({
     required BuildContext context,
     required IconData icon,
@@ -127,22 +144,20 @@ class VolunteerSidebar extends StatelessWidget {
     return ListTile(
       leading: Icon(
         icon,
-        color: AppColors.iconColor(context), // Icon color from AppColors
+        color: AppColors.iconColor(context),
       ),
       title: Text(
         title,
         style: GoogleFonts.poppins(
           fontSize: 16,
           fontWeight: FontWeight.w500,
-          color:
-              AppColors.defualtTextColor(context), // Text color from AppColors
+          color: AppColors.defualtTextColor(context),
         ),
       ),
       onTap: onTap,
     );
   }
 
-  // Navigation Helper
   void _navigateTo(BuildContext context, Widget page) {
     Navigator.push(
       context,

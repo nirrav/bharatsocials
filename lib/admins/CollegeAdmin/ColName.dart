@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:bharatsocials/admins/UniAdmin/ColProfile.dart';
-import 'package:bharatsocials/colors.dart';
+import 'package:bharatsocials/admins/CollegeAdmin/ColProfile.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: CollegePage(),
-  ));
-}
 
 class CollegePage extends StatelessWidget {
+  const CollegePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text('College Name'),
+        title: const Text('College Name'),
         centerTitle: true,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
@@ -38,7 +34,7 @@ class CollegePage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => CollegeProfileScreen()),
+                        builder: (context) => const CollegeProfileScreen()),
                   );
                   // Navigate to another page or perform another action here
                 },
@@ -51,7 +47,7 @@ class CollegePage extends StatelessWidget {
                   child: Center(
                     child: Text(
                       'Item ${index + 1}', // Optional label
-                      style: TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ),
                 ),

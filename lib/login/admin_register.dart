@@ -91,7 +91,7 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
     }
   }
 
-  Future<void> _onRegister() async {
+  Future<void> _onAdminRegister() async {
     setState(() {
       _isLoading = true; // Show loader when submitting
     });
@@ -466,7 +466,7 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
                             : SubmitButtonWidget(
                                 isTermsAgreed: _isTermsAgreed,
                                 selectedRole: selectedRole,
-                                onSubmit: _onRegister,
+                                onSubmit: _onAdminRegister,
                               ),
                         const SizedBox(height: 20),
                       ],

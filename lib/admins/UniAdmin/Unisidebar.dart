@@ -1,9 +1,42 @@
-import 'package:bharatsocials/admins/UniAdmin/uniDashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/admins/UniAdmin/UniProfile.dart';
 import 'package:bharatsocials/admins/UniAdmin/Unisettings.dart';
+import 'package:bharatsocials/admins/UniAdmin/uniAdminData.dart';
+import 'package:bharatsocials/admins/UniAdmin/uniDashboard.dart';
 
-class SlideBar extends StatelessWidget {
+class SlideBar extends StatefulWidget {
+  const SlideBar({super.key});
+
+  @override
+  _SlideBarState createState() => _SlideBarState();
+}
+
+class _SlideBarState extends State<SlideBar> {
+  String userName = '';
+  String userEmail = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAdminData();
+  }
+
+  // Fetch Admin data
+  Future<void> _fetchAdminData() async {
+    AdminData? adminData = await AdminData.fetchAdminData();
+    if (adminData != null) {
+      setState(() {
+        userName = adminData.name;
+        userEmail = adminData.email;
+      });
+    } else {
+      setState(() {
+        userName = 'Unknown';
+        userEmail = 'user@example.com';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -12,61 +45,61 @@ class SlideBar extends StatelessWidget {
         children: [
           // Drawer Header
           DrawerHeader(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.black,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.person, color: Colors.white, size: 50),
-                SizedBox(height: 8),
+                const Icon(Icons.person, color: Colors.white, size: 50),
+                const SizedBox(height: 8),
+                // Display the user's name and email
                 Text(
-                  'Hello, User!',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                  'Hello, $userName',
+                  style: const TextStyle(color: Colors.white, fontSize: 18),
                 ),
                 Text(
-                  'user@example.com',
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                  userEmail,
+                  style: const TextStyle(color: Colors.grey, fontSize: 14),
                 ),
               ],
             ),
           ),
           // Drawer Items
           ListTile(
-            leading: Icon(Icons.home, color: Colors.black),
-            title: Text('View Profile'),
+            leading: const Icon(Icons.home, color: Colors.black),
+            title: const Text('View Profile'),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => UniProfile()),
+                MaterialPageRoute(builder: (context) => const UniProfile()),
               );
             },
           ),
           ListTile(
-            leading: Icon(Icons.person, color: Colors.black),
-            title: Text('Permission'),
+            leading: const Icon(Icons.person, color: Colors.black),
+            title: const Text('Permission'),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
-            leading: Icon(Icons.settings, color: Colors.black),
-            title: Text('Dashboard'),
+            leading: const Icon(Icons.settings, color: Colors.black),
+            title: const Text('Dashboard'),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => UniAdminDashboard()),
+                MaterialPageRoute(builder: (context) => const Placeholder()),
               );
             },
           ),
-
           ListTile(
-            leading: Icon(Icons.logout, color: Colors.red),
-            title: Text('Settings'),
+            leading: const Icon(Icons.logout, color: Colors.red),
+            title: const Text('Settings'),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Unisettings()),
+                MaterialPageRoute(builder: (context) => const Unisettings()),
               );
             },
           ),

@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:bharatsocials/admins/CollegeAdmin/ColName.dart';
 import 'package:bharatsocials/colors.dart'; // Import AppColors from a separate file
-import 'package:bharatsocials/admins/UniAdmin/ColName.dart';
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: EventDetailsScreen(),
     );
   }
 }
 
 class EventDetailsScreen extends StatelessWidget {
+  const EventDetailsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Get theme-dependent colors using the AppColors utility
@@ -61,7 +65,7 @@ class EventDetailsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               // "Event Details" card
               Card(
                 color: backgroundColor,
@@ -78,13 +82,13 @@ class EventDetailsScreen extends StatelessWidget {
                         style: TextStyle(color: textColor, fontSize: 16),
                         overflow: TextOverflow.ellipsis,
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         'Event Date',
                         style: TextStyle(color: textColor, fontSize: 16),
                         overflow: TextOverflow.ellipsis,
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         'Event Location',
                         style: TextStyle(color: textColor, fontSize: 16),
@@ -95,13 +99,13 @@ class EventDetailsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               // "Attended" button
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CollegePage()),
+                    MaterialPageRoute(builder: (context) => const CollegePage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -114,7 +118,7 @@ class EventDetailsScreen extends StatelessWidget {
                 child: Text('Attended',
                     style: TextStyle(color: buttonTextColor, fontSize: 16)),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               // "Volunteer" button
               ElevatedButton(
                 onPressed: () {

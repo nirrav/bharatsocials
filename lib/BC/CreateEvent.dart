@@ -1,9 +1,6 @@
-import 'package:bharatsocials/colors.dart';
-import 'package:bharatsocials/login/userData.dart';
-import 'package:intl/intl.dart'; // Add this import
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart'; // Add this import
 
 class EventFormPage extends StatefulWidget {
   const EventFormPage({super.key});
@@ -29,46 +26,10 @@ class _EventFormPageState extends State<EventFormPage> {
   bool waterProvided = false;
   bool foodProvided = false;
   bool safetyEquipment = false;
-  String? currentUserId;
-
   DateTime? eventDateTime;
 
   @override
-  void initState() {
-    super.initState();
-    // Set the host name based on the current user when the page is initialized
-    final currentUser = GlobalUser.currentUser;
-    var currentUserId = GlobalUser.currentUser?.documentId; // Get current user ID
-    print(currentUser);
-    print(currentUserId);
-    if (currentUser != null) {
-      hostNameController.text = currentUser.role == 'ngo'
-          ? currentUser.organizationName ?? ''
-          : currentUser.adminName ?? '';
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final currentUser = GlobalUser.currentUser;
-
-    // Ensure only non-volunteer users can access this page
-    if (currentUser?.role == 'volunteer') {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Access Denied'),
-        ),
-        body: Center(
-          child: Text(
-            'You do not have permission to access this page.',
-            style: GoogleFonts.poppins(fontSize: 18),
-          ),
-        ),
-      );
-    }
-
-    print('Current user organization name: ${currentUser?.organizationName}');
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Events'),
@@ -91,28 +52,24 @@ class _EventFormPageState extends State<EventFormPage> {
                 TextFormField(
                   enabled: false, // Keep the field disabled
                   controller: hostNameController, // Use the controller here
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Host Name',
                     labelStyle: TextStyle(
-                      color: AppColors.defualtTextColor(
-                          context), // Set the label text color
+                      color: Colors.black, // Set the label text color
                     ),
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: AppColors.defualtTextColor(
-                            context), // Set the border color
+                        color: Colors.black, // Set the border color
                       ),
                     ),
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: AppColors.dividerColor(
-                            context), // Set the border color on focus
+                        color: Colors.grey, // Set the border color on focus
                       ),
                     ),
                   ),
-                  style: TextStyle(
-                    color: AppColors.defualtTextColor(
-                        context), // Set the text color
+                  style: const TextStyle(
+                    color: Colors.black, // Set the text color
                   ),
                 ),
 
@@ -246,7 +203,6 @@ class _EventFormPageState extends State<EventFormPage> {
                   },
                 ),
                 const SizedBox(height: 20),
-                // Removed Google Map location picker, no map UI now.
 
                 // Checkbox options
                 Row(
@@ -304,140 +260,29 @@ class _EventFormPageState extends State<EventFormPage> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        // Collect data from form fields
-                        String hostId = currentUser?.documentId ??
-                            ''; // Use documentId here
-                        String userRole = currentUser?.role ?? '';
-                        String hostName = currentUser?.role == 'ngo'
-                            ? currentUser?.organizationName ?? ''
-                            : currentUser?.adminName ?? '';
-                        String eventName = eventNameController.text;
-                        String eventLocation = eventLocationController.text;
-                        String pocFullName = pocFullNameController.text;
-                        String pocNumber = pocNumberController.text;
-                        String pocLocation = pocLocationController.text;
-                        int requiredVolunteers =
-                            int.tryParse(requiredVolunteersController.text) ??
-                                0;
-
-                        // Add event to Firestore with 'posted' timestamp
-                        DocumentReference eventDocRef = await FirebaseFirestore
-                            .instance
-                            .collection('events')
-                            .add({
-                          'hostId': hostId,
-                          'role': userRole,
-                          'hostName': hostName,
-                          'eventName': eventName,
-                          'eventLocation': eventLocation,
-                          'eventDateTime': eventDateTime ?? Timestamp.now(),
-                          'pocFullName': pocFullName,
-                          'pocNumber': pocNumber,
-                          'pocLocation': pocLocation,
-                          'waterProvided': waterProvided,
-                          'foodProvided': foodProvided,
-                          'safetyEquipment': safetyEquipment,
-                          'requiredVolunteers': requiredVolunteers,
-                          'readBy':
-                              [], // Adding an empty array for 'readBy' field
-                          'posted':
-                              Timestamp.now(), // Add the posted timestamp here
-                        });
-
-                        // Get the event's document ID
-                        String eventId = eventDocRef.id;
-
-                        // After event is created, update the eventsPosted field in the host's document
-                        if (userRole == 'ngo' || userRole == 'admin') {
-                          String collectionName =
-                              userRole == 'ngo' ? 'ngos' : 'admins';
-                          DocumentReference hostDocRef = FirebaseFirestore
-                              .instance
-                              .collection(collectionName)
-                              .doc(hostId);
-
-                          // Fetch the host document to update the eventsPosted array
-                          await hostDocRef.get().then((hostDoc) async {
-                            if (hostDoc.exists) {
-                              // Update the 'eventsPosted' array in the host document
-                              await hostDocRef.update({
-                                'eventsPosted': FieldValue.arrayUnion(
-                                    [eventId]) // Add the event ID to the array
-                              });
-                            } else {
-                              // If the host document doesn't exist (shouldn't happen), handle this case
-                              print("Host document not found!");
-                            }
-                          });
-                        }
-
-                        // Reference to the admin document (assuming currentAdminCollege is used to find the admin)
-                        DocumentReference adminDoc = FirebaseFirestore.instance
-                            .collection(
-                                'admins') // Collection that holds admin documents
-                            .doc(
-                                currentUserId); // Assuming the admin's document ID is the college name
-
-                        // Get the admin document to check for the existing upcomingEvents array
-                        DocumentSnapshot adminSnapshot = await adminDoc.get();
-
-                        // Check if the admin document exists and if it has an upcomingEvents array
-                        if (adminSnapshot.exists) {
-                          List<dynamic> upcomingEvents =
-                              adminSnapshot['interestedEvents'] ?? [];
-
-                          // Check if the eventId is already in the array, if not, add it
-                          if (!upcomingEvents.contains(eventId)) {
-                            upcomingEvents.add(eventId);
-
-                            // Update the admin document with the new upcomingEvents array
-                            await adminDoc.update({
-                              'interestedEvents': upcomingEvents,
-                            });
-
-                            print(
-                                "Admin's upcoming events updated with event ID: $eventId");
-                          } else {
-                            print(
-                                "Event ID is already in the upcoming events array.");
-                          }
-                        } else {
-                          print(
-                              "Admin document does not exist for the given college.");
-                        }
-
-                        // Show success message
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Event submitted successfully!')),
-                        );
-
-                        // Reset the form fields
-                        _formKey.currentState?.reset();
-                        eventNameController.clear();
-                        eventLocationController.clear();
-                        pocFullNameController.clear();
-                        pocNumberController.clear();
-                        pocLocationController.clear();
-                        requiredVolunteersController.clear();
-                        eventDateController.clear();
-                        eventTimeController.clear();
-                        setState(() {
-                          waterProvided = false;
-                          foodProvided = false;
-                          safetyEquipment = false;
-                        });
-                      }
-                    } catch (e) {
-                      print("Error submitting event details: $e");
+                  onPressed: () {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      // Display success message
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content:
-                                Text('Error submitting event details: $e')),
+                        const SnackBar(
+                            content: Text('Event submitted successfully!')),
                       );
+
+                      // Reset the form fields
+                      _formKey.currentState?.reset();
+                      eventNameController.clear();
+                      eventLocationController.clear();
+                      pocFullNameController.clear();
+                      pocNumberController.clear();
+                      pocLocationController.clear();
+                      requiredVolunteersController.clear();
+                      eventDateController.clear();
+                      eventTimeController.clear();
+                      setState(() {
+                        waterProvided = false;
+                        foodProvided = false;
+                        safetyEquipment = false;
+                      });
                     }
                   },
                   child: const Text('Submit'),

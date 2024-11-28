@@ -2,32 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:bharatsocials/admins/UniAdmin/uniAdminData.dart';
-import 'package:bharatsocials/admins/UniAdmin/uniDashboard.dart';
+import 'collegeAdminData.dart'; // Import your College Admin Data class
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: UniProfile(),
-    );
-  }
-}
-
-class UniProfile extends StatefulWidget {
-  const UniProfile({super.key});
+class CollegeProfileScreen extends StatefulWidget {
+  const CollegeProfileScreen({super.key});
 
   @override
-  _UniProfileState createState() => _UniProfileState();
+  _CollegeProfileScreenState createState() => _CollegeProfileScreenState();
 }
 
-class _UniProfileState extends State<UniProfile> {
+class _CollegeProfileScreenState extends State<CollegeProfileScreen> {
   late TextEditingController _nameController;
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
-  late TextEditingController _uniNameController;
+  late TextEditingController _collegeNameController;
   bool _isEditing = false; // Flag to toggle between view and edit mode
 
   @override
@@ -37,7 +25,7 @@ class _UniProfileState extends State<UniProfile> {
     _nameController = TextEditingController();
     _emailController = TextEditingController();
     _phoneController = TextEditingController();
-    _uniNameController = TextEditingController();
+    _collegeNameController = TextEditingController();
 
     // Fetch data from Firestore when the widget is initialized
     _loadAdminData();
@@ -51,7 +39,7 @@ class _UniProfileState extends State<UniProfile> {
       _nameController.text = adminData.name;
       _emailController.text = adminData.email;
       _phoneController.text = adminData.phone;
-      _uniNameController.text = adminData.uniName;
+      _collegeNameController.text = adminData.collegeName;
       setState(() {});
     }
   }
@@ -76,7 +64,7 @@ class _UniProfileState extends State<UniProfile> {
               .update({
             'name': _nameController.text,
             'phone': _phoneController.text,
-            'uniName': _uniNameController.text,
+            'collegeName': _collegeNameController.text,
           });
 
           // After updating, disable editing mode
@@ -92,21 +80,18 @@ class _UniProfileState extends State<UniProfile> {
 
   @override
   Widget build(BuildContext context) {
-    Color backgroundColor = AppColors.appBgColor(context);
-    Color textColor = AppColors.defualtTextColor(context);
-    Color buttonColor = AppColors.mainButtonColor(context);
-    Color buttonTextColor = AppColors.mainButtonTextColor(context);
+    final double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'View Profile',
-          style: TextStyle(color: Colors.black),
+        title:  Text(
+          'College Profile',
+          style: TextStyle(color: AppColors.titleTextColor(context)),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.titleColor(context),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: AppColors.iconColor(context)),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -137,43 +122,46 @@ class _UniProfileState extends State<UniProfile> {
 
             return Column(
               children: [
-                // Profile Picture
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.grey.shade300,
-                  child: const Icon(
-                    Icons.person,
-                    size: 50,
-                    color: Colors.black54,
+                // Profile Picture (using CircleAvatar)
+                SizedBox(
+                  height: screenHeight * 0.25,
+                  child: Center(
+                    child: CircleAvatar(
+                      radius: screenHeight * 0.1,
+                      backgroundColor: Colors.grey.shade300,
+                      child: const Icon(
+                        Icons.person,
+                        size: 60,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
 
-                // Name
+                // Name TextField
                 TextField(
                   controller: _nameController,
                   decoration: const InputDecoration(
                     labelText: 'Name',
                     border: UnderlineInputBorder(),
                   ),
-                  readOnly:
-                      !_isEditing, // Allow editing only when _isEditing is true
+                  readOnly: !_isEditing, // Allow editing only when _isEditing is true
                 ),
                 const SizedBox(height: 10),
 
-                // College Name
+                // College Name TextField
                 TextField(
-                  controller: _uniNameController,
+                  controller: _collegeNameController,
                   decoration: const InputDecoration(
-                    labelText: 'University Name',
+                    labelText: 'College Name',
                     border: UnderlineInputBorder(),
                   ),
-                  readOnly:
-                      !_isEditing, // Allow editing only when _isEditing is true
+                  readOnly: !_isEditing, // Allow editing only when _isEditing is true
                 ),
                 const SizedBox(height: 10),
 
-                // Email
+                // Email TextField (Read-only)
                 TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(
@@ -184,19 +172,18 @@ class _UniProfileState extends State<UniProfile> {
                 ),
                 const SizedBox(height: 10),
 
-                // Phone
+                // Phone Number TextField
                 TextField(
                   controller: _phoneController,
                   decoration: const InputDecoration(
                     labelText: 'Phone Number',
                     border: UnderlineInputBorder(),
                   ),
-                  readOnly:
-                      !_isEditing, // Allow editing only when _isEditing is true
+                  readOnly: !_isEditing, // Allow editing only when _isEditing is true
                 ),
                 const SizedBox(height: 20),
 
-                // Edit Profile Button
+                // Edit/Save Profile Button
                 ElevatedButton(
                   onPressed: () {
                     if (_isEditing) {
@@ -210,7 +197,7 @@ class _UniProfileState extends State<UniProfile> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: buttonColor,
+                    backgroundColor: AppColors.mainButtonColor(context), // Replace with your button color
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -221,7 +208,7 @@ class _UniProfileState extends State<UniProfile> {
                   ),
                   child: Text(
                     _isEditing ? 'Save Changes' : 'Edit Profile',
-                    style: TextStyle(color: buttonTextColor),
+                    style:  TextStyle(color: AppColors.mainButtonTextColor(context)),
                   ),
                 ),
               ],

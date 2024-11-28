@@ -2,32 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: CollegeActivityScreen(),
     );
   }
 }
 
 class CollegeActivityScreen extends StatelessWidget {
+  const CollegeActivityScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text('College Activity'),
+        title: const Text('College Activity'),
         actions: [
           TextButton(
             onPressed: () {
               // Handle see more press
             },
-            child: Text(
+            child: const Text(
               'See More..',
               style: TextStyle(color: Colors.blue),
             ),
@@ -37,7 +41,7 @@ class CollegeActivityScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 3 / 2.5, // Adjusted aspect ratio
             crossAxisSpacing: 8.0,
@@ -45,7 +49,7 @@ class CollegeActivityScreen extends StatelessWidget {
           ),
           itemCount: 6,
           itemBuilder: (context, index) {
-            return EventCard();
+            return const EventCard();
           },
         ),
       ),
@@ -54,6 +58,8 @@ class CollegeActivityScreen extends StatelessWidget {
 }
 
 class EventCard extends StatelessWidget {
+  const EventCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -63,33 +69,33 @@ class EventCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Event Name: Nature',
               style: TextStyle(fontWeight: FontWeight.bold),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            SizedBox(height: 4.0),
-            Text(
+            const SizedBox(height: 4.0),
+            const Text(
               'Event Date: 19/10/25',
               style: TextStyle(color: Colors.grey),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            SizedBox(height: 4.0),
-            Text(
+            const SizedBox(height: 4.0),
+            const Text(
               'Event Location:',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            Spacer(),
+            const Spacer(),
             Align(
               alignment: Alignment.bottomRight,
               child: TextButton(
                 onPressed: () {
                   // Handle view more press
                 },
-                child: Row(
+                child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text('View More'),

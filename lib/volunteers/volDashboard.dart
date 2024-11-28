@@ -1,13 +1,10 @@
-import 'dart:ui';
-import 'package:bharatsocials/common_widgets/upcoming_events_page.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:bharatsocials/BC/eventDetails.dart';
 import 'package:bharatsocials/volunteers/sidebar.dart';
 import 'package:bharatsocials/volunteers/NotiPage.dart';
-import 'package:bharatsocials/volunteers/savedPage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:bharatsocials/common_widgets/event_details.dart';
 import 'package:bharatsocials/common_widgets/event_card.dart' as commonWidgets;
 
 class VolunteerDashboard extends StatefulWidget {
@@ -30,7 +27,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SavedEventsPage(),
+          builder: (context) => const Placeholder(), // Redirect to SavedPage
         ),
       );
     }
@@ -59,7 +56,9 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const NotificationPage()),
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const NotificationPage()), // Notification page
               );
             },
           ),
@@ -86,7 +85,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
         ),
       ),
 
-      drawer: const VolunteerSidebar(), // Adding the sidebar
+      drawer: const VolunteerSidebar(), // Sidebar remains
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
@@ -108,7 +107,8 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const AllEventsPage(),
+                          builder: (context) =>
+                              const Placeholder(), // Event details page
                         ),
                       );
                     },
@@ -124,7 +124,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                 ],
               ),
               const SizedBox(height: 20),
-              _buildEventList(context),
+              _buildAllEventsHorizontalList(),
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -152,7 +152,7 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
                 ],
               ),
               const SizedBox(height: 8),
-              _buildEventList(context),
+              _buildAllEventsHorizontalList(),
             ],
           ),
         ),
@@ -160,7 +160,6 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Divider with conditional color based on theme
           Divider(
             color: AppColors.dividerColor(context), // Color based on theme
             thickness: 1,
@@ -214,20 +213,149 @@ class _VolunteerDashboardState extends State<VolunteerDashboard> {
     );
   }
 
-  Widget _buildEventList(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: 4,
-        itemBuilder: (context, index) {
-          return commonWidgets.EventCard(
-            eventName: 'Dummy Event Name $index',
-            eventDate: '14th December 2024',
-            eventLocation: 'Borivali',
+  Widget _buildAllEventsHorizontalList() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(3, (index) {
+          return Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Container(
+              width: 250,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.AlleventCardBgColor(context),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    offset: const Offset(2, 2),
+                    blurRadius: 4,
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Event Name',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.eventCardTextColor(context),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Event Date: 12 December 2024, 5:00 PM',
+                    style:
+                        TextStyle(color: AppColors.eventCardTextColor(context)),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Event Location: New York',
+                    style:
+                        TextStyle(color: AppColors.eventCardTextColor(context)),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.mainButtonColor(context),
+                      foregroundColor: AppColors.mainButtonTextColor(context),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const NgoEventDetailsPage(eventId: 'eventId'),
+                        ),
+                      );
+                    },
+                    child: const Text('View More'),
+                  ),
+                ],
+              ),
+            ),
           );
-        },
+        }),
       ),
     );
   }
 }
+
+
+
+// Widget _buildAllEventsHorizontalList() {
+//     return SingleChildScrollView(
+//       scrollDirection: Axis.horizontal,
+//       child: Row(
+//         children: List.generate(3, (index) {
+//           return Padding(
+//             padding: const EdgeInsets.only(right: 8.0),
+//             child: Container(
+//               width: 250,
+//               padding: const EdgeInsets.all(16),
+//               decoration: BoxDecoration(
+//                 color: AppColors.AlleventCardBgColor(context),
+//                 borderRadius: BorderRadius.circular(20),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: Colors.black.withOpacity(0.2),
+//                     offset: const Offset(2, 2),
+//                     blurRadius: 4,
+//                   ),
+//                 ],
+//               ),
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Text(
+//                     'Event Name',
+//                     style: TextStyle(
+//                       fontWeight: FontWeight.bold,
+//                       color: AppColors.eventCardTextColor(context),
+//                     ),
+//                   ),
+//                   const SizedBox(height: 4),
+//                   Text(
+//                     'Event Date: 12 December 2024, 5:00 PM',
+//                     style:
+//                         TextStyle(color: AppColors.eventCardTextColor(context)),
+//                   ),
+//                   const SizedBox(height: 4),
+//                   Text(
+//                     'Event Location: New York',
+//                     style:
+//                         TextStyle(color: AppColors.eventCardTextColor(context)),
+//                   ),
+//                   const SizedBox(height: 8),
+//                   ElevatedButton(
+//                     style: ElevatedButton.styleFrom(
+//                       backgroundColor: AppColors.mainButtonColor(context),
+//                       foregroundColor: AppColors.mainButtonTextColor(context),
+//                       shape: RoundedRectangleBorder(
+//                         borderRadius: BorderRadius.circular(16),
+//                       ),
+//                     ),
+//                     onPressed: () {
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                           builder: (context) =>
+//                               const NgoEventDetailsPage(eventId: 'eventId'),
+//                         ),
+//                       );
+//                     },
+//                     child: const Text('View More'),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           );
+//         }),
+//       ),
+//     );
+//   }

@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
+import 'package:bharatsocials/login/logout.dart';
 import 'package:bharatsocials/volunteers/volDashboard.dart';
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Unisettings(),
     );
   }
 }
 
 class Unisettings extends StatelessWidget {
+  const Unisettings({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Get theme-dependent colors using the AppColors utility
@@ -26,40 +31,42 @@ class Unisettings extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => VolunteerDashboard()),
+              MaterialPageRoute(builder: (context) => const Placeholder()),
             );
           },
         ),
-        title: Text('Settings'),
+        title: const Text('Settings'),
       ),
       body: ListView(
         children: <Widget>[
           ListTile(
-            title: Text('Theme'),
+            title: const Text('Theme'),
             onTap: () {
               // Add navigation to Theme settings here
             },
           ),
           ListTile(
-            title: Text('Report Bug'),
+            title: const Text('Report Bug'),
             onTap: () {
               // Add navigation to Report Bug page here
             },
           ),
           ListTile(
-            title: Text('Contact Us'),
+            title: const Text('Contact Us'),
             onTap: () {
               // Add navigation to Contact Us page here
             },
           ),
-          ListTile(
-            title: Text('Log Out'),
+         ListTile(
+            title: const Text('Log Out'),
             onTap: () {
-              // Add log out logic here
+              // Call the logout method
+              Logout.logout(
+                  context); // This will handle the logout and redirect
             },
           ),
         ],

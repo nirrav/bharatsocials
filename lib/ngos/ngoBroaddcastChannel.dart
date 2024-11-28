@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:bharatsocials/login/userData.dart';
-import 'package:bharatsocials/BC/CreateEvent.dart';
-import 'package:bharatsocials/BC/eventDetails.dart';
-import 'package:bharatsocials/ngos/ngoDashboard.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class NgoBroadcastChannelScreen extends StatefulWidget {
@@ -18,36 +13,11 @@ class NgoBroadcastChannelScreen extends StatefulWidget {
 
 class _NgoBroadcastChannelScreenState extends State<NgoBroadcastChannelScreen> {
   int _selectedIndex = 1;
-  String? currentUserId;
-  ScrollController _scrollController = ScrollController();
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-
-    if (index == 0) {
-      _navigateToNgoBroadcastChannelScreen();
-    }
-  }
-
-  void _navigateToNgoBroadcastChannelScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => NgoDashboard()),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    currentUserId = GlobalUser.currentUser?.documentId; // Get current user ID
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 
   @override
@@ -89,68 +59,26 @@ class _NgoBroadcastChannelScreenState extends State<NgoBroadcastChannelScreen> {
         child: Column(
           children: [
             Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('events')
-                    .orderBy('posted',
-                        descending: false) // Sort from oldest to newest
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  if (snapshot.hasError) {
-                    return const Center(child: Text('Something went wrong!'));
-                  }
-
-                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Center(child: Text('No events posted yet.'));
-                  }
-
-                  var events = snapshot.data!.docs;
-
-                  // After loading, scroll to the bottom (latest event)
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (_scrollController.hasClients) {
-                      _scrollController
-                          .jumpTo(_scrollController.position.maxScrollExtent);
-                    }
-                  });
-
-                  return ListView(
-                    controller: _scrollController,
-                    reverse:
-                        false, // This makes the ListView scroll from top to bottom
-                    children: events.map((event) {
-                      bool isSelfSent = event['hostId'] == currentUserId;
-
-                      // Check if the current user has read this event
-                      List<dynamic> readBy = event['readBy'] ?? [];
-                      bool isReadByUser = readBy.contains(currentUserId);
-
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Align(
-                          alignment: isSelfSent
-                              ? Alignment.centerRight
-                              : Alignment.centerLeft,
-                          child: EventCard(
-                            width: screenWidth * 0.70,
-                            height: screenHeight * 0.22,
-                            textColor: textColor,
-                            eventName: event['eventName'],
-                            eventDate: event['eventDateTime'].toDate(),
-                            eventLocation: event['eventLocation'],
-                            eventId: event.id,
-                            isSelfSent: isSelfSent,
-                            isReadByUser: isReadByUser, // Pass read status
-                          ),
-                        ),
-                      );
-                    }).toList(),
+              child: ListView(
+                children: List.generate(10, (index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: EventCard(
+                        width: screenWidth * 0.70,
+                        height: screenHeight * 0.22,
+                        textColor: textColor,
+                        eventName: 'Event ${index + 1}',
+                        eventDate: DateTime.now(),
+                        eventLocation: 'Location ${index + 1}',
+                        eventId: 'eventId${index + 1}',
+                        isSelfSent: false,
+                        isReadByUser: false, // Hardcoded read status
+                      ),
+                    ),
                   );
-                },
+                }),
               ),
             ),
           ],
@@ -159,10 +87,7 @@ class _NgoBroadcastChannelScreenState extends State<NgoBroadcastChannelScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.UpcomingeventCardBgColor(context),
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const EventFormPage()),
-          );
+          // Placeholder for event creation
         },
         child: Icon(Icons.add, color: AppColors.eventCardTextColor(context)),
       ),
@@ -201,7 +126,7 @@ class EventCard extends StatelessWidget {
   final bool isSelfSent;
   final bool isReadByUser; // New parameter
 
-  const EventCard({
+  const EventCard({super.key, 
     required this.width,
     required this.height,
     required this.textColor,
@@ -285,25 +210,10 @@ class EventCard extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    minimumSize: Size(double.infinity, 50),
+                    minimumSize: const Size(double.infinity, 50),
                   ),
                   onPressed: () {
-                    // Update 'readBy' array when the user views the event
-                    FirebaseFirestore.instance
-                        .collection('events')
-                        .doc(eventId)
-                        .update({
-                      'readBy': FieldValue.arrayUnion(
-                          [GlobalUser.currentUser?.documentId])
-                    });
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            NgoEventDetailsPage(eventId: eventId),
-                      ),
-                    );
+                    // Placeholder for "View More" action
                   },
                   child: Text(
                     'View More',

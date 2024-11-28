@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:bharatsocials/volunteers/NotiPage.dart';
+import 'package:bharatsocials/login/admin_register.dart';
 import 'package:bharatsocials/admins/UniAdmin/Boardcast.dart';
-import 'package:bharatsocials/admins/UniAdmin/collegeAct.dart';
+import 'package:bharatsocials/admins/UniAdmin/pendingNgo.dart';
+import 'package:bharatsocials/login/widgets/role_selection.dart';
+import 'package:bharatsocials/admins/UniAdmin/uniAdminData.dart';
 import 'package:bharatsocials/admins/UniAdmin/EventDetails.dart';
+import 'package:bharatsocials/admins/UniAdmin/pendingCollege.dart';
+import 'package:bharatsocials/admins/CollegeAdmin/collegeAct.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 import 'package:bharatsocials/admins/UniAdmin/Unisidebar.dart'; // Import the SlideBar widget
 
 class UniAdminDashboard extends StatefulWidget {
+  const UniAdminDashboard({super.key});
+
   @override
   _UniAdminDashboardState createState() => _UniAdminDashboardState();
 }
@@ -21,9 +30,14 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
   int _selectedIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // Attach the scaffold key to Scaffold
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: AppColors.appBgColor(context),
         elevation: 0,
@@ -33,9 +47,11 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
             _scaffoldKey.currentState?.openDrawer(); // Open the drawer
           },
         ),
-        title: Text(
-          'Dashboard',
-          style: TextStyle(color: AppColors.titleTextColor(context)),
+        title: Center(
+          child: Text(
+            'Uni Dashboard',
+            style: TextStyle(color: AppColors.titleTextColor(context)),
+          ),
         ),
         actions: [
           IconButton(
@@ -44,7 +60,8 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => NotificationPage()),
+                MaterialPageRoute(
+                    builder: (context) => const NotificationPage()),
               );
             },
           ),
@@ -60,7 +77,7 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
                 'Upcoming Event',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               SizedBox(
                 height: 180,
                 child: PageView.builder(
@@ -76,7 +93,7 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
                   },
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
@@ -84,12 +101,12 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
                   (index) => _buildIndicator(index, _currentEventIndex),
                 ),
               ),
-              SizedBox(height: 16),
-              Text(
+              const SizedBox(height: 16),
+              const Text(
                 'Colleges',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               SizedBox(
                 height: 180,
                 child: PageView.builder(
@@ -105,7 +122,7 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
                   },
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
@@ -113,14 +130,42 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
                   (index) => _buildIndicator(index, _currentCollegeIndex),
                 ),
               ),
+              const SizedBox(height: 16),
+
+              // Add Horizontal Buttons Below College Section
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildHorizontalButton(
+                    'Pending NGOs',
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PendingNgoScreen()),
+                      );
+                    },
+                  ),
+                  _buildHorizontalButton(
+                    'Pending Colleges',
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PendingColleges()),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ],
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: Icon(Icons.add),
         backgroundColor: Colors.grey[700],
+        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
@@ -132,51 +177,69 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
           if (index == 0) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => UniAdminDashboard()),
+              MaterialPageRoute(
+                  builder: (context) => const UniAdminDashboard()),
             );
           } else if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => BroadcastChannelScreen()),
+              MaterialPageRoute(
+                  builder: (context) => const BroadcastChannelScreen()),
             );
           }
         },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: '',
+            label: 'Home', //All the Best Guys Good night
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.campaign),
-            label: '',
+            label: 'Campaign',
           ),
         ],
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.grey,
       ),
-      drawer: SlideBar(), // Use SlideBar as the drawer
+      drawer: const SlideBar(),
     );
   }
 
+  // Method to build event card
   Widget _buildEventCard(int index) {
     return Card(
       color: AppColors.UpcomingeventCardBgColor(context),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(20),
       ),
       elevation: 8,
-      margin: EdgeInsets.symmetric(horizontal: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 5),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Event Name $index'),
+            Text(
+              'Event Name $index',
+              style: TextStyle(
+                  color: AppColors.eventCardTextColor(context),
+                  fontWeight: FontWeight.w500), // Set text color to black
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Event Date',
+              style: TextStyle(
+                  color: AppColors.eventCardTextColor(context),
+                  fontWeight: FontWeight.w500), // Set text color to black
+            ),
             SizedBox(height: 8),
-            Text('Event Date'),
-            SizedBox(height: 8),
-            Text('Event Location'),
-            SizedBox(height: 16),
+            Text(
+              'Event Location',
+              style: TextStyle(
+                  color: AppColors.eventCardTextColor(context),
+                  fontWeight: FontWeight.w500), // Set text color to black
+            ),
+            const SizedBox(height: 16),
             Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
@@ -184,7 +247,8 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => EventDetailsScreen()),
+                      builder: (context) => const EventDetailsScreen(),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -206,14 +270,15 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
     );
   }
 
+  // Method to build college card
   Widget _buildCollegeCard(int index) {
     return Card(
       color: AppColors.UpcomingeventCardBgColor(context),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(20),
       ),
       elevation: 8,
-      margin: EdgeInsets.symmetric(horizontal: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
       child: Stack(
         children: [
           Positioned(
@@ -237,15 +302,16 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('College Name $index', style: TextStyle(fontSize: 16)),
-                  SizedBox(height: 8),
+                  Text('College Name $index',
+                      style: const TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
                   ElevatedButton(
-                    //Button
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => CollegeActivityScreen()),
+                            builder: (context) =>
+                                const CollegeActivityScreen()),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -255,7 +321,7 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
                       ),
                     ),
                     child: Text(
-                      'View More →',
+                      'View Activities →',
                       style: TextStyle(
                           color: AppColors.mainButtonTextColor(context)),
                     ),
@@ -269,14 +335,39 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
     );
   }
 
+  // Method to build indicator dots
   Widget _buildIndicator(int index, int currentIndex) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 4),
+      margin: const EdgeInsets.symmetric(horizontal: 3),
       width: currentIndex == index ? 12 : 8,
       height: 8,
       decoration: BoxDecoration(
-        color: currentIndex == index ? Colors.black : Colors.grey,
-        borderRadius: BorderRadius.circular(4),
+        shape: BoxShape.circle,
+        color: currentIndex == index
+            ? AppColors.mainButtonColor(context)
+            : Colors.grey,
+      ),
+    );
+  }
+
+  Widget _buildHorizontalButton(String label, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.mainButtonColor(context),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20), // Set border radius to 20
+        ),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: AppColors.mainButtonTextColor(
+              context), // Text color based on theme
+          fontWeight: FontWeight.w600, // Bold text for emphasis
+          inherit: true, // Ensure consistent inheritance
+        ),
       ),
     );
   }

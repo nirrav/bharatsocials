@@ -4,6 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bharatsocials/admins/UniAdmin/uniDashboard.dart';
 
 class BroadcastChannelScreen extends StatefulWidget {
+  const BroadcastChannelScreen({super.key});
+
   @override
   _BroadcastChannelScreenState createState() => _BroadcastChannelScreenState();
 }
@@ -22,7 +24,7 @@ class _BroadcastChannelScreenState extends State<BroadcastChannelScreen> {
       case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => UniAdminDashboard()),
+          MaterialPageRoute(builder: (context) => const Placeholder()),
         );
 
         break;
@@ -31,7 +33,7 @@ class _BroadcastChannelScreenState extends State<BroadcastChannelScreen> {
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => BroadcastChannelScreen()),
+          MaterialPageRoute(builder: (context) => const BroadcastChannelScreen()),
         );
         break;
       default:
@@ -68,7 +70,7 @@ class _BroadcastChannelScreenState extends State<BroadcastChannelScreen> {
                 height: screenHeight * 0.35,
                 textColor: AppColors.UpcomingeventCardBgColor(context),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               EventCard(
                 width: screenWidth * 0.9,
                 height: screenHeight * 0.35,
@@ -84,7 +86,7 @@ class _BroadcastChannelScreenState extends State<BroadcastChannelScreen> {
           print('FAB clicked');
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MyCustomForm()),
+            MaterialPageRoute(builder: (context) => const MyCustomForm()),
           );
         },
         backgroundColor: AppColors.FAB(context),
@@ -124,7 +126,7 @@ class EventCard extends StatelessWidget {
   final double height;
   final Color textColor;
 
-  EventCard({
+  const EventCard({super.key, 
     required this.width,
     required this.height,
     required this.textColor,
@@ -146,17 +148,17 @@ class EventCard extends StatelessWidget {
                 style: TextStyle(
                     color: AppColors.eventCardTextColor(context),
                     fontSize: 18)),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text('Event Date',
                 style: TextStyle(
                     color: AppColors.eventCardTextColor(context),
                     fontSize: 16)),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text('Event Location',
                 style: TextStyle(
                     color: AppColors.eventCardTextColor(context),
                     fontSize: 16)),
-            Spacer(),
+            const Spacer(),
             Text(
               'View More',
               style: TextStyle(
@@ -170,11 +172,13 @@ class EventCard extends StatelessWidget {
 }
 
 class MyCustomForm extends StatelessWidget {
+  const MyCustomForm({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Custom Form")),
-      body: Center(child: Text("Form Content")),
+      appBar: AppBar(title: const Text("Custom Form")),
+      body: const Center(child: Text("Form Content")),
     );
   }
 }

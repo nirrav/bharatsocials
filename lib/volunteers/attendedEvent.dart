@@ -3,7 +3,7 @@ import 'package:bharatsocials/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: AttendedEventPage(),
     );
   }

@@ -116,7 +116,7 @@ class HomePage extends StatelessWidget {
                   ),
                   elevation: 4, // Adding shadow
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(35),
+                    borderRadius: BorderRadius.circular(13),
                   ),
                 ),
                 child: Text(

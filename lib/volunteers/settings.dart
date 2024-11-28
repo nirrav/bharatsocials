@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
-import 'package:bharatsocials/login/login.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:bharatsocials/volunteers/volDashboard.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bharatsocials/login/logout.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: SettingsPage(),
     );
   }
@@ -26,17 +23,21 @@ class SettingsPage extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
+        title: Text(
+          'Settings',
+          style: TextStyle(color: AppColors.titleTextColor(context)),
+        ),
+        backgroundColor: AppColors.titleColor(context),
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back, color: AppColors.iconColor(context)),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => const VolunteerDashboard()),
+              MaterialPageRoute(builder: (context) => const Placeholder()),
             );
           },
         ),
-        title: const Text('Settings'),
       ),
       body: ListView(
         children: <Widget>[
@@ -60,37 +61,10 @@ class SettingsPage extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Log Out'),
-            onTap: () async {
-              try {
-                // Sign out the user from Firebase Authentication
-                await FirebaseAuth.instance.signOut();
-
-                // Clear login-related data from SharedPreferences
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                await prefs.remove('isLoggedIn');
-                await prefs.remove('userRole');
-                await prefs.remove('userDocId');
-                await prefs.remove('email');
-
-                // Show a message that the user has logged out
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text('You have logged out successfully')),
-                );
-
-                // Redirect to the LoginPage
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const LoginPage()), // Redirect to LoginPage
-                );
-              } catch (e) {
-                // Handle any errors during logout
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error logging out: $e')),
-                );
-              }
+            onTap: () {
+              // Call the logout method
+              Logout.logout(
+                  context); // This will handle the logout and redirect
             },
           ),
         ],

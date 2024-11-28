@@ -1,15 +1,14 @@
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bharatsocials/BC/CreateEvent.dart';
 import 'package:bharatsocials/BC/eventDetails.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bharatsocials/BC/broadcastChannel.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart'; // Import NgoBroadcastChannelScreen
 import 'package:bharatsocials/ngos/Sidebar.dart'; // Import the sidebar file
 import 'package:bharatsocials/volunteers/NotiPage.dart'; // Import Notification Page
-import 'package:bharatsocials/ngos/ngoBroaddcastChannel.dart'; // Import NgoBroadcastChannelScreen
+// import 'package:bharatsocials/ngos/ngoBroaddcastChannel.dart';
+// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class NgoDashboard extends StatefulWidget {
   const NgoDashboard({super.key});
@@ -39,7 +38,7 @@ class _DashboardScreenState extends State<NgoDashboard> {
   void _navigateToNgoBroadcastChannelScreen() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => BroadcastChannel()),
+      MaterialPageRoute(builder: (context) => const BroadcastChannel()),
     );
   }
 
@@ -87,7 +86,7 @@ class _DashboardScreenState extends State<NgoDashboard> {
           ),
         ),
       ),
-      drawer: NgoSlideBar(),
+      drawer: const NgoSlideBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -101,6 +100,7 @@ class _DashboardScreenState extends State<NgoDashboard> {
               _buildSectionHeader(context, title: 'Our Campaigns'),
               const SizedBox(height: 16),
               _buildAllEventsHorizontalList(),
+              const SizedBox(height: 16),
             ],
           ),
         ),
@@ -118,11 +118,6 @@ class _DashboardScreenState extends State<NgoDashboard> {
               color: AppColors.iconColor(context),
               size: 32.0,
             ),
-            // icon: Icon(
-            //   Icons.home_outlined,
-            //   color: AppColors.iconColor(context),
-            //   size: 32.0,
-            // ),
             label: 'Dashboard',
           ),
           BottomNavigationBarItem(
@@ -131,11 +126,6 @@ class _DashboardScreenState extends State<NgoDashboard> {
               color: AppColors.iconColor(context),
               size: 32.0,
             ),
-            // icon: Icon(
-            //   Icons.cell_tower_outlined,
-            //   color: AppColors.iconColor(context),
-            //   size: 32.0,
-            // ),
             label: 'Broadcast Channel',
           ),
         ],
@@ -170,12 +160,13 @@ class _DashboardScreenState extends State<NgoDashboard> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => UpcomingCampaignsPage()),
+                    builder: (context) => const UpcomingCampaignsPage()),
               );
             } else if (title == 'Our Campaigns') {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AllCampaignsPage()),
+                MaterialPageRoute(
+                    builder: (context) => const AllCampaignsPage()),
               );
             }
           },
@@ -193,230 +184,146 @@ class _DashboardScreenState extends State<NgoDashboard> {
   }
 
   Widget _buildAllEventsHorizontalList() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('events')
-          .snapshots(), // Listen for changes in the 'events' collection
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (snapshot.hasError) {
-          return const Center(child: Text('Error loading events'));
-        }
-
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(child: Text('No events found.'));
-        }
-
-        var events = snapshot.data!.docs.take(3).toList(); // Take only 3 events
-
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: List.generate(events.length, (index) {
-              DocumentSnapshot event = events[index];
-
-              // Fetch and handle event details
-              String eventName = event['eventName'] ?? 'Event Name';
-              String eventLocation = event['eventLocation'] ?? 'Event Location';
-              String eventDate = 'Event Date';
-              if (event['eventDateTime'] != null) {
-                Timestamp timestamp =
-                    event['eventDateTime']; // Get the timestamp
-                DateTime eventDateTime =
-                    timestamp.toDate(); // Convert to DateTime
-                eventDate = DateFormat('d MMMM yyyy, h:mm a')
-                    .format(eventDateTime); // Format the date
-              }
-
-              return Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Container(
-                  width: 250,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.AlleventCardBgColor(context),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        offset: const Offset(2, 2),
-                        blurRadius: 4,
-                      ),
-                    ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(3, (index) {
+          return Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Container(
+              width: 250,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.AlleventCardBgColor(context),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    offset: const Offset(2, 2),
+                    blurRadius: 4,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        eventName,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.eventCardTextColor(context),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Event Date: $eventDate',
-                        style: TextStyle(
-                            color: AppColors.eventCardTextColor(context)),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Event Location: $eventLocation',
-                        style: TextStyle(
-                            color: AppColors.eventCardTextColor(context)),
-                      ),
-                      SizedBox(height: 8),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.mainButtonColor(context),
-                          foregroundColor:
-                              AppColors.mainButtonTextColor(context),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NgoEventDetailsPage(
-                                  eventId: event.id), // Pass the event ID
-                            ),
-                          );
-                        },
-                        child: const Text('View More'),
-                      ),
-                    ],
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Event Name',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.eventCardTextColor(context),
+                    ),
                   ),
-                ),
-              );
-            }),
-          ),
-        );
-      },
+                  const SizedBox(height: 4),
+                  Text(
+                    'Event Date: 12 December 2024, 5:00 PM',
+                    style:
+                        TextStyle(color: AppColors.eventCardTextColor(context)),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Event Location: New York',
+                    style:
+                        TextStyle(color: AppColors.eventCardTextColor(context)),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.mainButtonColor(context),
+                      foregroundColor: AppColors.mainButtonTextColor(context),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const NgoEventDetailsPage(eventId: 'eventId'),
+                        ),
+                      );
+                    },
+                    child: const Text('View More'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
+      ),
     );
   }
 
   Widget _buildUpcomingEventsHorizontalList() {
-    DateTime currentDateTime = DateTime.now();
-
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('events')
-          .snapshots(), // Listen for changes in the 'events' collection
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (snapshot.hasError) {
-          return const Center(child: Text('Error loading upcoming events'));
-        }
-
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(child: Text('No upcoming campaigns available.'));
-        }
-
-        // Filter events for upcoming ones
-        var events = snapshot.data!.docs.take(3).where((event) {
-          if (event['eventDateTime'] != null) {
-            Timestamp timestamp = event['eventDateTime']; // Get the timestamp
-            DateTime eventDateTime = timestamp.toDate(); // Convert to DateTime
-            return eventDateTime.isAfter(currentDateTime); // Only future events
-          }
-          return false; // Exclude events without a valid date
-        }).toList();
-
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: List.generate(events.length, (index) {
-              DocumentSnapshot event = events[index];
-
-              // Fetch and handle event details
-              String eventName = event['eventName'] ?? 'Event Name';
-              String eventLocation = event['eventLocation'] ?? 'Event Location';
-              String eventDate = 'Event Date';
-              if (event['eventDateTime'] != null) {
-                Timestamp timestamp =
-                    event['eventDateTime']; // Get the timestamp
-                DateTime eventDateTime =
-                    timestamp.toDate(); // Convert to DateTime
-                eventDate = DateFormat('d MMMM yyyy, h:mm a')
-                    .format(eventDateTime); // Format the date
-              }
-
-              return Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Container(
-                  width: 250,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.UpcomingeventCardBgColor(context),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        offset: const Offset(2, 2),
-                        blurRadius: 4,
-                      ),
-                    ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(3, (index) {
+          return Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Container(
+              width: 250,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.UpcomingeventCardBgColor(context),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    offset: const Offset(2, 2),
+                    blurRadius: 4,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        eventName,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.eventCardTextColor(context),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Event Date: $eventDate',
-                        style: TextStyle(
-                            color: AppColors.eventCardTextColor(context)),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Event Location: $eventLocation',
-                        style: TextStyle(
-                            color: AppColors.eventCardTextColor(context)),
-                      ),
-                      const SizedBox(height: 8),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.mainButtonColor(context),
-                          foregroundColor:
-                              AppColors.mainButtonTextColor(context),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        child: const Text('View More'),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NgoEventDetailsPage(
-                                  eventId: event.id), // Pass the event ID
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Event Name',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.eventCardTextColor(context),
+                    ),
                   ),
-                ),
-              );
-            }),
-          ),
-        );
-      },
+                  const SizedBox(height: 4),
+                  Text(
+                    'Event Date: 12 December 2024, 5:00 PM',
+                    style:
+                        TextStyle(color: AppColors.eventCardTextColor(context)),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Event Location: New York',
+                    style:
+                        TextStyle(color: AppColors.eventCardTextColor(context)),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.mainButtonColor(context),
+                      foregroundColor: AppColors.mainButtonTextColor(context),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: const Text('View More'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const NgoEventDetailsPage(eventId: 'eventId'),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
+      ),
     );
   }
 }
@@ -431,6 +338,20 @@ class AllCampaignsPage extends StatefulWidget {
 class _AllCampaignsPageState extends State<AllCampaignsPage> {
   @override
   Widget build(BuildContext context) {
+    // Hardcoded event data
+    var events = [
+      {
+        'eventName': 'Event 1',
+        'eventLocation': 'New York',
+        'eventDateTime': DateTime(2024, 12, 12, 17, 0),
+      },
+      {
+        'eventName': 'Event 2',
+        'eventLocation': 'Los Angeles',
+        'eventDateTime': DateTime(2024, 12, 15, 18, 30),
+      },
+    ];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.titleColor(context),
@@ -438,95 +359,71 @@ class _AllCampaignsPageState extends State<AllCampaignsPage> {
         title: Text('All Campaigns',
             style: TextStyle(color: AppColors.titleTextColor(context))),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('events')
-            .orderBy('posted',
-                descending: false) // Order by the 'posted' field, oldest first
-            .snapshots(), // Listen for changes in the 'events' collection
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        itemCount: events.length,
+        itemBuilder: (context, index) {
+          var event = events[index];
+
+          // Safely handle eventDateTime and ensure it's a DateTime
+          String eventDate = 'Event Date';
+          if (event['eventDateTime'] != null) {
+            // Check if event['eventDateTime'] is already a DateTime object
+            DateTime eventDateTime = event['eventDateTime'] is DateTime
+                ? event['eventDateTime'] as DateTime // Cast safely to DateTime
+                : DateTime.tryParse(event['eventDateTime'].toString()) ??
+                    DateTime.now(); // Fallback to now if parsing fails
+            eventDate = DateFormat('d MMMM yyyy, h:mm a').format(eventDateTime);
           }
 
-          if (snapshot.hasError) {
-            return const Center(child: Text('Error loading events'));
-          }
+          // Safely cast eventName and eventLocation to String and provide default values if null
+          String eventName = event['eventName'] as String? ?? 'Event Name';
+          String eventLocation =
+              event['eventLocation'] as String? ?? 'Event Location';
 
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('No events found.'));
-          }
-
-          var events = snapshot.data!.docs;
-
-          return ListView.builder(
-            padding: const EdgeInsets.all(16.0),
-            itemCount: events.length,
-            itemBuilder: (context, index) {
-              DocumentSnapshot event = events[index];
-
-              // Fetch and handle the event details
-              String eventName = event['eventName'] ?? 'Event Name';
-              String eventLocation = event['eventLocation'] ?? 'Event Location';
-
-              // Handle eventDateTime (timestamp)
-              String eventDate = 'Event Date';
-              if (event['eventDateTime'] != null) {
-                Timestamp timestamp =
-                    event['eventDateTime']; // Get the timestamp
-                DateTime eventDateTime =
-                    timestamp.toDate(); // Convert to DateTime
-                eventDate = DateFormat('d MMMM yyyy, h:mm a')
-                    .format(eventDateTime); // Format the date
-              }
-
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 15.0),
-                child: Card(
-                  color: AppColors.AlleventCardBgColor(context),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          eventName,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text('Event Date: $eventDate'),
-                        const SizedBox(height: 8),
-                        Text('Event Location: $eventLocation'),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Navigate to event details or perform any other action
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => NgoEventDetailsPage(
-                                  eventId: event.id, // Pass the event ID
-                                ),
-                              ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor:
-                                AppColors.mainButtonTextColor(context),
-                            backgroundColor: AppColors.mainButtonColor(
-                                context), // Set text color
-                          ),
-                          child: Text('View More'),
-                        )
-                      ],
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 15.0),
+            child: Card(
+              color: AppColors.AlleventCardBgColor(context),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      eventName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 8),
+                    Text('Event Date: $eventDate'),
+                    const SizedBox(height: 8),
+                    Text('Event Location: $eventLocation'),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Navigate to event details or perform any other action
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NgoEventDetailsPage(
+                                eventId: 'eventId'), // Pass the event ID
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: AppColors.mainButtonTextColor(context),
+                        backgroundColor: AppColors.mainButtonColor(
+                            context), // Set text color
+                      ),
+                      child: const Text('View More'),
+                    ),
+                  ],
                 ),
-              );
-            },
+              ),
+            ),
           );
         },
       ),
@@ -556,6 +453,29 @@ class _UpcomingCampaignsPageState extends State<UpcomingCampaignsPage> {
   Widget build(BuildContext context) {
     DateTime currentDateTime = DateTime.now();
 
+    // Hardcoded event data
+    var events = [
+      {
+        'eventName': 'Upcoming Event 1',
+        'eventLocation': 'New York',
+        'eventDateTime': DateTime(2024, 12, 12, 17, 0),
+      },
+      {
+        'eventName': 'Upcoming Event 2',
+        'eventLocation': 'Los Angeles',
+        'eventDateTime': DateTime(2024, 12, 15, 18, 30),
+      },
+    ];
+
+    // Filter upcoming events
+    var upcomingEvents = events.where((event) {
+      DateTime eventDateTime = event['eventDateTime'] is DateTime
+          ? event['eventDateTime'] as DateTime
+          : DateTime.tryParse(event['eventDateTime'].toString()) ??
+              DateTime.now();
+      return eventDateTime.isAfter(currentDateTime);
+    }).toList();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.appBgColor(context),
@@ -569,156 +489,124 @@ class _UpcomingCampaignsPageState extends State<UpcomingCampaignsPage> {
         ),
         elevation: 10,
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('events')
-            .orderBy('eventDateTime', descending: false)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+      body: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        itemCount: upcomingEvents.length,
+        itemBuilder: (context, index) {
+          var event = upcomingEvents[index];
+
+          // Safely handle eventDateTime and ensure it's a DateTime
+          String eventDate = 'Event Date';
+          if (event['eventDateTime'] != null) {
+            DateTime eventDateTime = event['eventDateTime'] is DateTime
+                ? event['eventDateTime'] as DateTime
+                : DateTime.tryParse(event['eventDateTime'].toString()) ??
+                    DateTime.now();
+            eventDate = DateFormat('d MMMM yyyy, h:mm a').format(eventDateTime);
           }
 
-          if (snapshot.hasError) {
-            return const Center(child: Text('Error loading upcoming events'));
-          }
+          // Safely cast eventName and eventLocation to String and provide default values if null
+          String eventName = event['eventName'] as String? ?? 'Event Name';
+          String eventLocation =
+              event['eventLocation'] as String? ?? 'Event Location';
 
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(
-                child: Text('No upcoming campaigns available.'));
-          }
-
-          var events = snapshot.data!.docs.where((event) {
-            if (event['eventDateTime'] != null) {
-              Timestamp timestamp = event['eventDateTime'];
-              DateTime eventDateTime = timestamp.toDate();
-              return eventDateTime.isAfter(currentDateTime);
-            }
-            return false;
-          }).toList();
-
-          return ListView.builder(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            itemCount: events.length,
-            itemBuilder: (context, index) {
-              DocumentSnapshot event = events[index];
-
-              String eventName = event['eventName'] ?? 'Event Name';
-              String eventLocation = event['eventLocation'] ?? 'Event Location';
-              String eventDate = 'Event Date';
-              if (event['eventDateTime'] != null) {
-                Timestamp timestamp = event['eventDateTime'];
-                DateTime eventDateTime = timestamp.toDate();
-                eventDate =
-                    DateFormat('d MMMM yyyy, h:mm a').format(eventDateTime);
-              }
-
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            NgoEventDetailsPage(eventId: event.id),
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NgoEventDetailsPage(
+                        eventId: 'eventId'), // Pass the event ID
+                  ),
+                );
+              },
+              child: Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                color: AppColors.UpcomingeventCardBgColor(context),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        eventName,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: AppColors.titleTextColor(context),
+                        ),
                       ),
-                    );
-                  },
-                  child: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    color: AppColors.UpcomingeventCardBgColor(context),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      const SizedBox(height: 8),
+                      Row(
                         children: [
-                          // Event Title
+                          Icon(Icons.calendar_today,
+                              color: AppColors.iconColor(context)),
+                          const SizedBox(width: 8),
                           Text(
-                            eventName,
+                            eventDate,
                             style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: AppColors.titleTextColor(context),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          // Event Date
-                          Row(
-                            children: [
-                              Icon(Icons.calendar_today,
-                                  color: AppColors.iconColor(context)),
-                              const SizedBox(width: 8),
-                              Text(
-                                eventDate,
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: AppColors.titleTextColor(context)),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          // Event Location
-                          Row(
-                            children: [
-                              Icon(Icons.location_on,
-                                  color: AppColors.iconColor(context)),
-                              const SizedBox(width: 8),
-                              Text(
-                                eventLocation,
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color:
-                                        AppColors.eventCardTextColor(context)),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          // "View More" Button
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        NgoEventDetailsPage(eventId: event.id),
-                                  ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    AppColors.mainButtonColor(context),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0, vertical: 12.0),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16.0),
-                                ),
-                              ),
-                              label: Text(
-                                'View More',
-                                style: TextStyle(
-                                  color: AppColors.mainButtonTextColor(context),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              icon: Icon(Icons.arrow_forward,
-                                  color: Colors.white),
-                            ),
+                                fontSize: 18,
+                                color: AppColors.titleTextColor(context)),
                           ),
                         ],
                       ),
-                    ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(Icons.location_on,
+                              color: AppColors.iconColor(context)),
+                          const SizedBox(width: 8),
+                          Text(
+                            eventLocation,
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: AppColors.eventCardTextColor(context)),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const NgoEventDetailsPage(
+                                    eventId: 'eventId'), // Pass the event ID
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.mainButtonColor(context),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0, vertical: 12.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.0),
+                            ),
+                          ),
+                          label: Text(
+                            'View More',
+                            style: TextStyle(
+                              color: AppColors.mainButtonTextColor(context),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          icon: const Icon(Icons.arrow_forward,
+                              color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              );
-            },
+              ),
+            ),
           );
         },
       ),

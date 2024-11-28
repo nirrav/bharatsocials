@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:bharatsocials/login/userData.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bharatsocials/BC/CreateEvent.dart';
 import 'package:bharatsocials/BC/eventDetails.dart';
 import 'package:bharatsocials/ngos/ngoDashboard.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:bharatsocials/admins/CollegeAdmin/caDashboard.dart';
 
 class BroadcastChannel extends StatefulWidget {
   const BroadcastChannel({super.key});
@@ -18,11 +15,7 @@ class BroadcastChannel extends StatefulWidget {
 
 class _BroadcastChannelState extends State<BroadcastChannel> {
   int _selectedIndex = 1;
-  String? currentUserId;
-  String? currentUserRole;
-  String? currentAdminRole;
-  String? currentAdminCollege;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   void _onItemTapped(int index) {
     setState(() {
@@ -35,38 +28,11 @@ class _BroadcastChannelState extends State<BroadcastChannel> {
   }
 
   void _navigateToBroadcastChannel() {
-    if (currentUserRole == 'ngo') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => NgoDashboard()),
-      );
-    } else if (currentUserRole == 'admin') {
-      if (currentAdminRole == 'uni') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => CaDashboardScreen()),
-        );
-      } else if (currentAdminRole == 'college') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => CaDashboardScreen()),
-        );
-      }
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    currentUserId = GlobalUser.currentUser?.documentId; // Get current user ID
-    currentUserRole = GlobalUser.currentUser?.role; // Get current user ID
-    currentAdminRole = GlobalUser.currentUser?.adminRole; // Get current user ID
-    currentAdminCollege =
-        GlobalUser.currentUser?.adminCollege; // Get current user ID
-    print('Current user id is $currentUserId');
-    print('Current user role is $currentUserRole');
-    print('Current admin role is $currentAdminRole');
-    print('Current admin college is $currentAdminCollege');
+    // Static navigation logic
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const NgoDashboard()),
+    );
   }
 
   @override
@@ -114,66 +80,34 @@ class _BroadcastChannelState extends State<BroadcastChannel> {
         child: Column(
           children: [
             Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('events')
-                    .orderBy('posted',
-                        descending: false) // Sort from oldest to newest
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+              child: ListView.builder(
+                itemCount: 10, // Hardcoded for 10 events
+                itemBuilder: (context, index) {
+                  // Hardcoded event data
+                  String eventName = 'Event $index';
+                  DateTime eventDate =
+                      DateTime.now().add(Duration(days: index));
+                  String eventLocation = 'Location $index';
+                  bool isSelfSent = index % 2 == 0; // Even index is self-sent
 
-                  if (snapshot.hasError) {
-                    return const Center(child: Text('Something went wrong!'));
-                  }
-
-                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Center(child: Text('No events posted yet.'));
-                  }
-
-                  var events = snapshot.data!.docs;
-
-                  // After loading, scroll to the bottom (latest event)
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (_scrollController.hasClients) {
-                      _scrollController
-                          .jumpTo(_scrollController.position.maxScrollExtent);
-                    }
-                  });
-
-                  return ListView(
-                    controller: _scrollController,
-                    reverse:
-                        false, // This makes the ListView scroll from top to bottom
-                    children: events.map((event) {
-                      bool isSelfSent = event['hostId'] == currentUserId;
-
-                      // Check if the current user has read this event
-                      List<dynamic> readBy = event['readBy'] ?? [];
-                      bool isReadByUser = readBy.contains(currentUserId);
-
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Align(
-                          alignment: isSelfSent
-                              ? Alignment.centerRight
-                              : Alignment.centerLeft,
-                          child: EventCard(
-                            width: screenWidth * 0.70,
-                            height: screenHeight * 0.22,
-                            textColor: textColor,
-                            eventName: event['eventName'],
-                            eventDate: event['eventDateTime'].toDate(),
-                            eventLocation: event['eventLocation'],
-                            eventId: event.id,
-                            isSelfSent: isSelfSent,
-                            isReadByUser: isReadByUser, // Pass read status
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Align(
+                      alignment: isSelfSent
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      child: EventCard(
+                        width: screenWidth * 0.70,
+                        height: screenHeight * 0.22,
+                        textColor: textColor,
+                        eventName: eventName,
+                        eventDate: eventDate,
+                        eventLocation: eventLocation,
+                        eventId: 'event$index',
+                        isSelfSent: isSelfSent,
+                        isReadByUser: false, // Hardcoded as false
+                      ),
+                    ),
                   );
                 },
               ),
@@ -229,9 +163,10 @@ class EventCard extends StatelessWidget {
   final String eventLocation;
   final String eventId;
   final bool isSelfSent;
-  final bool isReadByUser; // New parameter
+  final bool isReadByUser;
 
   const EventCard({
+    super.key,
     required this.width,
     required this.height,
     required this.textColor,
@@ -240,7 +175,7 @@ class EventCard extends StatelessWidget {
     required this.eventLocation,
     required this.eventId,
     required this.isSelfSent,
-    required this.isReadByUser, // Initialize isReadByUser
+    required this.isReadByUser,
   });
 
   @override
@@ -267,9 +202,7 @@ class EventCard extends StatelessWidget {
             padding: EdgeInsets.only(
               left: 16.0,
               right: 16.0,
-              top: isReadByUser || isSelfSent
-                  ? 16.0
-                  : 32.0, // Conditionally add top padding
+              top: isReadByUser || isSelfSent ? 16.0 : 32.0,
             ),
             alignment: cardAlignment,
             child: Column(
@@ -317,18 +250,9 @@ class EventCard extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    minimumSize: Size(double.infinity, 50),
+                    minimumSize: const Size(double.infinity, 50),
                   ),
                   onPressed: () {
-                    // Update 'readBy' array when the user views the event
-                    FirebaseFirestore.instance
-                        .collection('events')
-                        .doc(eventId)
-                        .update({
-                      'readBy': FieldValue.arrayUnion(
-                          [GlobalUser.currentUser?.documentId])
-                    });
-
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -347,30 +271,6 @@ class EventCard extends StatelessWidget {
               ],
             ),
           ),
-
-          // Show a "NEW" badge for unread messages
-          if (!isReadByUser && !isSelfSent)
-            Positioned(
-              top: 8,
-              left: 8,
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
-                decoration: BoxDecoration(
-                  color: AppColors.rejectButtonColor(
-                      context), // Red background to indicate unread
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  'NEW',
-                  style: TextStyle(
-                    color: AppColors.rejectButtonTextColor(context),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-            ),
         ],
       ),
     );

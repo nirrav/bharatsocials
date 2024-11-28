@@ -2,42 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:bharatsocials/admins/UniAdmin/uniAdminData.dart';
-import 'package:bharatsocials/admins/UniAdmin/uniDashboard.dart';
+import 'package:bharatsocials/ngos/NgoData.dart'; // Ensure NgoData is correctly imported
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: UniProfile(),
-    );
-  }
-}
-
-class UniProfile extends StatefulWidget {
-  const UniProfile({super.key});
+class NGOProfileScreen extends StatefulWidget {
+  const NGOProfileScreen({super.key});
 
   @override
-  _UniProfileState createState() => _UniProfileState();
+  _NGOProfileScreenState createState() => _NGOProfileScreenState();
 }
 
-class _UniProfileState extends State<UniProfile> {
-  late TextEditingController _nameController;
+class _NGOProfileScreenState extends State<NGOProfileScreen> {
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
-  late TextEditingController _uniNameController;
+  late TextEditingController _ngoNameController;
   bool _isEditing = false; // Flag to toggle between view and edit mode
 
   @override
   void initState() {
     super.initState();
     // Initialize controllers with empty text
-    _nameController = TextEditingController();
     _emailController = TextEditingController();
     _phoneController = TextEditingController();
-    _uniNameController = TextEditingController();
+    _ngoNameController = TextEditingController();
 
     // Fetch data from Firestore when the widget is initialized
     _loadAdminData();
@@ -45,25 +31,25 @@ class _UniProfileState extends State<UniProfile> {
 
   // Method to load admin data from Firestore
   Future<void> _loadAdminData() async {
-    AdminData? adminData = await AdminData.fetchAdminData();
-    if (adminData != null) {
+    NgoData? ngoData =
+        await NgoData.fetchNgoData(); // Fetch data from NgoData class
+    if (ngoData != null) {
       // Set the fetched data to the controllers
-      _nameController.text = adminData.name;
-      _emailController.text = adminData.email;
-      _phoneController.text = adminData.phone;
-      _uniNameController.text = adminData.uniName;
-      setState(() {});
+      _emailController.text = ngoData.email;
+      _phoneController.text = ngoData.phone;
+      _ngoNameController.text = ngoData.name;
+      setState(() {}); // Refresh the UI
     }
   }
 
-  // Method to update admin data in Firestore
+  // Method to update NGO admin data in Firestore
   Future<void> _updateAdminData() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         // Fetch the user document ID
         QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection('admins')
+            .collection('ngos')
             .where('email', isEqualTo: user.email)
             .get();
 
@@ -71,12 +57,11 @@ class _UniProfileState extends State<UniProfile> {
           String docId = querySnapshot.docs.first.id;
           // Update the document with the new data
           await FirebaseFirestore.instance
-              .collection('admins')
+              .collection('ngos')
               .doc(docId)
               .update({
-            'name': _nameController.text,
             'phone': _phoneController.text,
-            'uniName': _uniNameController.text,
+            'name': _ngoNameController.text,
           });
 
           // After updating, disable editing mode
@@ -86,21 +71,18 @@ class _UniProfileState extends State<UniProfile> {
         }
       }
     } catch (e) {
-      print('Error updating admin data: $e');
+      print('Error updating NGO admin data: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    Color backgroundColor = AppColors.appBgColor(context);
-    Color textColor = AppColors.defualtTextColor(context);
-    Color buttonColor = AppColors.mainButtonColor(context);
-    Color buttonTextColor = AppColors.mainButtonTextColor(context);
+    final double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'View Profile',
+          'NGO Profile',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
@@ -114,8 +96,9 @@ class _UniProfileState extends State<UniProfile> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: FutureBuilder<AdminData?>(
-          future: AdminData.fetchAdminData(), // Fetch admin data
+        child: FutureBuilder<NgoData?>(
+          future: NgoData
+              .fetchNgoData(), // Fetch NGO data using the updated class method
           builder: (context, snapshot) {
             // Check if the data is loading
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -132,28 +115,33 @@ class _UniProfileState extends State<UniProfile> {
               return const Center(child: Text('No data available.'));
             }
 
-            // Get the admin data from the snapshot
-            AdminData? adminData = snapshot.data;
+            // Get the NGO data from the snapshot
+            NgoData? ngoData = snapshot.data;
 
             return Column(
               children: [
-                // Profile Picture
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.grey.shade300,
-                  child: const Icon(
-                    Icons.person,
-                    size: 50,
-                    color: Colors.black54,
+                // Profile Picture (using CircleAvatar)
+                SizedBox(
+                  height: screenHeight * 0.25,
+                  child: Center(
+                    child: CircleAvatar(
+                      radius: screenHeight * 0.1,
+                      backgroundColor: Colors.grey.shade300,
+                      child: const Icon(
+                        Icons.person,
+                        size: 60,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
 
-                // Name
+                // NGO Name TextField
                 TextField(
-                  controller: _nameController,
+                  controller: _ngoNameController,
                   decoration: const InputDecoration(
-                    labelText: 'Name',
+                    labelText: 'NGO Name',
                     border: UnderlineInputBorder(),
                   ),
                   readOnly:
@@ -161,19 +149,7 @@ class _UniProfileState extends State<UniProfile> {
                 ),
                 const SizedBox(height: 10),
 
-                // College Name
-                TextField(
-                  controller: _uniNameController,
-                  decoration: const InputDecoration(
-                    labelText: 'University Name',
-                    border: UnderlineInputBorder(),
-                  ),
-                  readOnly:
-                      !_isEditing, // Allow editing only when _isEditing is true
-                ),
-                const SizedBox(height: 10),
-
-                // Email
+                // Email TextField (Read-only)
                 TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(
@@ -184,7 +160,7 @@ class _UniProfileState extends State<UniProfile> {
                 ),
                 const SizedBox(height: 10),
 
-                // Phone
+                // Phone Number TextField
                 TextField(
                   controller: _phoneController,
                   decoration: const InputDecoration(
@@ -196,7 +172,7 @@ class _UniProfileState extends State<UniProfile> {
                 ),
                 const SizedBox(height: 20),
 
-                // Edit Profile Button
+                // Edit/Save Profile Button
                 ElevatedButton(
                   onPressed: () {
                     if (_isEditing) {
@@ -210,7 +186,8 @@ class _UniProfileState extends State<UniProfile> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: buttonColor,
+                    backgroundColor: AppColors.mainButtonColor(
+                        context), // Replace with your button color
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -221,7 +198,8 @@ class _UniProfileState extends State<UniProfile> {
                   ),
                   child: Text(
                     _isEditing ? 'Save Changes' : 'Edit Profile',
-                    style: TextStyle(color: buttonTextColor),
+                    style: TextStyle(
+                        color: AppColors.mainButtonTextColor(context)),
                   ),
                 ),
               ],

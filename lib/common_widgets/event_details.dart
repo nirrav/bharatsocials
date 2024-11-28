@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bharatsocials/colors.dart'; // Import AppColors
-import 'package:bharatsocials/login/userData.dart'; // Import GlobalUser to get current user data
 
 class EventDetailsPage extends StatelessWidget {
   final Map<String, dynamic>
@@ -11,9 +10,6 @@ class EventDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = GlobalUser.currentUser;
-    final isNgo = currentUser?.role == 'ngo';
-
     return Scaffold(
       backgroundColor: AppColors.appBgColor(context),
       appBar: AppBar(
@@ -58,30 +54,29 @@ class EventDetailsPage extends StatelessWidget {
               const SizedBox(height: 16),
               _buildPurposeBox(context, 'Purpose Of Event'),
               const SizedBox(height: 30), // Extra space before buttons
-              if (!isNgo) // Only show these buttons if the user is not an NGO
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildActionButton(
-                      context,
-                      text: 'Not Interested',
-                      color: Colors.red,
-                      onPressed: () {
-                        // Handle Not Interested action
-                        const Placeholder();
-                      },
-                    ),
-                    _buildActionButton(
-                      context,
-                      text: 'Interested',
-                      color: Colors.green,
-                      onPressed: () {
-                        // Handle Interested action
-                        const Placeholder();
-                      },
-                    ),
-                  ],
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildActionButton(
+                    context,
+                    text: 'Not Interested',
+                    color: Colors.red,
+                    onPressed: () {
+                      // Handle Not Interested action
+                      const Placeholder();
+                    },
+                  ),
+                  _buildActionButton(
+                    context,
+                    text: 'Interested',
+                    color: Colors.green,
+                    onPressed: () {
+                      // Handle Interested action
+                      const Placeholder();
+                    },
+                  ),
+                ],
+              ),
             ],
           ),
         ),

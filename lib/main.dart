@@ -1,14 +1,14 @@
 import 'dart:io';
-import 'package:bharatsocials/firebase_options.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bharatsocials/splashScreen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:bharatsocials/firebase_options.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:bharatsocials/notifications.dart'; // Import notifications.dart
 
-void main() async {
+void main() async { 
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode
           .system, // Auto-switch between light/dark based on system theme
-      home: const SplashScreen(),
+      home: SplashScreen(),
     );
   }
 }
@@ -68,8 +68,7 @@ Future<void> initializeLocalNotifications() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
 
-  const InitializationSettings initializationSettings =
-      InitializationSettings(
+  const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
   );
 

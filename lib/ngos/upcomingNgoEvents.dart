@@ -1,10 +1,8 @@
-import 'package:bharatsocials/common_widgets/event_details.dart';
-import 'package:bharatsocials/login/userData.dart';
-import 'package:flutter/material.dart';
-import 'package:bharatsocials/colors.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:bharatsocials/colors.dart'; // Retained for frontend
+import 'package:bharatsocials/common_widgets/event_details.dart'; // Retained for frontend
 
 class EventFormAndUpcomingPage extends StatefulWidget {
   const EventFormAndUpcomingPage({super.key});
@@ -33,24 +31,7 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = GlobalUser.currentUser;
-
-    // Ensure only non-volunteer users can access this page
-    if (currentUser?.role == 'volunteer') {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Access Denied'),
-        ),
-        body: Center(
-          child: Text(
-            'You do not have permission to access this page.',
-            style: GoogleFonts.poppins(fontSize: 18),
-          ),
-        ),
-      );
-    }
-
-    // EventCard Widget inside UpcomingEventsNgo
+    // eventCard Widget inside UpcomingEventsNgo
     Widget eventCard({
       required String eventName,
       required String eventDate,
@@ -114,7 +95,7 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
                 child: ElevatedButton(
                   onPressed: onViewMore,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.mainButtonColor(context),
+                    backgroundColor: Colors.blue, // Placeholder color
                     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -124,7 +105,7 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
                     'View More',
                     style: GoogleFonts.poppins(
                       fontSize: 14,
-                      color: AppColors.mainButtonTextColor(context),
+                      color: Colors.white, // Placeholder text color
                     ),
                   ),
                 ),
@@ -137,27 +118,25 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.titleColor(context),
+        backgroundColor: Colors.blue, // Placeholder color
         title: Text(
           'Event Submission & Upcoming Events',
           style: GoogleFonts.poppins(
             fontSize: 20,
-            color: AppColors.titleTextColor(context),
+            color: Colors.white, // Placeholder text color
           ),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          color: AppColors.iconColor(
-              context), // Set back arrow color to match button text color
+          color: Colors.white, // Placeholder icon color
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0), // Divider height
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1.0), // Divider height
           child: Divider(
-            color:
-                AppColors.dividerColor(context), // Divider color based on theme
+            color: Colors.grey, // Placeholder divider color
             thickness: 1,
             height: 1,
           ),
@@ -182,9 +161,7 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
                   // Host Name (NGO or Admin)
                   TextFormField(
                     enabled: false,
-                    initialValue: currentUser?.role == 'ngo'
-                        ? currentUser?.organizationName
-                        : currentUser?.adminName,
+                    initialValue: "Host Name", // Placeholder for host name
                     decoration: const InputDecoration(
                       labelText: 'Host Name',
                     ),
@@ -281,34 +258,6 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
                   ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState?.validate() ?? false) {
-                        // Collect data and save it to Firestore
-                        String hostId = currentUser?.documentId ?? '';
-                        String userRole = currentUser?.role ?? '';
-                        String hostName = currentUser?.role == 'ngo'
-                            ? currentUser?.organizationName ?? ''
-                            : currentUser?.adminName ?? '';
-                        String eventName = eventNameController.text;
-                        String eventLocation = eventLocationController.text;
-                        String pocFullName = pocFullNameController.text;
-                        String pocNumber = pocNumberController.text;
-                        String pocLocation = pocLocationController.text;
-                        String requiredVolunteers =
-                            requiredVolunteersController.text;
-
-                        // Save to Firestore
-                        FirebaseFirestore.instance.collection('events').add({
-                          'hostId': hostId,
-                          'userRole': userRole,
-                          'hostName': hostName,
-                          'eventName': eventName,
-                          'eventLocation': eventLocation,
-                          'eventDate': eventDateController.text,
-                          'eventTime': eventTimeController.text,
-                          'pocFullName': pocFullName,
-                          'pocNumber': pocNumber,
-                          'pocLocation': pocLocation,
-                          'requiredVolunteers': requiredVolunteers,
-                        });
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content: Text('Event submitted successfully!')),
@@ -328,56 +277,24 @@ class _EventFormAndUpcomingPageState extends State<EventFormAndUpcomingPage> {
                   fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            // Fetch upcoming events from Firestore for the logged-in user
+            // Placeholder for Upcoming Events section
             Expanded(
-              child: FutureBuilder<QuerySnapshot>(
-                future: FirebaseFirestore.instance
-                    .collection('events')
-                    .where('hostId', isEqualTo: currentUser?.documentId)
-                    .where('eventDate', isGreaterThanOrEqualTo: DateTime.now())
-                    .orderBy('eventDate')
-                    .get(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Center(child: Text('No upcoming events.'));
-                  } else {
-                    List<QueryDocumentSnapshot> eventDocs = snapshot.data!.docs;
-                    return GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 16.0,
-                        mainAxisSpacing: 16.0,
-                      ),
-                      itemCount: eventDocs.length,
-                      itemBuilder: (context, index) {
-                        var event = eventDocs[index];
-                        String eventName = event['eventName'];
-                        String eventDate = event['eventDate'];
-                        String eventLocation = event['eventLocation'];
-                        return eventCard(
-                          eventName: eventName,
-                          eventDate: eventDate,
-                          eventLocation: eventLocation,
-                          onViewMore: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EventDetailsPage(
-                                  event: {
-                                    'eventName': event['eventName'],
-                                    'eventDate': event['eventDate'],
-                                    'eventLocation': event['eventLocation'],
-                                  },
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    );
-                  }
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16.0,
+                  mainAxisSpacing: 16.0,
+                ),
+                itemCount: 5, // Placeholder for number of upcoming events
+                itemBuilder: (context, index) {
+                  return eventCard(
+                    eventName: 'Event Name $index',
+                    eventDate: '2024-12-01',
+                    eventLocation: 'Event Location $index',
+                    onViewMore: () {
+                      // Placeholder for View More action
+                    },
+                  );
                 },
               ),
             ),

@@ -278,7 +278,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     SubmitButtonWidget(
                       isTermsAgreed: _isTermsAgreed,
                       selectedRole: selectedRole,
-                      onSubmit: _onSubmit, // Pass the _onSubmit function here
+                      onSubmit: _onRegister, // Pass the _onSubmit function here
                     ),
                     const SizedBox(height: 20),
                   ],
@@ -305,7 +305,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     }
   }
 
-  void _onSubmit() async {
+  void _onRegister() async {
     // Start loading
     setState(() {
       _isLoading = true;
@@ -584,7 +584,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   Widget _buildCollegeNameDropdown(bool isDarkMode) {
     if (collegeNames.isEmpty) {
-      return Text("No colleges found");
+      return const Text("No colleges found");
     }
 
     return Autocomplete<String>(

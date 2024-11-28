@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
-import 'package:bharatsocials/volunteers/volDashboard.dart';
 // import 'package:bharatsocials/common_widgets/event_details.dart';
 
 class SavedEventsApp extends StatelessWidget {
@@ -8,7 +7,7 @@ class SavedEventsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SavedEventsPage(),
     );
@@ -37,7 +36,7 @@ class SavedEventsPage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const VolunteerDashboard()),
+                  builder: (context) => const Placeholder()),
             );
           },
         ),
@@ -64,7 +63,7 @@ class SavedEventsPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: EdgeInsets.only(bottom: size.height * 0.02),
-                    child: EventCard(),
+                    child: const EventCard(),
                   );
                 },
               ),
@@ -96,11 +95,11 @@ class _EventCardState extends State<EventCard> {
         color: AppColors.UpcomingeventCardBgColor(
             context), // Using white for the card background
         borderRadius: BorderRadius.circular(10),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black,
             blurRadius: 5,
-            offset: const Offset(0, 3),
+            offset: Offset(0, 3),
           ),
         ],
       ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:bharatsocials/common_widgets/event_details.dart';
 
 class EventCard extends StatelessWidget {
   final String eventName;
