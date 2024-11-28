@@ -1,6 +1,6 @@
+import 'package:bharatsocials/login/home.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
-import 'package:bharatsocials/login/home.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bharatsocials/ngos/ngoDashboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,7 +12,7 @@ import 'package:bharatsocials/login/widgets/text_field_widget.dart';
 import 'package:bharatsocials/admins/CollegeAdmin/caDashboard.dart';
 import 'package:bharatsocials/login/widgets/password_field_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
-// import 'package:bharatsocials/ngos/ngoDashboard.dart';
+import 'package:firebase_messaging/firebase_messaging.dart'; // Import Firebase Messaging
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -87,11 +87,67 @@ class _LoginPageState extends State<LoginPage> {
         }
       }
 
+      // Once we have the user role, generate a new FCM token and update it in Firestore
+      await _updateFcmToken(user);
+
       // Navigate based on role
       onSuccess(role, adminRole);
     } catch (e) {
-      // Handle errors (e.g., network issues, Firestore permission issues)
       print('Error checking user role: $e');
+    }
+  }
+
+  // Function to update FCM token
+  Future<void> _updateFcmToken(User user) async {
+    try {
+      // Get the new FCM token
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+
+      if (fcmToken != null) {
+        // Get the collection based on user role and update the FCM token
+        if (user.email != null) {
+          final volunteerSnapshot = await FirebaseFirestore.instance
+              .collection('volunteers')
+              .where('email', isEqualTo: user.email)
+              .get();
+
+          if (volunteerSnapshot.docs.isNotEmpty) {
+            await FirebaseFirestore.instance
+                .collection('volunteers')
+                .doc(volunteerSnapshot.docs.first.id)
+                .update({'fcmToken': fcmToken});
+            print('FCM Token updated for Volunteer');
+          } else {
+            final ngoSnapshot = await FirebaseFirestore.instance
+                .collection('ngos')
+                .where('email', isEqualTo: user.email)
+                .get();
+
+            if (ngoSnapshot.docs.isNotEmpty) {
+              await FirebaseFirestore.instance
+                  .collection('ngos')
+                  .doc(ngoSnapshot.docs.first.id)
+                  .update({'fcmToken': fcmToken});
+              print('FCM Token updated for NGO');
+            } else {
+              final adminSnapshot = await FirebaseFirestore.instance
+                  .collection('admins')
+                  .where('email', isEqualTo: user.email)
+                  .get();
+
+              if (adminSnapshot.docs.isNotEmpty) {
+                await FirebaseFirestore.instance
+                    .collection('admins')
+                    .doc(adminSnapshot.docs.first.id)
+                    .update({'fcmToken': fcmToken});
+                print('FCM Token updated for Admin');
+              }
+            }
+          }
+        }
+      }
+    } catch (e) {
+      print('Error updating FCM token: $e');
     }
   }
 
@@ -123,7 +179,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  // Trigger login attempt
   void onLogin({
     required String email,
     required String password,
@@ -249,7 +304,7 @@ class _LoginPageState extends State<LoginPage> {
                           ? CircularProgressIndicator(
                               valueColor: AlwaysStoppedAnimation<Color>(
                                   AppColors.defualtTextColor(context)),
-                            ) // Show the loading spinner when _isLoading is true
+                            )
                           : LoginButton(
                               onPressed: () => onLogin(
                                 email: emailController.text,
