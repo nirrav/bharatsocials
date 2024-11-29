@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
-import 'package:bharatsocials/login/login.dart';
 import 'package:bharatsocials/ngos/ngoData.dart';
 import 'package:bharatsocials/login/logout.dart';
 import 'package:bharatsocials/ngos/ngoProfile.dart';

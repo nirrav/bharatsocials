@@ -49,7 +49,7 @@ class VolunteerData {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('volunteers')
           .where('email', isEqualTo: email)
-          .get(GetOptions(
+          .get(const GetOptions(
               source: Source.server)); // Force fresh data from the server
 
       print('Query result count: ${querySnapshot.docs.length}');

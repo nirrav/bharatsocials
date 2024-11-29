@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:bharatsocials/admins/UniAdmin/UniProfile.dart';
 import 'package:bharatsocials/admins/UniAdmin/Unisettings.dart';
 import 'package:bharatsocials/admins/UniAdmin/uniAdminData.dart';
-import 'package:bharatsocials/admins/UniAdmin/uniDashboard.dart';
 
 class SlideBar extends StatefulWidget {
   const SlideBar({super.key});

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:bharatsocials/admins/UniAdmin/uniDashboard.dart';
 
 class BroadcastChannelScreen extends StatefulWidget {
   const BroadcastChannelScreen({super.key});

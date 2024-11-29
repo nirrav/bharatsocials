@@ -3,7 +3,6 @@ import 'package:bharatsocials/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bharatsocials/admins/UniAdmin/uniAdminData.dart';
-import 'package:bharatsocials/admins/UniAdmin/uniDashboard.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

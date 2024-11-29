@@ -1,6 +1,6 @@
-import 'package:bharatsocials/admins/UniAdmin/pendingOperations.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
+import 'package:bharatsocials/admins/UniAdmin/pendingOperations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
 
 class PendingColleges extends StatefulWidget {
@@ -64,9 +64,8 @@ class PendingCollege extends StatelessWidget {
       stream: FirebaseFirestore.instance
           .collection('admins')
           .where('adminRole', isEqualTo: 'college')
-          .where('isVerified', isEqualTo: false)
-          .where('isRejected',
-              isEqualTo: false) // Add this line to filter out rejected NGOs
+          .where('isVerified',
+              isEqualTo: false) // Filter for unverified colleges
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -79,7 +78,22 @@ class PendingCollege extends StatelessWidget {
 
         final admins = snapshot.data?.docs ?? [];
 
-        if (admins.isEmpty) {
+        // Filter out rejected colleges (those with 'isRejected' field)
+        final pendingAdmins = admins.where((admin) {
+          // Safely check if 'isRejected' field exists and handle it properly
+          final adminData =
+              admin.data() as Map<String, dynamic>?; // Cast to Map
+          final isRejected = adminData != null &&
+                  adminData.containsKey('isRejected')
+              ? adminData['isRejected']
+              : false; // Default to false if 'isRejected' is null or not present
+
+          // Filter out the rejected ones, considering 'isRejected' as null or false
+          return isRejected ==
+              false; // Only include those that are not rejected
+        }).toList();
+
+        if (pendingAdmins.isEmpty) {
           return const Center(
               child: Text('No Pending College Requests to show.'));
         }
@@ -87,9 +101,9 @@ class PendingCollege extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: ListView.builder(
-            itemCount: admins.length,
+            itemCount: pendingAdmins.length,
             itemBuilder: (context, index) {
-              final admin = admins[index];
+              final admin = pendingAdmins[index];
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 child: ListTile(

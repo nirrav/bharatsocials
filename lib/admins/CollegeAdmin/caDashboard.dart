@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:bharatsocials/BC/CreateEvent.dart';
+import 'package:bharatsocials/volunteers/NotiPage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:bharatsocials/admins/UniAdmin/pendingVolScrens.dart';
 import 'package:bharatsocials/admins/CollegeAdmin/CollegeAdminSidebar.dart';
 
 class CaDashboardScreen extends StatefulWidget {
   const CaDashboardScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _CaDashboardScreenState createState() => _CaDashboardScreenState();
 }
 
 class _CaDashboardScreenState extends State<CaDashboardScreen> {
   // Variable to track selected tab
   int _selectedIndex = 0;
-
-  // Pages to show based on selected index
-  final List<Widget> _pages = [
-    // Home Page (Placeholder for now)
-    const Scaffold(body: Center(child: Text('Home Page'))),
-    // Notifications Page (NotiPage)
-    const Scaffold(body: Center(child: Text('Notification Page'))),
-  ];
 
   // Function to handle BottomNavigationBar item taps
   void _onItemTapped(int index) {
@@ -72,8 +67,7 @@ class _CaDashboardScreenState extends State<CaDashboardScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const Scaffold(
-                        body: Center(child: Text('Notification Page')))),
+                    builder: (context) => const NotificationPage()),
               );
             },
           ),
@@ -95,6 +89,22 @@ class _CaDashboardScreenState extends State<CaDashboardScreen> {
             _buildSectionHeader(context, title: 'Our Campaigns'),
             const SizedBox(height: 8),
             _buildAllEventsHorizontalList(),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildHorizontalButton(
+                  'Pending Volunteers',
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PendingVolunteerScreen()),
+                    );
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -129,6 +139,28 @@ class _CaDashboardScreenState extends State<CaDashboardScreen> {
           );
         },
         child: Icon(Icons.add, color: AppColors.eventCardTextColor(context)),
+      ),
+    );
+  }
+
+  Widget _buildHorizontalButton(String label, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.mainButtonColor(context),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20), // Set border radius to 20
+        ),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: AppColors.mainButtonTextColor(
+              context), // Text color based on theme
+          fontWeight: FontWeight.w600, // Bold text for emphasis
+          inherit: true, // Ensure consistent inheritance
+        ),
       ),
     );
   }
@@ -221,7 +253,7 @@ class _CaDashboardScreenState extends State<CaDashboardScreen> {
                       backgroundColor: AppColors.mainButtonColor(context),
                       foregroundColor: AppColors.mainButtonTextColor(context),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                     ),
                     onPressed: () {},
@@ -285,7 +317,7 @@ class _CaDashboardScreenState extends State<CaDashboardScreen> {
                       backgroundColor: AppColors.mainButtonColor(context),
                       foregroundColor: AppColors.mainButtonTextColor(context),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                     ),
                     child: const Text('View More'),
@@ -336,8 +368,6 @@ class UpcomingCampaignsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime currentDateTime = DateTime.now();
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.appBgColor(context),

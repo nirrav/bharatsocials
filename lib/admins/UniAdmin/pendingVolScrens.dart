@@ -3,20 +3,20 @@ import 'package:bharatsocials/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
 import 'package:bharatsocials/admins/UniAdmin/pendingOperations.dart'; // Import the reject method
 
-class PendingNgoScreen extends StatefulWidget {
-  const PendingNgoScreen({super.key});
+class PendingVolunteerScreen extends StatefulWidget {
+  const PendingVolunteerScreen({super.key});
 
   @override
-  _PendingNgoScreenState createState() => _PendingNgoScreenState();
+  _PendingVolunteerScreenState createState() => _PendingVolunteerScreenState();
 }
 
-class _PendingNgoScreenState extends State<PendingNgoScreen> {
+class _PendingVolunteerScreenState extends State<PendingVolunteerScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    const PendingNgo(),
-    const AcceptedNgo(),
-    const RejectedNgo(),
+    const PendingVolunteer(),
+    const AcceptedVolunteer(),
+    const RejectedVolunteer(),
   ];
 
   void _onItemTapped(int index) {
@@ -29,7 +29,7 @@ class _PendingNgoScreenState extends State<PendingNgoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("NGO Management"),
+        title: const Text("Volunteer Management"),
         backgroundColor: AppColors.titleColor(context),
       ),
       body: _screens[_selectedIndex],
@@ -55,15 +55,16 @@ class _PendingNgoScreenState extends State<PendingNgoScreen> {
   }
 }
 
-class PendingNgo extends StatelessWidget {
-  const PendingNgo({super.key});
+class PendingVolunteer extends StatelessWidget {
+  const PendingVolunteer({super.key});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('ngos')
-          .where('isVerified', isEqualTo: false) // Filter for unverified NGOs
+          .collection('volunteers')
+          .where('isVerified',
+              isEqualTo: false) // Filter for unverified volunteers
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -74,36 +75,35 @@ class PendingNgo extends StatelessWidget {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
 
-        final ngos = snapshot.data?.docs ?? [];
+        final volunteers = snapshot.data?.docs ?? [];
 
-        // Filter out rejected NGOs (those with 'isRejected' field)
-        final pendingNgos = ngos.where((ngo) {
-          // Safely check if 'isRejected' field exists and handle it properly
-          final ngoData = ngo.data() as Map<String, dynamic>?; // Cast to Map
-          final isRejected = ngoData != null &&
-                  ngoData.containsKey('isRejected')
-              ? ngoData['isRejected']
+        // Filter out rejected volunteers (those with 'isRejected' field)
+        final pendingVolunteers = volunteers.where((volunteer) {
+          final volunteerData =
+              volunteer.data() as Map<String, dynamic>?; // Cast to Map
+          final isRejected = volunteerData != null &&
+                  volunteerData.containsKey('isRejected')
+              ? volunteerData['isRejected']
               : false; // Default to false if 'isRejected' is null or not present
 
-          // Filter out the rejected ones, considering 'isRejected' as null or false
           return isRejected ==
               false; // Only include those that are not rejected
         }).toList();
 
-        if (pendingNgos.isEmpty) {
-          return const Center(child: Text('No Pending NGOs to show.'));
+        if (pendingVolunteers.isEmpty) {
+          return const Center(child: Text('No Pending Volunteers to show.'));
         }
 
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: ListView.builder(
-            itemCount: pendingNgos.length,
+            itemCount: pendingVolunteers.length,
             itemBuilder: (context, index) {
-              final ngo = pendingNgos[index];
+              final volunteer = pendingVolunteers[index];
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 child: ListTile(
-                  title: Text(ngo['name'] ?? 'NGO Name'),
+                  title: Text(volunteer['name'] ?? 'Volunteer Name'),
                   subtitle: const Text("Pending Approval"),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -111,13 +111,13 @@ class PendingNgo extends StatelessWidget {
                       IconButton(
                         icon: const Icon(Icons.check),
                         onPressed: () async {
-                          await onNgoVerify(ngo.id);
+                          await onVolunteerVerify(volunteer.id);
                         },
                       ),
                       IconButton(
                         icon: const Icon(Icons.cancel),
                         onPressed: () async {
-                          await onNgoReject(context, ngo.id);
+                          await onVolunteerReject(context, volunteer.id);
                         },
                       ),
                     ],
@@ -132,14 +132,14 @@ class PendingNgo extends StatelessWidget {
   }
 }
 
-class AcceptedNgo extends StatelessWidget {
-  const AcceptedNgo({super.key});
+class AcceptedVolunteer extends StatelessWidget {
+  const AcceptedVolunteer({super.key});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('ngos')
+          .collection('volunteers')
           .where('isVerified', isEqualTo: true)
           .snapshots(),
       builder: (context, snapshot) {
@@ -151,27 +151,27 @@ class AcceptedNgo extends StatelessWidget {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
 
-        final ngos = snapshot.data?.docs ?? [];
+        final volunteers = snapshot.data?.docs ?? [];
 
-        if (ngos.isEmpty) {
-          return const Center(child: Text('No Accepted NGOs to show.'));
+        if (volunteers.isEmpty) {
+          return const Center(child: Text('No Accepted Volunteers to show.'));
         }
 
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: ListView.builder(
-            itemCount: ngos.length,
+            itemCount: volunteers.length,
             itemBuilder: (context, index) {
-              final ngo = ngos[index];
+              final volunteer = volunteers[index];
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 child: ListTile(
-                  title: Text(ngo['name'] ?? 'NGO Name'),
+                  title: Text(volunteer['name'] ?? 'Volunteer Name'),
                   subtitle: const Text("Accepted"),
                   trailing: IconButton(
                     icon: const Icon(Icons.cancel),
                     onPressed: () async {
-                      await onNgoReject(context, ngo.id);
+                      await onVolunteerReject(context, volunteer.id);
                     },
                   ),
                 ),
@@ -184,14 +184,14 @@ class AcceptedNgo extends StatelessWidget {
   }
 }
 
-class RejectedNgo extends StatelessWidget {
-  const RejectedNgo({super.key});
+class RejectedVolunteer extends StatelessWidget {
+  const RejectedVolunteer({super.key});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('ngos')
+          .collection('volunteers')
           .where('isRejected', isEqualTo: true)
           .snapshots(),
       builder: (context, snapshot) {
@@ -203,22 +203,22 @@ class RejectedNgo extends StatelessWidget {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
 
-        final ngos = snapshot.data?.docs ?? [];
+        final volunteers = snapshot.data?.docs ?? [];
 
-        if (ngos.isEmpty) {
-          return const Center(child: Text('No Rejected NGOs to show.'));
+        if (volunteers.isEmpty) {
+          return const Center(child: Text('No Rejected Volunteers to show.'));
         }
 
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: ListView.builder(
-            itemCount: ngos.length,
+            itemCount: volunteers.length,
             itemBuilder: (context, index) {
-              final ngo = ngos[index];
+              final volunteer = volunteers[index];
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 child: ListTile(
-                  title: Text(ngo['name'] ?? 'NGO Name'),
+                  title: Text(volunteer['name'] ?? 'Volunteer Name'),
                   subtitle: const Text("Rejected"),
                 ),
               );

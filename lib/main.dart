@@ -1,25 +1,27 @@
-import 'dart:io';
-import 'package:bharatsocials/api/firebase_api.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bharatsocials/splashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:bharatsocials/api/firebase_api.dart';
 import 'package:bharatsocials/firebase_options.dart';
+import 'package:bharatsocials/volunteers/NotiPage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:bharatsocials/notifications.dart'; // Import notifications.dart
 
+final navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseApi().initNotifications();
-  // Register background message handler
+
+  // Pass the navigatorKey when creating the FirebaseApi instance
+  final firebaseApi = FirebaseApi(navigatorKey: navigatorKey);
+
+  await firebaseApi.initNotifications();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-  // Initialize local notifications
   await initializeLocalNotifications();
 
   runApp(const MyApp());
@@ -60,34 +62,9 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode
           .system, // Auto-switch between light/dark based on system theme
-      home: SplashScreen(),
+      navigatorKey: navigatorKey,
+      home: const SplashScreen(),
+      routes: {NotificationPage.route: (context) => const NotificationPage()},
     );
-  }
-}
-
-Future<void> initializeLocalNotifications() async {
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-
-  const InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-  );
-
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-  // Create a default notification channel for Android 8.0+ devices
-  if (Platform.isAndroid) {
-    const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'default_channel', // Channel ID
-      'Default Notifications', // Channel name
-      description:
-          'This is the default notification channel for app notifications',
-      importance: Importance.high,
-      playSound: true,
-    );
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
   }
 }

@@ -1,8 +1,8 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:bharatsocials/colors.dart'; // Retained for frontend
-import 'package:bharatsocials/common_widgets/event_details.dart'; // Retained for frontend
+// Retained for frontend
+// Retained for frontend
 
 class EventFormAndUpcomingPage extends StatefulWidget {
   const EventFormAndUpcomingPage({super.key});

@@ -5,7 +5,6 @@ import 'package:bharatsocials/BC/eventDetails.dart';
 import 'package:bharatsocials/volunteers/sidebar.dart';
 import 'package:bharatsocials/volunteers/NotiPage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:bharatsocials/common_widgets/event_card.dart' as commonWidgets;
 
 class VolunteerDashboard extends StatefulWidget {
   const VolunteerDashboard({super.key});

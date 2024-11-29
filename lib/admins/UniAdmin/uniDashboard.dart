@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:bharatsocials/volunteers/NotiPage.dart';
-import 'package:bharatsocials/login/admin_register.dart';
 import 'package:bharatsocials/admins/UniAdmin/Boardcast.dart';
 import 'package:bharatsocials/admins/UniAdmin/pendingNgo.dart';
-import 'package:bharatsocials/login/widgets/role_selection.dart';
-import 'package:bharatsocials/admins/UniAdmin/uniAdminData.dart';
 import 'package:bharatsocials/admins/UniAdmin/EventDetails.dart';
 import 'package:bharatsocials/admins/UniAdmin/pendingCollege.dart';
 import 'package:bharatsocials/admins/CollegeAdmin/collegeAct.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 import 'package:bharatsocials/admins/UniAdmin/Unisidebar.dart'; // Import the SlideBar widget
 
 class UniAdminDashboard extends StatefulWidget {
@@ -232,7 +227,7 @@ class _UniAdminDashboardState extends State<UniAdminDashboard> {
                   color: AppColors.eventCardTextColor(context),
                   fontWeight: FontWeight.w500), // Set text color to black
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'Event Location',
               style: TextStyle(
