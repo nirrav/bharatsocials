@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:bharatsocials/BC/eventDetails.dart';
 import 'package:bharatsocials/volunteers/sidebar.dart';
 import 'package:bharatsocials/volunteers/NotiPage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:bharatsocials/broadcastChannel/eventDetails.dart';
 
 class VolunteerDashboard extends StatefulWidget {
   const VolunteerDashboard({super.key});

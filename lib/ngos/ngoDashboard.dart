@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:bharatsocials/BC/CreateEvent.dart';
-import 'package:bharatsocials/BC/eventDetails.dart';
-import 'package:bharatsocials/BC/broadcastChannel.dart';
+import 'package:bharatsocials/broadcastChannel/CreateEvent.dart';
+import 'package:bharatsocials/broadcastChannel/eventDetails.dart';
 import 'package:intl/intl.dart'; // Import NgoBroadcastChannelScreen
+import 'package:bharatsocials/broadcastChannel/broadcastChannel.dart';
 import 'package:bharatsocials/ngos/Sidebar.dart'; // Import the sidebar file
 import 'package:bharatsocials/volunteers/NotiPage.dart'; // Import Notification Page
 // import 'package:bharatsocials/ngos/ngoBroaddcastChannel.dart';
@@ -52,7 +52,7 @@ class _DashboardScreenState extends State<NgoDashboard> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'NGO Dashboard',
+              'NGOs Dashboard',
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,

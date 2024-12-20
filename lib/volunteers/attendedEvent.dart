@@ -2,21 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: AttendedEventPage(),
-    );
-  }
-}
-
 class AttendedEventPage extends StatelessWidget {
   const AttendedEventPage({super.key});
 

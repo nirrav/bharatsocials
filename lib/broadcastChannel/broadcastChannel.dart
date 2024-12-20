@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:bharatsocials/BC/CreateEvent.dart';
-import 'package:bharatsocials/BC/eventDetails.dart';
+import 'package:bharatsocials/broadcastChannel/CreateEvent.dart';
+import 'package:bharatsocials/broadcastChannel/eventDetails.dart';
 import 'package:bharatsocials/ngos/ngoDashboard.dart';
 
 class BroadcastChannel extends StatefulWidget {

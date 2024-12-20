@@ -49,6 +49,7 @@ dependencies:
   geocoding:
   intl:
   flutter_datetime_picker:
+  fluttertoast:
 
 dev_dependencies:
   flutter_test:

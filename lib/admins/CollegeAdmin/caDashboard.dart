@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
-import 'package:bharatsocials/BC/CreateEvent.dart';
+import 'package:bharatsocials/broadcastChannel/CreateEvent.dart';
 import 'package:bharatsocials/volunteers/NotiPage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bharatsocials/admins/UniAdmin/pendingVolScrens.dart';
