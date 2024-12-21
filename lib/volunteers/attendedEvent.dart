@@ -7,12 +7,6 @@ class AttendedEventPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get theme-dependent colors using AppColors utility
-
-    // Get screen width and height for responsive design
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

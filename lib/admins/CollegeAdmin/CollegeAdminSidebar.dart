@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
-import 'package:bharatsocials/login/logout.dart';
+import 'package:bharatsocials/commonWidgets/widgets.dart';
 import 'package:bharatsocials/admins/UniAdmin/Unisettings.dart';
 import 'package:bharatsocials/admins/CollegeAdmin/ColProfile.dart';
 import 'package:bharatsocials/admins/CollegeAdmin/collegeAdminData.dart';
+
 
 class AdminSidebar extends StatelessWidget {
   const AdminSidebar({super.key});

@@ -1,12 +1,13 @@
 import 'dart:async';
-import 'package:bharatsocials/volunteers/volDashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/login/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bharatsocials/ngos/ngoDashboard.dart';
+import 'package:bharatsocials/volunteers/volDashboard.dart';
+import 'package:bharatsocials/dashboard/dashboardTemplate.dart';
 import 'package:bharatsocials/admins/UniAdmin/uniDashboard.dart';
 import 'package:bharatsocials/admins/CollegeAdmin/caDashboard.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -68,35 +69,17 @@ class _SplashScreenState extends State<SplashScreen>
     String? adminRole;
 
     try {
-      // Check if the user is a volunteer
-      final volunteerSnapshot = await FirebaseFirestore.instance
-          .collection('volunteers')
-          .where('email', isEqualTo: user.email)
+      // Check if the user exists in the 'users' collection and retrieve role
+      final userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
           .get();
 
-      if (volunteerSnapshot.docs.isNotEmpty) {
-        role = 'volunteer';
-      } else {
-        // Check if the user is an NGO
-        final ngoSnapshot = await FirebaseFirestore.instance
-            .collection('ngos')
-            .where('email', isEqualTo: user.email)
-            .get();
-
-        if (ngoSnapshot.docs.isNotEmpty) {
-          role = 'ngo';
-        } else {
-          // Check if the user is an admin
-          final adminSnapshot = await FirebaseFirestore.instance
-              .collection('admins')
-              .where('email', isEqualTo: user.email)
-              .get();
-
-          if (adminSnapshot.docs.isNotEmpty) {
-            role = 'admin';
-            DocumentSnapshot userDoc = adminSnapshot.docs.first;
-            adminRole = userDoc['adminRole'];
-          }
+      if (userSnapshot.exists) {
+        var userData = userSnapshot.data();
+        if (userData != null) {
+          role = userData['role'];
+          adminRole = userData['adminRole'];
         }
       }
 
@@ -109,28 +92,31 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
-  // Navigate to the specific screen based on role and admin role
+// Navigate to the specific screen based on role and admin role
   void onSuccess(String role, String? adminRole) {
     if (role == 'volunteer') {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const VolunteerDashboard()),
+        MaterialPageRoute(builder: (context) => const DashboardTemplate()),
       );
     } else if (role == 'ngo') {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const NgoDashboard()),
+        MaterialPageRoute(builder: (context) => const DashboardTemplate()),
       );
     } else if (role == 'admin') {
+      // Redirect based on admin role
       if (adminRole == 'uni') {
+        // If adminRole is 'uni', navigate to UniAdminDashboard
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const UniAdminDashboard()),
         );
-      } else if (adminRole == 'college') {
+      } else {
+        // For other admin roles, navigate to DashboardTemplate
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const CaDashboardScreen()),
+          MaterialPageRoute(builder: (context) => const DashboardTemplate()),
         );
       }
     }

@@ -1,18 +1,12 @@
 import 'dart:io'; // For File handling
 import 'package:flutter/material.dart';
+import 'package:bharatsocials/T&C.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:bharatsocials/login/home.dart';
-import 'package:bharatsocials/login/login.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:bharatsocials/login/widgets/dot_indicator.dart';
-import 'package:bharatsocials/login/widgets/submit_button.dart';
-import 'package:bharatsocials/login/widgets/text_field_widget.dart';
-import 'package:image_picker/image_picker.dart'; // For Image picking
-import 'package:bharatsocials/login/widgets/upload_button_widget.dart';
-import 'package:bharatsocials/login/widgets/password_field_widget.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
-import 'package:firebase_storage/firebase_storage.dart'; // Import Firebase Storage
+import 'package:image_picker/image_picker.dart';
+import 'package:bharatsocials/api/register_method.dart';
+import 'package:bharatsocials/commonWidgets/widgets.dart';
 
 class AdminRegisterPage extends StatefulWidget {
   const AdminRegisterPage({super.key});
@@ -91,133 +85,46 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
     }
   }
 
-  Future<void> _onAdminRegister() async {
-    setState(() {
-      _isLoading = true; // Show loader when submitting
-    });
+  bool _isFormValid() {
+    return adminNameController.text.isNotEmpty &&
+        adminEmailController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty &&
+        confirmPasswordController.text.isNotEmpty;
+  }
 
-    // Check if proof of identity (image) is provided
-    if (_image == null) {
-      _showErrorSnackbar('Please upload a proof of identity.');
-      setState(() {
-        _isLoading = false; // Hide loader after error
-      });
-      return;
-    }
+  void _showErrorSnackbar(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
 
-    // Validate fields (same validation logic as before)
-    if (adminNameController.text.isEmpty ||
-        adminEmailController.text.isEmpty ||
-        passwordController.text.isEmpty ||
-        confirmPasswordController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please fill in all required fields.")),
-      );
-      setState(() {
-        _isLoading = false; // Hide loader after error
-      });
-      return;
-    }
+  void _clearFormFields() {
+    adminNameController.clear();
+    adminEmailController.clear();
+    passwordController.clear();
+    confirmPasswordController.clear();
+    adminPhoneController.clear();
+    collegeFieldController.clear();
+    universityFieldController.clear();
+  }
 
-    // Check if password and confirm password match (same validation)
-    if (passwordController.text != confirmPasswordController.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Passwords do not match.")),
-      );
-      setState(() {
-        _isLoading = false; // Hide loader after error
-      });
-      return;
-    }
-
-    // Check password strength (same validation)
-    if (passwordStrength == 'weak') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Password is too weak.")),
-      );
-      setState(() {
-        _isLoading = false; // Hide loader after error
-      });
-      return;
-    }
-
-    try {
-      // Firebase Authentication - Register the admin user
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: adminEmailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-
-      // Image upload to Firebase Storage
-      String imageUrl = '';
-      if (_image != null) {
-        String fileName = '${DateTime.now().millisecondsSinceEpoch}.png';
-        try {
-          UploadTask uploadTask = FirebaseStorage.instance
-              .ref('${selectedRole.toLowerCase()}s/$fileName')
-              .putFile(_image!);
-
-          TaskSnapshot snapshot = await uploadTask;
-          imageUrl = await snapshot.ref.getDownloadURL();
-          print("Image uploaded successfully. Download URL: $imageUrl");
-        } catch (e) {
-          print("Error during image upload: $e");
-          _showErrorSnackbar('Error uploading image.');
-          setState(() {
-            _isLoading = false; // Hide loader after error
-          });
-          return;
-        }
-      }
-
-      // Create the data map to be sent to Firestore
-      Map<String, dynamic> adminData = {
-        'name': adminNameController.text.trim(),
-        'email': adminEmailController.text.trim(),
-        'phone': adminPhoneController.text.trim(),
-        'role': 'admin', // Always set to admin
-        'adminRole': selectedRole,
-        'isVerified': false,
-        'POIurl': imageUrl,
-      };
-
-      // Add role-specific data (same logic as before)
-      if (selectedRole == 'college') {
-        adminData['collegeName'] = collegeFieldController.text.trim();
-      } else if (selectedRole == 'uni') {
-        adminData['uniName'] = universityFieldController.text.trim();
-      }
-
-      // Store data in Firestore under 'admins' collection
-      await FirebaseFirestore.instance.collection('admins').add(adminData);
-      print("Admin registered successfully");
-
-      // Navigate to the Login Page after a short delay
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginPage(),
-        ),
-      );
-
-      // After a short delay, show the Snackbar
-      Future.delayed(const Duration(seconds: 1), () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content:
-                  Text("You've registered successfully. Now, please login.")),
-        );
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
-      );
-    } finally {
-      setState(() {
-        _isLoading = false; // Hide loader after the operation completes
-      });
-    }
+  void _onAdminRegister() {
+    AdminRegistrationHelper(
+      context: context,
+      isLoading: _isLoading,
+      isFormValid: _isFormValid,
+      showErrorSnackbar: _showErrorSnackbar,
+      clearFormFields: _clearFormFields,
+      image: _image,
+      adminNameController: adminNameController,
+      adminEmailController: adminEmailController,
+      passwordController: passwordController,
+      confirmPasswordController: confirmPasswordController,
+      adminPhoneController: adminPhoneController,
+      passwordStrength: passwordStrength,
+      selectedRole: selectedRole,
+      collegeFieldController: collegeFieldController,
+      universityFieldController: universityFieldController,
+    ).onAdminRegister();
   }
 
   @override
@@ -441,7 +348,12 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
                             ),
                             TextButton(
                               onPressed: () {
-                                // You can implement a T&C dialog or redirect here
+                              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                         TermsAndConditions()), 
+              );
                               },
                               child: Text(
                                 '(READ T&C)',
@@ -479,11 +391,6 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
         ),
       ),
     );
-  }
-
-  void _showErrorSnackbar(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   // Helper method to create a connecting line

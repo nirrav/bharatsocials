@@ -19,9 +19,6 @@ class SavedEventsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get screen width and height for responsive design
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
     final size = MediaQuery.of(context).size;
 
     return Scaffold(

@@ -1,24 +1,21 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:bharatsocials/T&C.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:bharatsocials/login/login.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bharatsocials/api/register_method.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:bharatsocials/login/admin_register.dart';
+import 'package:bharatsocials/commonWidgets/widgets.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:bharatsocials/login/widgets/dot_indicator.dart';
-import 'package:bharatsocials/login/widgets/submit_button.dart';
-import 'package:bharatsocials/login/widgets/role_selection.dart';
-import 'package:bharatsocials/login/widgets/text_field_widget.dart';
-import 'package:bharatsocials/login/widgets/upload_button_widget.dart';
-import 'package:bharatsocials/login/widgets/password_field_widget.dart';
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({super.key});
+  const RegistrationPage({super.key, required String role});
 
   @override
   _RegistrationPageState createState() => _RegistrationPageState();
@@ -29,7 +26,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
- 
+
   TextEditingController phoneNoController = TextEditingController();
   TextEditingController rollNoController = TextEditingController();
   TextEditingController departmentController = TextEditingController();
@@ -41,14 +38,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
   TextEditingController organizationNameController = TextEditingController();
   TextEditingController contactNumberController = TextEditingController();
   TextEditingController cityController = TextEditingController();
-
   String passwordStrength = "";
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
-
   bool _isTermsAgreed = false;
   bool _isLoading = false;
-
   String selectedRole = '';
   File? _image; // Variable to hold the selected image
   @override
@@ -107,40 +101,54 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   void _fetchCollegeNames() async {
-    QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('admins').get();
-    setState(() {
-      collegeNames = snapshot.docs
-          .where((doc) =>
-              doc['adminRole'] == 'college' && doc['collegeName'] != null)
-          .map((doc) => doc['collegeName'] as String)
-          .toList();
-    });
+    try {
+      // Query the 'users' collection with 'adminRole' == 'college' and 'collegeName' not null
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('adminRole', isEqualTo: 'college') // Filter for colleges
+          .where('collegeName',
+              isNotEqualTo: null) // Ensure collegeName is not null
+          .get(); // Fetch the data
+
+      // Extract college names from the query snapshot
+      List<String> collegeList =
+          snapshot.docs.map((doc) => doc['collegeName'] as String).toList();
+
+      // Update the state with the college names list
+      setState(() {
+        collegeNames =
+            collegeList; // Assign the list to the collegeNames state variable
+      });
+    } catch (e) {
+      print('Error fetching college names: $e');
+    }
   }
 
   void _showRoleSelectionDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false, // Allow dismissal by tapping outside
+      barrierDismissible: false, // Prevent dismissing by tapping outside
       builder: (BuildContext context) {
         return RoleSelectionDialog(
           onRoleSelected: (role) {
             setState(() {
               selectedRole = role; // Update the selected role
             });
-            Navigator.of(context).pop(); // Close the dialog after selection
-
-            // Debugging log to ensure the selected role is being updated
-            print("Role selected: $selectedRole");
+            Navigator.of(context).pop(); // Close the dialog
 
             // Redirect based on role selection
             if (role == 'admin') {
-              // If the user selects 'Admin', navigate to the Admin registration page
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      const AdminRegisterPage(), // Admin registration page
+                  builder: (context) => const AdminRegisterPage(),
+                ),
+              );
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RegistrationPage(role: role),
                 ),
               );
             }
@@ -255,7 +263,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                             Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        TermsAndConditions()), // Notification page
+              );
+                          },
                           child: Text(
                             '(READ T&C)',
                             style: GoogleFonts.poppins(
@@ -305,133 +320,26 @@ class _RegistrationPageState extends State<RegistrationPage> {
     }
   }
 
-  void _onRegister() async {
-    // Start loading
-    setState(() {
-      _isLoading = true;
-    });
-
-    // Check if terms and conditions are agreed
-    if (!_isTermsAgreed) {
-      _showErrorSnackbar('Please agree to the terms and conditions.');
-      setState(() {
-        _isLoading = false; // Stop loading
-      });
-      return;
-    }
-
-    // Check if proof of identity (image) is provided
-    if (_image == null) {
-      _showErrorSnackbar('Please upload a proof of identity.');
-      setState(() {
-        _isLoading = false; // Stop loading
-      });
-      return;
-    }
-
-    // Check form validity
-    if (!_isFormValid()) {
-      _showErrorSnackbar('Please fill all required fields correctly.');
-      setState(() {
-        _isLoading = false; // Stop loading
-      });
-      return; // Don't proceed further if form is invalid
-    }
-
-    try {
-      // Firebase Authentication (signup)
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-
-      // Generate FCM token
-      String fcmToken = await FirebaseMessaging.instance.getToken() ?? '';
-      print("FCM Token generated: $fcmToken");
-
-      // Image upload to Firebase Storage
-      String imageUrl = '';
-      if (_image != null) {
-        String fileName = '${DateTime.now().millisecondsSinceEpoch}.png';
-        try {
-          UploadTask uploadTask = FirebaseStorage.instance
-              .ref('${selectedRole.toLowerCase()}s/$fileName')
-              .putFile(_image!);
-
-          TaskSnapshot snapshot = await uploadTask;
-          imageUrl = await snapshot.ref.getDownloadURL();
-          print("Image uploaded successfully. Download URL: $imageUrl");
-        } catch (e) {
-          print("Error during image upload: $e");
-          _showErrorSnackbar('Error uploading image.');
-          setState(() {
-            _isLoading = false; // Stop loading
-          });
-          return;
-        }
-      }
-
-      // Firestore data save
-      Map<String, dynamic> userData = {
-        'email': emailController.text,
-
-      };
-
-      // Store user data based on the role
-      if (selectedRole == 'volunteer') {
-        userData.addAll({
-          'name': firstNameController.text,
-   
-          'phone': phoneNoController.text,
-          'rollno': rollNoController.text,
-          'department': departmentController.text,
-          'collegeName': collegeNameController.text,
-          'role': "volunteer",
-                  'image': imageUrl,
-          'isVerified': false,
-          'fcmToken': fcmToken, // Store the FCM token
-        });
-        await FirebaseFirestore.instance.collection('volunteers').add(userData);
-      } else if (selectedRole == 'ngo') {
-        userData.addAll({
-          'name': organizationNameController.text,
-          'phone': contactNumberController.text,
-          'city': cityController.text,
-          'role': "ngo",
-                  'image': imageUrl,
-          'isVerified': false,
-          'fcmToken': fcmToken, // Store the FCM token
-        });
-        await FirebaseFirestore.instance.collection('ngos').add(userData);
-      }
-
-      // Navigate to the Login Page
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-      );
-
-      // Show success snackbar after a short delay
-      Future.delayed(const Duration(seconds: 1), () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content:
-                  Text("You've registered successfully. Now, please login.")),
-        );
-      });
-
-      // Clear the form fields
-      _clearFormFields();
-    } catch (e) {
-      print("Error occurred during form submission: ${e.toString()}");
-      _showErrorSnackbar('Error: ${e.toString()}');
-    } finally {
-      // Stop loading when all processes are complete
-      setState(() {
-        _isLoading = false;
-      });
-    }
+  void _onRegister() {
+    RegistrationHelper(
+      context: context,
+      isTermsAgreed: _isTermsAgreed,
+      image: _image,
+      isFormValid: _isFormValid,
+      showErrorSnackbar: _showErrorSnackbar,
+      clearFormFields: _clearFormFields,
+      emailController: emailController,
+      passwordController: passwordController,
+      selectedRole: selectedRole,
+      firstNameController: firstNameController,
+      phoneNoController: phoneNoController,
+      rollNoController: rollNoController,
+      departmentController: departmentController,
+      collegeNameController: collegeNameController,
+      organizationNameController: organizationNameController,
+      contactNumberController: contactNumberController,
+      cityController: cityController,
+    ).onRegister();
   }
 
   void _requestPermissions() async {
@@ -499,7 +407,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         print("First name is empty for Volunteer.");
         return false;
       }
-    
+
       if (rollNoController.text.isEmpty) {
         print("Roll number is empty for Volunteer.");
         return false;

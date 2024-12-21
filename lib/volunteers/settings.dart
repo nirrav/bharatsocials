@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
-import 'package:bharatsocials/login/logout.dart';
+import 'package:bharatsocials/commonWidgets/widgets.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -18,9 +18,6 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get screen width and height for responsive design
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: Text(

@@ -43,7 +43,9 @@ class HomePage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const RegistrationPage()),
+                              builder: (context) => const RegistrationPage(
+                                    role: '',
+                                  )),
                         );
                       },
                       child: _buildDot(
@@ -103,7 +105,9 @@ class HomePage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const RegistrationPage(),
+                      builder: (context) => const RegistrationPage(
+                        role: '',
+                      ),
                     ),
                   );
                 },
@@ -128,7 +132,8 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: screenHeight * 0.02),
+
+             SizedBox(height: screenHeight * 0.02),
 
               // Row for "Already Member?" and "Log In" Text Buttons
               Padding(

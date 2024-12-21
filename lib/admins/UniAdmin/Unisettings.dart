@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
-import 'package:bharatsocials/login/logout.dart';
+import 'package:bharatsocials/commonWidgets/widgets.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -143,6 +143,7 @@ class _VolunteerEventDetailsPageState extends State<VolunteerEventDetailsPage> {
     bool safetyEquipment = eventDetails!['safetyEquipment'] ?? false;
     bool waterProvided = eventDetails!['waterProvided'] ?? false;
 
+    // ignore: unused_local_variable
     String hostName = eventDetails!['hostName'] ?? 'No Host Name';
     String pocFullName = eventDetails!['pocFullName'] ?? 'No Contact Name';
     String pocLocation = eventDetails!['pocLocation'] ?? 'No Contact Location';
