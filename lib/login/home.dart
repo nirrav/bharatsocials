@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:bharatsocials/login/login.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'register.dart'; // Import the Register screen
+import 'package:bharatsocials/login/ngoRegister.dart';
+import 'package:bharatsocials/login/admin_register.dart';
+import 'package:bharatsocials/login/volunteerRegister.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Get theme-dependent colors using the AppColors utility
-
     // Get screen width and height for responsive design
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -36,22 +36,6 @@ class HomePage extends StatelessWidget {
                         isActive: true, context: context), // First dot (active)
                     _buildConnectingLine(context), // Line between dots
 
-                    // Middle Dot wrapped with GestureDetector for navigation
-                    GestureDetector(
-                      onTap: () {
-                        // Navigate to the Registration page when the middle dot is clicked
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const RegistrationPage(
-                                    role: '',
-                                  )),
-                        );
-                      },
-                      child: _buildDot(
-                          isActive: false,
-                          context: context), // Middle dot (inactive)
-                    ),
                     _buildConnectingLine(context), // Line between dots
 
                     _buildDot(
@@ -101,15 +85,8 @@ class HomePage extends StatelessWidget {
               // Get Started Button
               ElevatedButton(
                 onPressed: () {
-                  // Navigate to the Register page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const RegistrationPage(
-                        role: '',
-                      ),
-                    ),
-                  );
+                  _showRoleSelectionDialog(
+                      context); // Show the role selection dialog
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.mainButtonColor(
@@ -133,7 +110,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
 
-             SizedBox(height: screenHeight * 0.02),
+              SizedBox(height: screenHeight * 0.02),
 
               // Row for "Already Member?" and "Log In" Text Buttons
               Padding(
@@ -197,6 +174,78 @@ class HomePage extends StatelessWidget {
       width: 80,
       height: 2,
       color: AppColors.getLineColor(context), // Correctly pass context here
+    );
+  }
+
+  // Show the role selection dialog when the user presses "Get Started"
+  void _showRoleSelectionDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dismissing by tapping outside
+      builder: (BuildContext context) {
+        return RoleSelectionDialog(
+          onRoleSelected: (role) {
+            Navigator.of(context).pop(); // Close the dialog after selection
+
+            // Redirect based on role selection
+            if (role == 'Admin') {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AdminRegisterPage(),
+                ),
+              );
+            } else if (role == 'Volunteer') {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const VolunteerRegistrationPage(),
+                ),
+              );
+            } else if (role == 'NGO') {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NgoRegistrationPage(),
+                ),
+              );
+            }
+          },
+        );
+      },
+    );
+  }
+}
+
+// Role Selection Dialog Widget
+class RoleSelectionDialog extends StatelessWidget {
+  final Function(String) onRoleSelected;
+
+  const RoleSelectionDialog({required this.onRoleSelected, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Who are you?', style: GoogleFonts.poppins()),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildRoleOption(context, 'Volunteer'),
+          _buildRoleOption(context, 'NGO'),
+          _buildRoleOption(context, 'Admin'),
+        ],
+      ),
+    );
+  }
+
+  // Build the role option widget
+  Widget _buildRoleOption(BuildContext context, String role) {
+    return ListTile(
+      leading: const Icon(Icons.account_circle),
+      title: Text(role, style: GoogleFonts.poppins(fontSize: 18)),
+      onTap: () {
+        onRoleSelected(role); // Notify parent widget about role selection
+      },
     );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:bharatsocials/colors.dart';
+import 'package:bharatsocials/UserData.dart';
 import 'package:bharatsocials/commonWidgets/sidebar.dart';
 import 'package:bharatsocials/commonWidgets/bottomNavbar.dart';
 import 'package:bharatsocials/commonWidgets/pendingVolunteers.dart';
@@ -13,6 +15,22 @@ class DashboardTemplate extends StatefulWidget {
 
 class _DashboardTemplateState extends State<DashboardTemplate> {
   int _selectedIndex = 1;
+  bool _isVolunteer = false; // Default to false (if user is not a volunteer)
+
+  @override
+  void initState() {
+    super.initState();
+    _checkUserRole();
+  }
+
+  // Check the user's role
+  Future<void> _checkUserRole() async {
+    await UserData().fetchUserData(); // Fetch user data
+    setState(() {
+      _isVolunteer = UserData().role ==
+          'volunteer'; // Set the _isVolunteer flag based on the fetched role
+    });
+  }
 
   // Dynamically changing content index
   Widget _currentPage() {
@@ -37,24 +55,25 @@ class _DashboardTemplateState extends State<DashboardTemplate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(
-          239, 113, 218, 245), // Light background color for the body
+      backgroundColor:
+          AppColors.appBgColor(context), // Light background color for the body
       appBar: AppBar(
-        backgroundColor: Colors.deepPurple, // Deep purple gradient for AppBar
-        title: const Row(
+        backgroundColor:
+            AppColors.titleColor(context), // Deep purple gradient for AppBar
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'Dashboard',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: AppColors.titleTextColor(context)),
             ),
           ],
         ),
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.notifications_active,
-              color: Colors.white,
+              color: AppColors.iconColor(context),
             ),
             onPressed: () {
               // Placeholder for navigation to NotificationPage
@@ -71,14 +90,17 @@ class _DashboardTemplateState extends State<DashboardTemplate> {
         // Use custom bottom nav here
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
+        isVolunteer: _isVolunteer, // Pass the volunteer flag
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.deepOrange, // Bright accent color
-        onPressed: () {
-          // Placeholder for navigation to Event Form Page
-        },
-        child: Icon(Icons.add, color: Colors.white),
-      ),
+      floatingActionButton: !_isVolunteer
+          ? FloatingActionButton(
+              backgroundColor: Colors.deepOrange, // Bright accent color
+              onPressed: () {
+                // Placeholder for navigation to Event Form Page
+              },
+              child: const Icon(Icons.add, color: Colors.white),
+            )
+          : null, // Show nothing if the user is a volunteer
     );
   }
 }
@@ -113,7 +135,7 @@ class CurrentCampaigns extends StatelessWidget {
           onTap: () {
             // Placeholder for navigation logic
           },
-          child: Text(
+          child: const Text(
             'See More..',
             style: TextStyle(color: Colors.deepPurple, fontSize: 14),
           ),
@@ -129,7 +151,7 @@ class CurrentCampaigns extends StatelessWidget {
       itemBuilder: (context, index) {
         return ListTile(
           title: Text('Campaign ${index + 1}'),
-          subtitle: Text('Details of the campaign'),
+          subtitle: const Text('Details of the campaign'),
           onTap: () {
             // Placeholder for navigating to campaign details
           },

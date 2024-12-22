@@ -19,8 +19,9 @@ class UserData {
 
   // Fetch current user from FirebaseAuth and Firestore
   Future<void> fetchUserData() async {
-    if (_isDataLoaded)
+    if (_isDataLoaded) {
       return; // If data is already loaded, no need to fetch again
+    }
 
     try {
       // Check if data is available in SharedPreferences (cached)

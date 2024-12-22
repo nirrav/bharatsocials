@@ -1,113 +1,12 @@
 import 'dart:io';
-import 'package:bharatsocials/UserData.dart';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
+import 'package:bharatsocials/UserData.dart';
 import 'package:bharatsocials/login/login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-class RoleSelectionDialog extends StatelessWidget {
-  final Function(String) onRoleSelected; // Callback to return the selected role
-
-  const RoleSelectionDialog({super.key, required this.onRoleSelected});
-
-  @override
-  Widget build(BuildContext context) {
-    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
-    return Scaffold(
-      body: Stack(
-        children: [
-          // Your main content goes here
-          Positioned(
-            bottom: 300, // Adjust this value to move the card up/down
-            left: 25.0, // Adjust the left/right margin if necessary
-            right: 25.0, // Adjust the left/right margin if necessary
-            child: Card(
-              color: AppColors.appBgColor(context),
-              elevation: 15.0, // Add some elevation to make it look like a card
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // const Text('▬▬▬▬',
-                    //     style: TextStyle(
-                    //       fontSize: 20,
-                    //       fontWeight: FontWeight.w900,
-                    //     )),
-                    // SizedBox(height: 6.0),
-                    Text(
-                      'Who are you?',
-                      style: GoogleFonts.poppins(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.defualtTextColor(context),
-                      ),
-                    ),
-                    SizedBox(height: 16.0), // Spacing between title and options
-                    _buildRoleOption(
-                      context,
-                      'volunteer',
-                      AppColors.mainButtonColor(context),
-                      AppColors.mainButtonTextColor(context),
-                    ),
-                    _buildRoleOption(
-                      context,
-                      'ngo',
-                      AppColors.mainButtonColor(context),
-                      AppColors.mainButtonTextColor(context),
-                    ),
-                    _buildRoleOption(
-                      context,
-                      'admin',
-                      AppColors.mainButtonColor(context),
-                      AppColors.mainButtonTextColor(context),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRoleOption(BuildContext context, String role, Color buttonColor,
-      Color buttonTextColor) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: ElevatedButton(
-        onPressed: () {
-          onRoleSelected(role); // Pass the selected role back to the callback
-          // Don't pop the dialog here; we want to stay on the current screen
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: buttonColor,
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(13), // Set border radius to 13
-          ),
-        ),
-        child: Text(
-          role,
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            color: buttonTextColor, // Using the updated button text color
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class Logout {
   // This method handles the logout process

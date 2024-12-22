@@ -49,7 +49,7 @@ Future<void> onNgoReject(BuildContext context, String documentId) async {
                   borderSide: BorderSide(color: Colors.grey[400]!),
                 ),
                 contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
               maxLines: 4,
               minLines: 1,
@@ -63,9 +63,9 @@ Future<void> onNgoReject(BuildContext context, String documentId) async {
             },
             style: TextButton.styleFrom(
               foregroundColor: AppColors.titleColor(context),
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               backgroundColor: Colors.grey,
-              textStyle: TextStyle(fontWeight: FontWeight.bold),
+              textStyle: const TextStyle(fontWeight: FontWeight.bold),
             ),
             child: const Text("Cancel"),
           ),
@@ -79,7 +79,7 @@ Future<void> onNgoReject(BuildContext context, String documentId) async {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return Center(
+                      return const Center(
                         child: CircularProgressIndicator(),
                       );
                     },
@@ -126,9 +126,9 @@ Future<void> onNgoReject(BuildContext context, String documentId) async {
             },
             style: TextButton.styleFrom(
               foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               backgroundColor: Colors.red,
-              textStyle: TextStyle(fontWeight: FontWeight.bold),
+              textStyle: const TextStyle(fontWeight: FontWeight.bold),
             ),
             child: const Text("Submit"),
           ),
@@ -199,9 +199,9 @@ Future<void> onVolunteerReject(BuildContext context, String documentId) async {
             },
             style: TextButton.styleFrom(
               foregroundColor: AppColors.titleColor(context),
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               backgroundColor: Colors.grey,
-              textStyle: TextStyle(fontWeight: FontWeight.bold),
+              textStyle: const TextStyle(fontWeight: FontWeight.bold),
             ),
             child: const Text("Cancel"),
           ),
@@ -246,7 +246,7 @@ Future<void> onVolunteerReject(BuildContext context, String documentId) async {
                       .pop(); // Close the loading indicator dialog
                   print("Error rejecting Volunteer: $e");
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text("An error occurred. Please try again."),
                       backgroundColor: Colors.red,
                     ),
@@ -262,9 +262,9 @@ Future<void> onVolunteerReject(BuildContext context, String documentId) async {
             },
             style: TextButton.styleFrom(
               foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               backgroundColor: Colors.red,
-              textStyle: TextStyle(fontWeight: FontWeight.bold),
+              textStyle: const TextStyle(fontWeight: FontWeight.bold),
             ),
             child: const Text("Submit"),
           ),
@@ -335,9 +335,9 @@ Future<void> onCollegeReject(BuildContext context, String documentId) async {
             },
             style: TextButton.styleFrom(
               foregroundColor: AppColors.titleColor(context),
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               backgroundColor: Colors.grey,
-              textStyle: TextStyle(fontWeight: FontWeight.bold),
+              textStyle: const TextStyle(fontWeight: FontWeight.bold),
             ),
             child: const Text("Cancel"),
           ),
@@ -380,7 +380,7 @@ Future<void> onCollegeReject(BuildContext context, String documentId) async {
                       .pop(); // Close the loading indicator dialog
                   print("Error rejecting NGO: $e");
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text("An error occurred. Please try again."),
                       backgroundColor: Colors.red,
                     ),
@@ -396,9 +396,9 @@ Future<void> onCollegeReject(BuildContext context, String documentId) async {
             },
             style: TextButton.styleFrom(
               foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               backgroundColor: Colors.red,
-              textStyle: TextStyle(fontWeight: FontWeight.bold),
+              textStyle: const TextStyle(fontWeight: FontWeight.bold),
             ),
             child: const Text("Submit"),
           ),

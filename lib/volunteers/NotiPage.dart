@@ -19,7 +19,7 @@ class NotificationPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.appBgColor(context),
-      appBar: AppBar(title: Text('Notification Page for firebase')),
+      appBar: AppBar(title: const Text('Notification Page for firebase')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

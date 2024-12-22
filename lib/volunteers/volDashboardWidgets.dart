@@ -81,7 +81,7 @@ class EventCard extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Placeholder()),
+                  MaterialPageRoute(builder: (context) => const Placeholder()),
                 );
               },
               child: const Text('View More'),

@@ -32,7 +32,7 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
   String passwordStrength = 'weak'; // Default password strength
   File? _identityProof; // To hold the identity proof image
   File? _image; // Variable to hold the selected image
-  bool _isLoading = false; // Track the loading state
+  final bool _isLoading = false; // Track the loading state
 
   @override
   void dispose() {

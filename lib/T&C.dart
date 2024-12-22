@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class TermsAndConditions extends StatelessWidget {
+  const TermsAndConditions({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Terms and Conditions',
           style: TextStyle(
             fontSize: 22,
@@ -15,12 +17,12 @@ class TermsAndConditions extends StatelessWidget {
         backgroundColor: Colors.blueAccent,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Title
-            Text(
+            const Text(
               'Terms and Conditions for Bharat Socials',
               style: TextStyle(
                 fontSize: 24,
@@ -28,7 +30,7 @@ class TermsAndConditions extends StatelessWidget {
                 color: Colors.blueAccent,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Effective Date
             Text(
@@ -39,10 +41,10 @@ class TermsAndConditions extends StatelessWidget {
               ),
             ),
             Divider(color: Colors.grey[300], thickness: 1),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Terms Content
-            Text(
+            const Text(
               'By using Bharat Socials, you agree to comply with these terms. Please read carefully.',
               style: TextStyle(
                 fontSize: 16,
@@ -50,7 +52,7 @@ class TermsAndConditions extends StatelessWidget {
                 color: Colors.black87,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Sections
             _buildSectionTitle('1. Eligibility'),
@@ -135,10 +137,10 @@ class TermsAndConditions extends StatelessWidget {
             _buildSectionContent(
               'For questions, contact us at: bharatsocials24@gmail.com',
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             
             // Final notice
-            Text(
+            const Text(
               'By using Bharat Socials, you acknowledge that you have read, understood, and agree to these Terms and Conditions.',
               style: TextStyle(
                 fontSize: 16,
@@ -158,7 +160,7 @@ class TermsAndConditions extends StatelessWidget {
       padding: const EdgeInsets.only(top: 16.0),
       child: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
           color: Colors.blueAccent,
@@ -173,7 +175,7 @@ class TermsAndConditions extends StatelessWidget {
       padding: const EdgeInsets.only(top: 8.0),
       child: Text(
         content,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 16,
           height: 1.6,
           color: Colors.black87,

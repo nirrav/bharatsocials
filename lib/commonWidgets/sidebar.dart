@@ -12,11 +12,11 @@ class Sidebar extends StatelessWidget {
       future: UserData().fetchUserData(), // Fetch user data asynchronously
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (snapshot.hasError) {
-          return Center(child: Text('Error loading user data'));
+          return const Center(child: Text('Error loading user data'));
         }
 
         // Once the user data is fetched, we can get the data locally
@@ -51,17 +51,17 @@ class Sidebar extends StatelessWidget {
                                     height: 60,
                                   ),
                                 )
-                              : FaIcon(
+                              : const FaIcon(
                                   FontAwesomeIcons
                                       .user, // Font Awesome icon as fallback
                                   size: 40,
                                   color: Colors.deepPurple, // Icon color
                                 ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Text(
                           name,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -69,7 +69,7 @@ class Sidebar extends StatelessWidget {
                         ),
                         Text(
                           email,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white70,
                             fontSize: 14,
                           ),
@@ -80,24 +80,24 @@ class Sidebar extends StatelessWidget {
                 ),
                 // List items below the DrawerHeader
                 ListTile(
-                  leading: Icon(Icons.home),
-                  title: Text('Dashboard'),
+                  leading: const Icon(Icons.home),
+                  title: const Text('Dashboard'),
                   onTap: () {
                     // Navigate to dashboard (if required)
                     Navigator.pop(context);
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.settings),
-                  title: Text('Settings'),
+                  leading: const Icon(Icons.settings),
+                  title: const Text('Settings'),
                   onTap: () {
                     // Placeholder for settings page
                     Navigator.pop(context);
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.logout),
-                  title: Text('Logout'),
+                  leading: const Icon(Icons.logout),
+                  title: const Text('Logout'),
                   onTap: () async {
                     // Show a message that the user has logged out
                     ScaffoldMessenger.of(context).showSnackBar(

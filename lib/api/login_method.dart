@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:bharatsocials/ngos/ngoDashboard.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:bharatsocials/volunteers/volDashboard.dart';
 import 'package:bharatsocials/dashboard/dashboardTemplate.dart';
 import 'package:bharatsocials/admins/UniAdmin/uniDashboard.dart';
-import 'package:bharatsocials/admins/CollegeAdmin/caDashboard.dart';
 
 class LoginHelper {
   final BuildContext context;

@@ -36,7 +36,7 @@ class UpcomingCampaigns extends StatelessWidget {
           onTap: () {
             // Placeholder for navigation logic
           },
-          child: Text(
+          child: const Text(
             'See More..',
             style: TextStyle(color: Colors.deepPurple, fontSize: 14),
           ),

@@ -31,7 +31,7 @@ class PendingVolunteers extends StatelessWidget {
           onTap: () {
             // Placeholder for navigation logic
           },
-          child: Text(
+          child: const Text(
             'See More..',
             style: TextStyle(color: Colors.deepPurple, fontSize: 14),
           ),
@@ -47,7 +47,7 @@ class PendingVolunteers extends StatelessWidget {
       itemBuilder: (context, index) {
         return ListTile(
           title: Text('Volunteer ${index + 1}'),
-          subtitle: Text('Details about the volunteer'),
+          subtitle: const Text('Details about the volunteer'),
           onTap: () {
             // Placeholder for navigating to volunteer details
           },

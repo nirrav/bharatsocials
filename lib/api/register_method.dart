@@ -61,15 +61,17 @@ class RegistrationHelper {
     }
 
     // Check if terms and conditions are agreed
-    if (!isTermsAgreed)
+    if (!isTermsAgreed) {
       return handleError('Please agree to the terms and conditions.');
+    }
 
     // Check if proof of identity (image) is provided
     if (image == null) return handleError('Please upload a proof of identity.');
 
     // Check form validity
-    if (!isFormValid())
+    if (!isFormValid()) {
       return handleError('Please fill all required fields correctly.');
+    }
 
     try {
       // Firebase Authentication (signup)
