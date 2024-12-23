@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:bharatsocials/UserData.dart';
 import 'package:bharatsocials/commonWidgets/sidebar.dart';
+import 'package:bharatsocials/commonWidgets/savedPage.dart';
 import 'package:bharatsocials/commonWidgets/bottomNavbar.dart';
+import 'package:bharatsocials/commonWidgets/currentCampaigns.dart';
 import 'package:bharatsocials/commonWidgets/pendingVolunteers.dart';
 import 'package:bharatsocials/commonWidgets/horizontalWidgets.dart';
 
@@ -14,7 +16,7 @@ class DashboardTemplate extends StatefulWidget {
 }
 
 class _DashboardTemplateState extends State<DashboardTemplate> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
   bool _isVolunteer = false; // Default to false (if user is not a volunteer)
 
   @override
@@ -27,22 +29,32 @@ class _DashboardTemplateState extends State<DashboardTemplate> {
   Future<void> _checkUserRole() async {
     await UserData().fetchUserData(); // Fetch user data
     setState(() {
-      _isVolunteer = UserData().role ==
-          'volunteer'; // Set the _isVolunteer flag based on the fetched role
+      _isVolunteer = UserData().role == 'volunteer';
     });
   }
 
   // Dynamically changing content index
   Widget _currentPage() {
-    switch (_selectedIndex) {
-      case 0:
-        return const CurrentCampaigns();
-      case 1:
-        return const UpcomingCampaigns();
-      case 2:
-        return const PendingVolunteers();
-      default:
-        return const UpcomingCampaigns(); // Default content
+    if (_isVolunteer) {
+      switch (_selectedIndex) {
+        case 0:
+          return const UpcomingCampaigns();
+        case 3: // Saved Events index for volunteers
+          return const SavedEventsPage();
+        default:
+          return const UpcomingCampaigns(); // Default content
+      }
+    } else {
+      switch (_selectedIndex) {
+        case 0:
+          return const UpcomingCampaigns();
+        case 1:
+          return const CurrentCampaigns();
+        case 2:
+          return const PendingVolunteers();
+        default:
+          return const UpcomingCampaigns(); // Default content
+      }
     }
   }
 
@@ -55,11 +67,9 @@ class _DashboardTemplateState extends State<DashboardTemplate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          AppColors.appBgColor(context), // Light background color for the body
+      backgroundColor: AppColors.appBgColor(context),
       appBar: AppBar(
-        backgroundColor:
-            AppColors.titleColor(context), // Deep purple gradient for AppBar
+        backgroundColor: AppColors.titleColor(context),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -81,82 +91,25 @@ class _DashboardTemplateState extends State<DashboardTemplate> {
           ),
         ],
       ),
-      drawer: const Sidebar(), // Use the AdminSidebar here
+      drawer: const Sidebar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: _currentPage(), // Dynamically rendering content
+        child: _currentPage(),
       ),
       bottomNavigationBar: CustomBottomNavigationBar(
-        // Use custom bottom nav here
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
-        isVolunteer: _isVolunteer, // Pass the volunteer flag
+        isVolunteer: _isVolunteer,
       ),
       floatingActionButton: !_isVolunteer
           ? FloatingActionButton(
-              backgroundColor: Colors.deepOrange, // Bright accent color
+              backgroundColor: AppColors.mainButtonColor(context),
               onPressed: () {
                 // Placeholder for navigation to Event Form Page
               },
               child: const Icon(Icons.add, color: Colors.white),
             )
-          : null, // Show nothing if the user is a volunteer
-    );
-  }
-}
-
-// Sample of a dynamic content class for Current Campaigns
-class CurrentCampaigns extends StatelessWidget {
-  const CurrentCampaigns({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildSectionHeader(context, title: 'Current Campaigns'),
-        const SizedBox(height: 8),
-        _buildCampaignsList(),
-      ],
-    );
-  }
-
-  Widget _buildSectionHeader(BuildContext context, {required String title}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-              color: Colors.deepPurple[700],
-              fontSize: 18,
-              fontWeight: FontWeight.bold),
-        ),
-        GestureDetector(
-          onTap: () {
-            // Placeholder for navigation logic
-          },
-          child: const Text(
-            'See More..',
-            style: TextStyle(color: Colors.deepPurple, fontSize: 14),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCampaignsList() {
-    return ListView.builder(
-      itemCount: 5,
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text('Campaign ${index + 1}'),
-          subtitle: const Text('Details of the campaign'),
-          onTap: () {
-            // Placeholder for navigating to campaign details
-          },
-        );
-      },
+          : null,
     );
   }
 }

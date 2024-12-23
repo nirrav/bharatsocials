@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
-import 'package:bharatsocials/broadcastChannel/CreateEvent.dart';
 import 'package:bharatsocials/volunteers/NotiPage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:bharatsocials/broadcastChannel/CreateEvent.dart';
 import 'package:bharatsocials/admins/UniAdmin/pendingVolScrens.dart';
 import 'package:bharatsocials/admins/CollegeAdmin/CollegeAdminSidebar.dart';
 
@@ -253,7 +253,7 @@ class _CaDashboardScreenState extends State<CaDashboardScreen> {
                       backgroundColor: AppColors.mainButtonColor(context),
                       foregroundColor: AppColors.mainButtonTextColor(context),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(6),
                       ),
                     ),
                     onPressed: () {},

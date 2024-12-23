@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:bharatsocials/login/ngoRegister.dart';
 import 'package:bharatsocials/login/admin_register.dart';
 import 'package:bharatsocials/login/volunteerRegister.dart';
+// import 'package:bharatsocials/login/ngoRegister.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -24,7 +25,7 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Padding before pagination to ensure content isn't at the top
-              SizedBox(height: screenHeight * 0.12),
+              SizedBox(height: screenHeight * 0.06),
 
               // Pagination (Dot) Indicator at the Top
               Padding(
@@ -35,7 +36,9 @@ class HomePage extends StatelessWidget {
                     _buildDot(
                         isActive: true, context: context), // First dot (active)
                     _buildConnectingLine(context), // Line between dots
-
+                    _buildDot(
+                        isActive: false,
+                        context: context), // Last dot (inactive)
                     _buildConnectingLine(context), // Line between dots
 
                     _buildDot(
@@ -177,7 +180,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // Show the role selection dialog when the user presses "Get Started"
   void _showRoleSelectionDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -189,23 +191,25 @@ class HomePage extends StatelessWidget {
 
             // Redirect based on role selection
             if (role == 'Admin') {
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const AdminRegisterPage(),
                 ),
               );
             } else if (role == 'Volunteer') {
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const VolunteerRegistrationPage(),
+                  // builder: (context) => const volunteer.VolunteerRegistrationPage(),    New Method to call the page
                 ),
               );
             } else if (role == 'NGO') {
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
+                  // builder: (context) => const NgoRegestrationPage(),
                   builder: (context) => const NgoRegistrationPage(),
                 ),
               );

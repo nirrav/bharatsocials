@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:bharatsocials/colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onItemTapped;
-  final bool isVolunteer; // Flag to check if user is a volunteer
+  final bool isVolunteer;
 
   const CustomBottomNavigationBar({
     super.key,
     required this.selectedIndex,
     required this.onItemTapped,
-    required this.isVolunteer, // Pass the volunteer flag
+    required this.isVolunteer,
   });
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: selectedIndex,
-      onTap: onItemTapped,
-      backgroundColor: Colors.blueGrey[50],
-      selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
+      onTap: (index) {
+        if (isVolunteer && index == 1) {
+          onItemTapped(3); // Map Saved Events to the correct index
+        } else {
+          onItemTapped(index);
+        }
+      },
+      backgroundColor: AppColors.titleColor(context),
+      selectedItemColor: const Color.fromARGB(255, 8, 0, 0),
       unselectedItemColor: const Color.fromARGB(255, 66, 63, 63),
       selectedLabelStyle:
           const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
@@ -30,35 +37,38 @@ class CustomBottomNavigationBar extends StatelessWidget {
       items: [
         BottomNavigationBarItem(
           icon: FaIcon(
-            FontAwesomeIcons.bullhorn,
+            FontAwesomeIcons.house,
             size: 24,
-            color: selectedIndex == 0
-                ? const Color.fromARGB(255, 0, 0, 0)
-                : const Color.fromARGB(255, 0, 0, 0),
+            color: AppColors.titleTextColor(context),
           ),
-          label: 'Home Page',
+          label: 'Home',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.home,
-            size: 24,
-            color: selectedIndex == 1
-                ? const Color.fromARGB(255, 0, 0, 0)
-                : const Color.fromARGB(255, 0, 0, 0),
-          ),
-          label: 'Upcoming Events',
-        ),
-        // Show "Pending Volunteers" only if the user is not a volunteer
         if (!isVolunteer)
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.pending_actions,
+            icon: FaIcon(
+              FontAwesomeIcons.solidClock,
               size: 24,
-              color: selectedIndex == 2
-                  ? const Color.fromARGB(255, 8, 8, 8)
-                  : const Color.fromARGB(255, 0, 0, 0),
+              color: AppColors.titleTextColor(context),
+            ),
+            label: 'Current Campaigns',
+          ),
+        if (!isVolunteer)
+          BottomNavigationBarItem(
+            icon: FaIcon(
+              FontAwesomeIcons.bullhorn,
+              size: 24,
+              color: AppColors.titleTextColor(context),
             ),
             label: 'Pending Volunteers',
+          ),
+        if (isVolunteer)
+          BottomNavigationBarItem(
+            icon: FaIcon(
+              FontAwesomeIcons.solidBookmark,
+              size: 24,
+              color: AppColors.titleTextColor(context),
+            ),
+            label: 'Saved Events',
           ),
       ],
     );

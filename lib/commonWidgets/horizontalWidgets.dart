@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:bharatsocials/colors.dart';
 
 // Sample of a dynamic content class for Upcoming Campaigns
 
@@ -12,11 +13,11 @@ class UpcomingCampaigns extends StatelessWidget {
       children: [
         _buildSectionHeader(context, title: 'Upcoming Campaigns'),
         const SizedBox(height: 8),
-        _buildUpcomingEventsHorizontalList(),
+        _buildUpcomingEventsHorizontalList(context),
         const SizedBox(height: 16),
         _buildSectionHeader(context, title: 'Our Campaigns'),
         const SizedBox(height: 8),
-        _buildAllEventsHorizontalList(),
+        _buildAllEventsHorizontalList(context),
       ],
     );
   }
@@ -28,7 +29,7 @@ class UpcomingCampaigns extends StatelessWidget {
         Text(
           title,
           style: TextStyle(
-              color: Colors.deepPurple[700],
+              color: AppColors.defualtTextColor(context),
               fontSize: 18,
               fontWeight: FontWeight.bold),
         ),
@@ -36,16 +37,17 @@ class UpcomingCampaigns extends StatelessWidget {
           onTap: () {
             // Placeholder for navigation logic
           },
-          child: const Text(
+          child: Text(
             'See More..',
-            style: TextStyle(color: Colors.deepPurple, fontSize: 14),
+            style:
+                TextStyle(color: AppColors.subTextColor(context), fontSize: 14),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildUpcomingEventsHorizontalList() {
+  Widget _buildUpcomingEventsHorizontalList(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -56,7 +58,8 @@ class UpcomingCampaigns extends StatelessWidget {
               width: 250,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.blueGrey[100], // Lighter card background
+                color: AppColors.UpcomingeventCardBgColor(
+                    context), // Lighter card background
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
@@ -73,23 +76,24 @@ class UpcomingCampaigns extends StatelessWidget {
                     'Event Name',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.deepPurple[700], // Title color
+                      color: Colors.black, // Title color
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Event Date: 12 December 2024',
-                    style: TextStyle(color: Colors.grey[700]),
+                    style: TextStyle(color: Colors.black),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Event Location: Los Angeles',
-                    style: TextStyle(color: Colors.grey[700]),
+                    style: TextStyle(color: Colors.black),
                   ),
                   const SizedBox(height: 8),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepOrange, // Button color
+                      backgroundColor:
+                          AppColors.mainButtonColor(context), // Button color
                       foregroundColor: Colors.white, // Button text color
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
@@ -107,7 +111,7 @@ class UpcomingCampaigns extends StatelessWidget {
     );
   }
 
-  Widget _buildAllEventsHorizontalList() {
+  Widget _buildAllEventsHorizontalList(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -118,7 +122,8 @@ class UpcomingCampaigns extends StatelessWidget {
               width: 250,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white, // Clean white cards
+                color:
+                    AppColors.AlleventCardBgColor(context), // Clean white cards
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
@@ -135,23 +140,24 @@ class UpcomingCampaigns extends StatelessWidget {
                     'Event Name',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.deepPurple[700], // Bold title color
+                      color: Colors.black, // Bold title color
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Event Date: 10 December 2024',
-                    style: TextStyle(color: Colors.grey[700]),
+                    style: TextStyle(color: Colors.black),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Event Location: New York City',
-                    style: TextStyle(color: Colors.grey[700]),
+                    style: TextStyle(color: Colors.black),
                   ),
                   const SizedBox(height: 8),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepOrange, // Button color
+                      backgroundColor:
+                          AppColors.mainButtonColor(context), // Button color
                       foregroundColor: Colors.white, // Button text color
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),

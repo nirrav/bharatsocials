@@ -7,8 +7,8 @@ class AppColors {
   static Color appBgColor(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return isDarkMode
-        ? const Color(0xFF18171C) // Dark mode color
-        : Colors.white; // Light mode color
+        ? const Color(0xFF302F35) // Dark mode color
+        : const Color(0xFFFFFFFF); // Light mode color
   }
 
   // Text Colors
@@ -31,8 +31,8 @@ class AppColors {
   static Color titleColor(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return isDarkMode
-        ? const Color(0xFF2A2A34) // Dark mode color (rgba(62, 62, 62, 1))
-        : const Color(0xFFDEDEDE); // Light mode color (white)
+        ? const Color(0xFF222227) // Dark mode color (rgba(62, 62, 62, 1))
+        : const Color(0xFFD2D3DB); // Light mode color (white)
   }
 
   static Color mainButtonColor(BuildContext context) {
@@ -85,15 +85,15 @@ class AppColors {
   static Color UpcomingeventCardBgColor(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return isDarkMode
-        ? const Color(0xFFEFE5FF) // Dark mode color (rgba(117, 117, 117, 1))
-        : const Color(0xFFEFE5FF); // Light mode color (rgba(217, 217, 217, 1))
+        ? const Color(0xFFFFFFFF) // Dark mode color (rgba(117, 117, 117, 1))
+        : const Color(0xFFC8E7FF); // Light mode color (rgba(217, 217, 217, 1))
   }
 
   static Color AlleventCardBgColor(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return isDarkMode
-        ? const Color(0xFFFFF7A9) // Dark mode color (rgba(117, 117, 117, 1))
-        : const Color(0xFFFFF7A9); // Light mode color (rgba(217, 217, 217, 1))
+        ? const Color(0xFFFFFFFF) // Dark mode color (rgba(117, 117, 117, 1))
+        : const Color(0xFFC8E7FF); // Light mode color (rgba(217, 217, 217, 1))
   }
 
   static Color eventCardTextColor(BuildContext context) {
@@ -142,4 +142,3 @@ class AppColors {
         : const Color(0xFFCCCCCC); // Softer greys for lines
   }
 }
-

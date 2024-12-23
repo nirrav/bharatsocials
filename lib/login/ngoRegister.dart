@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:bharatsocials/commonWidgets/widgets.dart';
@@ -11,11 +12,45 @@ class NgoRegistrationPage extends StatefulWidget {
   _NgoRegistrationPageState createState() => _NgoRegistrationPageState();
 }
 
+class TextFieldWidget extends StatelessWidget {
+  final String label;
+  final TextEditingController controller;
+  final bool isDarkMode;
+  final List<TextInputFormatter>? inputFormatters;
+  final String? Function(String?)? validator;
+
+  const TextFieldWidget({
+    Key? key,
+    required this.label,
+    required this.controller,
+    required this.isDarkMode,
+    this.inputFormatters,
+    this.validator,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      inputFormatters: inputFormatters,
+      validator: validator,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+        errorStyle: const TextStyle(color: Colors.red),
+      ),
+    );
+  }
+}
+
 class _NgoRegistrationPageState extends State<NgoRegistrationPage> {
   final TextEditingController organizationNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController contactNumberController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   File? _image;
 
   @override
@@ -39,22 +74,12 @@ class _NgoRegistrationPageState extends State<NgoRegistrationPage> {
   }
 
   void _onSubmit() {
-    if (_validateForm()) {
+    if (_formKey.currentState?.validate() ?? false) {
       print("NGO form submitted!");
       // Perform registration logic here
     } else {
       print("NGO form validation failed.");
     }
-  }
-
-  bool _validateForm() {
-    if (organizationNameController.text.isEmpty ||
-        emailController.text.isEmpty ||
-        contactNumberController.text.isEmpty ||
-        cityController.text.isEmpty) {
-      return false;
-    }
-    return true;
   }
 
   @override
@@ -63,58 +88,139 @@ class _NgoRegistrationPageState extends State<NgoRegistrationPage> {
 
     return WillPopScope(
       onWillPop: () async {
-        Navigator.of(context).pop(); // Navigate back to the previous screen
-        return false; // Prevent the default back button behavior
+        // Navigate back to the previous screen
+        return true; // Prevent the default back button behavior
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('NGO Registration'),
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: const Text(
+            'Register as NGO',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
+              fontSize: 20,
+            ),
+          ),
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFieldWidget(
-                label: 'NGO Name',
-                controller: organizationNameController,
-                isDarkMode: isDarkMode,
-              ),
-              TextFieldWidget(
-                label: 'NGO Email',
-                controller: emailController,
-                isDarkMode: isDarkMode,
-              ),
-              TextFieldWidget(
-                label: 'Contact Number',
-                controller: contactNumberController,
-                isDarkMode: isDarkMode,
-              ),
-              TextFieldWidget(
-                label: 'City',
-                controller: cityController,
-                isDarkMode: isDarkMode,
-              ),
-              const SizedBox(height: 20),
-              UploadButtonWidget(
-                label: 'Upload Government ID',
-                isDarkMode: isDarkMode,
-                onImageSelected: (File? image) {
-                  setState(() {
-                    _image = image;
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
-              SubmitButtonWidget(
-                isTermsAgreed: true,
-                selectedRole: 'ngo',
-                onSubmit: _onSubmit,
-              ),
-            ],
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildDot(isActive: false, context: context),
+                      _buildConnectingLine(context),
+                      _buildDot(isActive: true, context: context),
+                      _buildConnectingLine(context),
+                      _buildDot(isActive: false, context: context),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 50),
+                TextFieldWidget(
+                  label: 'NGO Name',
+                  controller: organizationNameController,
+                  isDarkMode: isDarkMode,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'NGO Full Name is required';
+                    }
+                    return null;
+                  },
+                ),
+                TextFieldWidget(
+                  label: 'NGO Email',
+                  controller: emailController,
+                  isDarkMode: isDarkMode,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Email is required';
+                    }
+                    // Check if the email contains '@' and '.com'
+                    if (!value.contains('@') || !value.contains('.com')) {
+                      return 'Email must contain "@" and ".com"';
+                    }
+                    return null;
+                  },
+                ),
+                TextFieldWidget(
+                  label: 'Contact Number',
+                  controller: contactNumberController,
+                  isDarkMode: isDarkMode,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(10),
+                  ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Contact number is required';
+                    }
+                    if (value.length != 10) {
+                      return 'Contact number must be 10 digits';
+                    }
+                    return null;
+                  },
+                ),
+                TextFieldWidget(
+                  label: 'City',
+                  controller: cityController,
+                  isDarkMode: isDarkMode,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'City Name is required';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                UploadButtonWidget(
+                  label: 'Upload Government ID',
+                  isDarkMode: isDarkMode,
+                  onImageSelected: (File? image) {
+                    setState(() {
+                      _image = image;
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
+                SubmitButtonWidget(
+                  isTermsAgreed: true,
+                  selectedRole: 'ngo',
+                  onSubmit: _onSubmit,
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+}
+
+Widget _buildDot({required bool isActive, required BuildContext context}) {
+  return Container(
+    width: 20,
+    height: 20,
+    decoration: BoxDecoration(
+      color: AppColors.getDotColor(context, isActive: isActive),
+      shape: BoxShape.circle,
+    ),
+  );
+}
+
+Widget _buildConnectingLine(BuildContext context) {
+  return Container(
+    width: 80,
+    height: 2,
+    color: AppColors.getLineColor(context),
+  );
 }

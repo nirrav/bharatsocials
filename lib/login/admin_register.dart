@@ -1,5 +1,6 @@
 import 'dart:io'; // For File handling
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:bharatsocials/T&C.dart';
 import 'package:bharatsocials/colors.dart';
 import 'package:bharatsocials/login/home.dart';
@@ -13,6 +14,38 @@ class AdminRegisterPage extends StatefulWidget {
 
   @override
   _AdminRegisterPageState createState() => _AdminRegisterPageState();
+}
+
+class TextFieldWidget extends StatelessWidget {
+  final String label;
+  final TextEditingController controller;
+  final bool isDarkMode;
+  final List<TextInputFormatter>? inputFormatters;
+  final String? Function(String?)? validator;
+
+  const TextFieldWidget({
+    Key? key,
+    required this.label,
+    required this.controller,
+    required this.isDarkMode,
+    this.inputFormatters,
+    this.validator,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      inputFormatters: inputFormatters,
+      validator: validator,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
 }
 
 class _AdminRegisterPageState extends State<AdminRegisterPage> {
@@ -86,10 +119,27 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
   }
 
   bool _isFormValid() {
+    // Check that no field is empty and validate the password & confirm password
     return adminNameController.text.isNotEmpty &&
         adminEmailController.text.isNotEmpty &&
         passwordController.text.isNotEmpty &&
-        confirmPasswordController.text.isNotEmpty;
+        confirmPasswordController.text.isNotEmpty &&
+        // _isPasswordValid() && // Ensure password validity
+        _isPasswordsMatch(); // Ensure passwords match
+  }
+
+// Check if the password is valid
+// bool _isPasswordValid() {
+//   final String passwordRegex = r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*\(\)_\+\-=\[\]\{\};:\'",<>\./?\\|`~]).{8,}$';
+//   final RegExp regex = RegExp(passwordRegex);
+
+//   // Make sure all the parentheses and curly braces are correctly closed
+// }
+
+// Check if the passwords match
+  bool _isPasswordsMatch() {
+    // Compare password and confirm password
+    return passwordController.text == confirmPasswordController.text;
   }
 
   void _showErrorSnackbar(String message) {
@@ -149,6 +199,19 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
         return false;
       },
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: const Text(
+            'Register as Admin',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
+              fontSize: 20,
+            ),
+          ),
+        ),
         backgroundColor: backgroundColor,
         body: SafeArea(
           child: SingleChildScrollView(
@@ -157,7 +220,7 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: screenHeight * 0.12),
+                  SizedBox(height: 16),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(
@@ -178,17 +241,6 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Admin Registration',
-                          style: GoogleFonts.poppins(
-                            fontSize: screenWidth > 600 ? 30 : 26,
-                            fontWeight: FontWeight.w500,
-                            color: textColor,
-                          ),
-                        ),
-                        SizedBox(height: screenHeight * 0.02),
-
-                        // Title for Admin Role Selection
                         Text(
                           'Admin Role',
                           style: GoogleFonts.poppins(
@@ -257,17 +309,45 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
                           label: 'Full Name',
                           controller: adminNameController,
                           isDarkMode: isDarkMode,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(
+                                r'[a-zA-Z\s]')), // Allow only alphabetic characters and spaces
+                            // LengthLimitingTextInputFormatter(10), // Limit input length to 10 characters
+                          ],
                         ),
+
                         TextFieldWidget(
                           label: 'Email',
                           controller: adminEmailController,
                           isDarkMode: isDarkMode,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Email is required';
+                            }
+                            if (!value.contains('@')) {
+                              return 'Email must contain "@"';
+                            }
+                            if (!value.endsWith('.com')) {
+                              return 'Email must end with ".com"';
+                            }
+                            return null;
+                          },
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(
+                                r'[a-zA-Z0-9@.]')), // Only allow alphanumeric characters, @ and .
+                          ],
                         ),
                         TextFieldWidget(
                           label: 'Contact Number',
                           controller: adminPhoneController,
                           isDarkMode: isDarkMode,
+                          inputFormatters: [
+                            FilteringTextInputFormatter
+                                .digitsOnly, // Restrict input to digits only
+                            LengthLimitingTextInputFormatter(10),
+                          ],
                         ),
+
                         PasswordFieldWidget(
                           label: 'Password',
                           isDarkMode: isDarkMode,
@@ -348,12 +428,12 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
                             ),
                             TextButton(
                               onPressed: () {
-                              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                         TermsAndConditions()), 
-              );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          TermsAndConditions()),
+                                );
                               },
                               child: Text(
                                 '(READ T&C)',

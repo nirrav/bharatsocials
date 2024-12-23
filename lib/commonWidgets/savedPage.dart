@@ -2,17 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 // import 'package:bharatsocials/common_widgets/event_details.dart';
 
-class SavedEventsApp extends StatelessWidget {
-  const SavedEventsApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SavedEventsPage(),
-    );
-  }
-}
 
 class SavedEventsPage extends StatelessWidget {
   const SavedEventsPage({super.key});

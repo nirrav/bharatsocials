@@ -6,6 +6,7 @@ import 'package:bharatsocials/login/login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/src/services/text_formatter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Logout {
@@ -266,6 +267,8 @@ class TextFieldWidget extends StatelessWidget {
     required this.label,
     required this.controller,
     required bool isDarkMode,
+    required String? Function(dynamic value) validator,
+    required List<TextInputFormatter> inputFormatters,
   });
 
   @override
