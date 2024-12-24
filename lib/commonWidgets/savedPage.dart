@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:bharatsocials/colors.dart';
 // import 'package:bharatsocials/common_widgets/event_details.dart';
 
-
-
 class SavedEventsPage extends StatelessWidget {
   const SavedEventsPage({super.key});
 
@@ -12,35 +10,9 @@ class SavedEventsPage extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Saved Events',
-          style: TextStyle(color: AppColors.titleTextColor(context)),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.iconColor(context)),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const Placeholder()),
-            );
-          },
-        ),
-        backgroundColor: AppColors.titleColor(context),
-        elevation: 0,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0), // Divider height
-          child: Divider(
-            color:
-                AppColors.dividerColor(context), // Divider color based on theme
-            thickness: 1,
-            height: 1,
-          ),
-        ),
-      ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+        padding: const EdgeInsets.symmetric(
+            horizontal: 1.0), // Add padding to the sides
         child: Column(
           children: [
             SizedBox(height: size.height * 0.02), // Gap between AppBar and body
@@ -78,15 +50,17 @@ class _EventCardState extends State<EventCard> {
     final size = MediaQuery.of(context).size;
 
     return Container(
+      margin: const EdgeInsets.symmetric(
+          horizontal: 16.0), // Add margin to the card
       decoration: BoxDecoration(
         color: AppColors.UpcomingeventCardBgColor(
             context), // Using white for the card background
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: const [
           BoxShadow(
-            color: Colors.black,
-            blurRadius: 5,
-            offset: Offset(0, 3),
+            color: Colors.grey,
+            offset: Offset(4, 5),
+            blurRadius: 10,
           ),
         ],
       ),
@@ -96,7 +70,7 @@ class _EventCardState extends State<EventCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Event Name',
+              'Event yenna poda',
               style: TextStyle(
                 fontSize: size.width * 0.045,
                 fontWeight: FontWeight.bold,

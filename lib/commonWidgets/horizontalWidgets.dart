@@ -50,6 +50,8 @@ class UpcomingCampaigns extends StatelessWidget {
   Widget _buildUpcomingEventsHorizontalList(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(
+          vertical: 8.0), // Add padding to prevent cutting
       child: Row(
         children: List.generate(3, (index) {
           return Padding(
@@ -60,19 +62,19 @@ class UpcomingCampaigns extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.UpcomingeventCardBgColor(
                     context), // Lighter card background
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: const [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    offset: const Offset(2, 2),
-                    blurRadius: 4,
+                    color: Colors.grey,
+                    offset: Offset(1, 2),
+                    blurRadius: 6,
                   ),
                 ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Event Name',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -80,12 +82,12 @@ class UpcomingCampaigns extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(
+                  const Text(
                     'Event Date: 12 December 2024',
                     style: TextStyle(color: Colors.black),
                   ),
                   const SizedBox(height: 4),
-                  Text(
+                  const Text(
                     'Event Location: Los Angeles',
                     style: TextStyle(color: Colors.black),
                   ),
@@ -114,6 +116,8 @@ class UpcomingCampaigns extends StatelessWidget {
   Widget _buildAllEventsHorizontalList(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(
+          vertical: 8.0), // Add padding to prevent cutting
       child: Row(
         children: List.generate(3, (index) {
           return Padding(
@@ -124,19 +128,19 @@ class UpcomingCampaigns extends StatelessWidget {
               decoration: BoxDecoration(
                 color:
                     AppColors.AlleventCardBgColor(context), // Clean white cards
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: const [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    offset: const Offset(2, 2),
-                    blurRadius: 4,
+                    color: Colors.grey,
+                    offset: Offset(1, 2),
+                    blurRadius: 6,
                   ),
                 ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Event Name',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -144,12 +148,12 @@ class UpcomingCampaigns extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(
+                  const Text(
                     'Event Date: 10 December 2024',
                     style: TextStyle(color: Colors.black),
                   ),
                   const SizedBox(height: 4),
-                  Text(
+                  const Text(
                     'Event Location: New York City',
                     style: TextStyle(color: Colors.black),
                   ),

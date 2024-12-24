@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:bharatsocials/login/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,12 +21,6 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    // Timer to check login state and navigate after a delay
-    Timer(const Duration(seconds: 3), () {
-      _checkLoginStatus();
-    });
-
-    // Set up the animation controller
     _animationController = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
@@ -38,35 +31,36 @@ class _SplashScreenState extends State<SplashScreen>
       curve: Curves.easeInOut,
     );
 
-    // Start the animation
     _animationController.forward();
+
+    // Print a debug statement to ensure splash screen logic is working
+    print("SplashScreen is initialized, checking login...");
+
+    _checkLoginStatus();
   }
 
-  // Check if the user is logged in
   void _checkLoginStatus() async {
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
       // If not logged in, navigate to login screen
+      print("User not logged in, navigating to HomePage...");
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const HomePage()), // LoginPage or wherever your login screen is
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     } else {
       // If logged in, navigate based on user role
-      _navigateToHomeScreen(user);
+      print("User logged in, checking role...");
+      await _navigateToHomeScreen(user);
     }
   }
 
-  // Navigate to the correct screen based on user role
-  void _navigateToHomeScreen(User user) async {
-    String role = '';
-    String? adminRole;
-
+  Future<void> _navigateToHomeScreen(User user) async {
     try {
-      // Check if the user exists in the 'users' collection and retrieve role
+      String role = '';
+      String? adminRole;
+
       final userSnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
@@ -80,17 +74,23 @@ class _SplashScreenState extends State<SplashScreen>
         }
       }
 
+      print("User role is: $role");
+
       // Navigate based on the role
-      onSuccess(role, adminRole);
+      if (mounted) {
+        onSuccess(role, adminRole);
+      }
     } catch (e) {
-      // Handle any errors here (network, permission, etc.)
-      print('Error fetching user data: $e');
-      // Optionally, show an error message or navigate to an error screen
+      print("Error fetching user data: $e");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
     }
   }
 
-// Navigate to the specific screen based on role and admin role
   void onSuccess(String role, String? adminRole) {
+    print("Navigating based on user role...");
     if (role == 'volunteer') {
       Navigator.pushReplacement(
         context,
@@ -102,15 +102,12 @@ class _SplashScreenState extends State<SplashScreen>
         MaterialPageRoute(builder: (context) => const DashboardTemplate()),
       );
     } else if (role == 'admin') {
-      // Redirect based on admin role
       if (adminRole == 'uni') {
-        // If adminRole is 'uni', navigate to UniAdminDashboard
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const UniAdminDashboard()),
         );
       } else {
-        // For other admin roles, navigate to DashboardTemplate
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const DashboardTemplate()),

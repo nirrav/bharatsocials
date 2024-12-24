@@ -24,13 +24,13 @@ class TextFieldWidget extends StatelessWidget {
   final String? Function(String?)? validator;
 
   const TextFieldWidget({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
     required this.isDarkMode,
     this.inputFormatters,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -220,7 +220,7 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(
@@ -432,7 +432,7 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          TermsAndConditions()),
+                                          const TermsAndConditions()),
                                 );
                               },
                               child: Text(

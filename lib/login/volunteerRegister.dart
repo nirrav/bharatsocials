@@ -7,7 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bharatsocials/commonWidgets/widgets.dart';
 
 class VolunteerRegistrationPage extends StatefulWidget {
-  const VolunteerRegistrationPage({Key? key}) : super(key: key);
+  const VolunteerRegistrationPage({super.key});
 
   @override
   _VolunteerRegistrationPageState createState() =>
@@ -22,13 +22,13 @@ class TextFieldWidget extends StatelessWidget {
   final String? Function(String?)? validator;
 
   const TextFieldWidget({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
     required this.isDarkMode,
     this.inputFormatters,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +107,7 @@ class _VolunteerRegistrationPageState extends State<VolunteerRegistrationPage> {
       if (_image == null) {
         // Show error if image is not selected
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('ID Card upload is required')),
+          const SnackBar(content: Text('ID Card upload is required')),
         );
         return false;
       }
@@ -169,7 +169,7 @@ class _VolunteerRegistrationPageState extends State<VolunteerRegistrationPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
 
                 // Volunteer Registration Form
                 TextFieldWidget(
@@ -184,7 +184,7 @@ class _VolunteerRegistrationPageState extends State<VolunteerRegistrationPage> {
                   },
                 ),
 
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
                 TextFieldWidget(
                   label: 'Email',
@@ -201,7 +201,7 @@ class _VolunteerRegistrationPageState extends State<VolunteerRegistrationPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
                 TextFieldWidget(
                   label: 'Phone Number',
@@ -221,7 +221,7 @@ class _VolunteerRegistrationPageState extends State<VolunteerRegistrationPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
                 // College Name Autocomplete
                 Autocomplete<String>(
@@ -242,7 +242,7 @@ class _VolunteerRegistrationPageState extends State<VolunteerRegistrationPage> {
                     );
                   },
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
                 TextFieldWidget(
                   label: 'Department',
@@ -256,7 +256,7 @@ class _VolunteerRegistrationPageState extends State<VolunteerRegistrationPage> {
                   },
                 ),
 
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
                 TextFieldWidget(
                   label: 'Roll Number',
@@ -276,7 +276,7 @@ class _VolunteerRegistrationPageState extends State<VolunteerRegistrationPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
 
                 // Upload Button for ID Card
                 UploadButtonWidget(
@@ -288,7 +288,7 @@ class _VolunteerRegistrationPageState extends State<VolunteerRegistrationPage> {
                     });
                   },
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
 
                 // Submit Button
                 SubmitButtonWidget(

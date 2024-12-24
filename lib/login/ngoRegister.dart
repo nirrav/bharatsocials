@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:bharatsocials/commonWidgets/widgets.dart';
 
 class NgoRegistrationPage extends StatefulWidget {
-  const NgoRegistrationPage({Key? key}) : super(key: key);
+  const NgoRegistrationPage({super.key});
 
   @override
   _NgoRegistrationPageState createState() => _NgoRegistrationPageState();
@@ -20,13 +20,13 @@ class TextFieldWidget extends StatelessWidget {
   final String? Function(String?)? validator;
 
   const TextFieldWidget({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
     required this.isDarkMode,
     this.inputFormatters,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +125,7 @@ class _NgoRegistrationPageState extends State<NgoRegistrationPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 TextFieldWidget(
                   label: 'NGO Name',
                   controller: organizationNameController,
